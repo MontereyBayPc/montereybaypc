@@ -11,11 +11,11 @@ const SectionHeading = ({ label, title, description }: SectionHeadingProps) => (
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5 }}
+    transition={{ duration: 0.6 }}
     className="text-center mb-12 lg:mb-16"
   >
     {label && (
-      <span className="font-display text-xs font-bold uppercase tracking-[0.3em] text-primary mb-3 block">
+      <span className="font-display text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3 block">
         {label}
       </span>
     )}

@@ -49,9 +49,8 @@ const Prebuilt = () => (
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeading
-          label="Prebuilt Systems"
-          title="Ready to Ship"
-          description="Curated builds for every need and budget. Each system is fully tested and backed by our warranty."
+          title="Prebuilt Systems"
+          description="Curated builds for every need and budget. Each system is fully tested and backed by lifetime technical support."
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {builds.map((b, i) => (
@@ -60,29 +59,29 @@ const Prebuilt = () => (
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="glass rounded-xl overflow-hidden group hover:rgb-glow transition-shadow duration-300 flex flex-col"
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="border border-border rounded-xl overflow-hidden group hover:border-foreground/20 transition-all duration-500 flex flex-col bg-card/40"
             >
               <div className="relative aspect-square overflow-hidden">
-                <img src={b.image} alt={b.name} loading="lazy" width={800} height={800} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <Badge className="absolute top-3 right-3 gradient-rgb-bg text-primary-foreground border-0 font-display text-[10px] tracking-wider">
+                <img src={b.image} alt={b.name} loading="lazy" width={800} height={800} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <Badge className="absolute top-3 right-3 bg-foreground text-background border-0 font-display text-[10px] tracking-wider">
                   {b.badge}
                 </Badge>
               </div>
               <div className="p-5 flex flex-col flex-1">
-                <span className="text-primary text-xs font-display uppercase tracking-wider">{b.category}</span>
+                <span className="text-muted-foreground text-xs font-display uppercase tracking-wider">{b.category}</span>
                 <h3 className="font-heading text-2xl font-bold text-foreground mt-1">{b.name}</h3>
                 <ul className="mt-3 flex-1 flex flex-col gap-1">
                   {b.specs.map((s) => (
                     <li key={s} className="text-muted-foreground text-xs flex items-center gap-2">
-                      <span className="w-1 h-1 rounded-full bg-primary" />
+                      <span className="w-1 h-1 rounded-full bg-foreground/40" />
                       {s}
                     </li>
                   ))}
                 </ul>
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="font-display text-2xl font-bold gradient-rgb-text">${b.price.toLocaleString()}</span>
-                  <Button asChild size="sm" className="font-heading font-bold uppercase text-xs tracking-wider gradient-rgb-bg text-primary-foreground hover:opacity-90">
+                  <span className="font-display text-2xl font-bold text-foreground">${b.price.toLocaleString()}</span>
+                  <Button asChild size="sm" className="font-heading font-bold uppercase text-xs tracking-wider bg-foreground text-background hover:bg-foreground/90 transition-all duration-300">
                     <Link to="/contact">Inquire</Link>
                   </Button>
                 </div>
