@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/builder", label: "PC Builder" },
   { to: "/prebuilt", label: "Prebuilt PCs" },
   { to: "/services", label: "Services" },
   { to: "/about", label: "About" },
+  { to: "/reviews", label: "Reviews" },
+  { to: "/faq", label: "FAQ" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -17,23 +18,21 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          <Link to="/" className="font-display text-lg lg:text-xl font-bold tracking-wider">
-            <span className="gradient-rgb-text">MONTEREY BAY</span>
-            <span className="text-foreground ml-1">PCs</span>
+          <Link to="/" className="font-display text-lg lg:text-xl font-bold tracking-wider text-foreground">
+            MONTEREY BAY <span className="text-muted-foreground">PCs</span>
           </Link>
 
-          {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`font-heading text-sm font-semibold uppercase tracking-widest transition-colors duration-200 ${
+                className={`font-heading text-sm font-semibold uppercase tracking-widest transition-colors duration-300 ${
                   location.pathname === link.to
-                    ? "text-primary"
+                    ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -42,7 +41,6 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Mobile Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden text-foreground"
@@ -53,14 +51,13 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden glass-strong border-t border-border"
+            className="lg:hidden bg-background border-t border-border"
           >
             <div className="container mx-auto px-4 py-4 flex flex-col gap-3">
               {navLinks.map((link) => (
@@ -68,9 +65,9 @@ const Navbar = () => {
                   key={link.to}
                   to={link.to}
                   onClick={() => setIsOpen(false)}
-                  className={`font-heading text-sm font-semibold uppercase tracking-widest py-2 ${
+                  className={`font-heading text-sm font-semibold uppercase tracking-widest py-2 transition-colors duration-300 ${
                     location.pathname === link.to
-                      ? "text-primary"
+                      ? "text-foreground"
                       : "text-muted-foreground"
                   }`}
                 >
