@@ -14,7 +14,7 @@ const Services = () => (
   <Layout>
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
-        <SectionHeading label="Services" title="What We Offer" description="Professional PC services from passionate enthusiasts. We treat your machine like our own." />
+        <SectionHeading title="What We Offer" description="Professional PC services from passionate enthusiasts." />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {services.map((s, i) => (
             <motion.div
@@ -22,13 +22,13 @@ const Services = () => (
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="glass rounded-xl p-8 group hover:rgb-glow transition-shadow duration-300"
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="border border-border rounded-xl p-8 group hover:border-foreground/20 transition-all duration-500 bg-card/40"
             >
-              <s.icon className="w-10 h-10 text-primary mb-5 group-hover:scale-110 transition-transform" />
+              <s.icon className="w-10 h-10 text-foreground mb-5 group-hover:scale-110 transition-transform duration-300" />
               <h3 className="font-heading text-2xl font-bold text-foreground mb-2">{s.title}</h3>
               <p className="text-muted-foreground text-sm mb-4">{s.desc}</p>
-              <span className="font-display text-xs text-primary uppercase tracking-wider">{s.price}</span>
+              <span className="font-display text-xs text-muted-foreground uppercase tracking-wider">{s.price}</span>
             </motion.div>
           ))}
         </div>
