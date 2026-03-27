@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Mail, MessageSquare } from "lucide-react";
+import { Send, Mail } from "lucide-react";
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ const Contact = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="glass rounded-xl p-8 flex flex-col gap-5"
+            className="border border-border rounded-xl p-8 flex flex-col gap-5 bg-card/40"
           >
             <div>
               <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">Name</label>
@@ -47,7 +47,7 @@ const Contact = () => {
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 placeholder="Your name"
-                className="bg-secondary border-border focus:border-primary"
+                className="bg-secondary border-border"
               />
             </div>
             <div>
@@ -57,7 +57,7 @@ const Contact = () => {
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                 placeholder="your@email.com"
-                className="bg-secondary border-border focus:border-primary"
+                className="bg-secondary border-border"
               />
             </div>
             <div>
@@ -67,21 +67,18 @@ const Contact = () => {
                 onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                 placeholder="Tell us about your project or question..."
                 rows={5}
-                className="bg-secondary border-border focus:border-primary"
+                className="bg-secondary border-border"
               />
             </div>
-            <Button type="submit" className="w-full font-heading font-bold uppercase tracking-wider gradient-rgb-bg text-primary-foreground hover:opacity-90">
+            <Button type="submit" className="w-full font-heading font-bold uppercase tracking-wider bg-foreground text-background hover:bg-foreground/90">
               <Send className="w-4 h-4 mr-2" />
               Send Message
             </Button>
           </motion.form>
 
-          <div className="flex flex-wrap justify-center gap-6 mt-10 text-sm text-muted-foreground">
-            <a href="mailto:hello@montereybaypc.com" className="flex items-center gap-2 hover:text-primary transition-colors">
-              <Mail className="w-4 h-4" /> hello@montereybaypc.com
-            </a>
-            <a href="https://discord.gg" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors">
-              <MessageSquare className="w-4 h-4" /> Discord
+          <div className="flex justify-center mt-10 text-sm text-muted-foreground">
+            <a href="mailto:montereybaypc@gmail.com" className="flex items-center gap-2 hover:text-foreground transition-colors duration-300">
+              <Mail className="w-4 h-4" /> montereybaypc@gmail.com
             </a>
           </div>
         </div>
