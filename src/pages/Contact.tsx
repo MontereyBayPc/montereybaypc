@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Mail } from "lucide-react";
+import { Send, Mail, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
-import SectionHeading from "@/components/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,55 +30,102 @@ const Contact = () => {
 
   return (
     <Layout>
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4 lg:px-8 max-w-2xl">
-          <SectionHeading label="Contact" title="Get in Touch" description="Have a question or want a custom quote? Drop us a message." />
-          <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="border border-border rounded-xl p-8 flex flex-col gap-5 bg-card/40"
-          >
-            <div>
-              <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">Name</label>
-              <Input
-                value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="Your name"
-                className="bg-secondary border-border"
+      <section className="py-16 lg:py-24 min-h-[80vh] flex items-center">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-5xl mx-auto items-center">
+            {/* Left side - Info */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
+            >
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: "3rem" }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="h-px bg-foreground/40 mb-8"
               />
-            </div>
-            <div>
-              <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">Email</label>
-              <Input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                placeholder="your@email.com"
-                className="bg-secondary border-border"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">Message</label>
-              <Textarea
-                value={form.message}
-                onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-                placeholder="Tell us about your project or question..."
-                rows={5}
-                className="bg-secondary border-border"
-              />
-            </div>
-            <Button type="submit" className="w-full font-heading font-bold uppercase tracking-wider bg-foreground text-background hover:bg-foreground/90">
-              <Send className="w-4 h-4 mr-2" />
-              Send Message
-            </Button>
-          </motion.form>
+              <h1 className="font-heading text-4xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
+                Let's
+                <br />
+                <span className="text-muted-foreground">Talk</span>
+              </h1>
+              <p className="text-muted-foreground text-lg mb-10 max-w-sm">
+                Have a question or want a custom quote? We'd love to hear from you.
+              </p>
 
-          <div className="flex justify-center mt-10 text-sm text-muted-foreground">
-            <a href="mailto:montereybaypc@gmail.com" className="flex items-center gap-2 hover:text-foreground transition-colors duration-300">
-              <Mail className="w-4 h-4" /> montereybaypc@gmail.com
-            </a>
+              <motion.a
+                href="mailto:montereybaypc@gmail.com"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="group flex items-center gap-4 p-5 rounded-2xl border border-border hover:border-foreground/30 transition-all duration-500 bg-card/30 hover:bg-card/60"
+              >
+                <div className="w-12 h-12 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-5 h-5 text-background" />
+                </div>
+                <div>
+                  <span className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider block mb-1">Email Us</span>
+                  <span className="text-foreground font-medium group-hover:tracking-wider transition-all duration-300">montereybaypc@gmail.com</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto group-hover:translate-x-1 transition-transform duration-300" />
+              </motion.a>
+            </motion.div>
+
+            {/* Right side - Form */}
+            <motion.form
+              onSubmit={handleSubmit}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-foreground/5 to-transparent -z-10" />
+              <div className="space-y-6">
+                <div>
+                  <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">Name</label>
+                  <Input
+                    value={form.name}
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                    placeholder="Your name"
+                    className="bg-transparent border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-foreground transition-colors duration-300 text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">Email</label>
+                  <Input
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                    placeholder="your@email.com"
+                    className="bg-transparent border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-foreground transition-colors duration-300 text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">Message</label>
+                  <Textarea
+                    value={form.message}
+                    onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                    placeholder="Tell us about your project..."
+                    rows={4}
+                    className="bg-transparent border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-foreground transition-colors duration-300 text-foreground resize-none"
+                  />
+                </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <Button
+                    type="submit"
+                    className="w-full font-heading font-bold uppercase tracking-widest bg-foreground text-background hover:bg-foreground/90 rounded-full py-6 text-sm hover:scale-[1.02] transition-all duration-300"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    Send Message
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.form>
           </div>
         </div>
       </section>

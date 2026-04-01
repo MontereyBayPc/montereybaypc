@@ -28,10 +28,10 @@ const About = () => (
               Monterey Bay PCs is a small business started by a high schooler with a deep passion for technology and a mission to spread the joy of PCs to everyone.
             </p>
             <p className="text-muted-foreground mb-4">
-              What began as building PCs for friends and family quickly grew into something bigger. Based in the Monterey Bay area of California, we pour our heart into every build — from meticulous cable management to thorough stress testing.
+              What began as building PCs for friends and family quickly grew into something bigger. Based in the Monterey Bay area of California, we pour our heart into every build, from meticulous cable management to thorough stress testing.
             </p>
             <p className="text-muted-foreground">
-              Whether you're a competitive gamer, a creative professional, or someone who just wants a reliable everyday PC — we build it right, the first time. Every system is a reflection of our love for what we do.
+              Whether you're a competitive gamer, a creative professional, or someone who just wants a reliable everyday PC, we build it right, the first time. Every system is a reflection of our love for what we do.
             </p>
             <div className="grid grid-cols-3 gap-4 mt-8">
               {[

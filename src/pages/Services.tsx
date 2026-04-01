@@ -4,8 +4,8 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 
 const services = [
-  { icon: Wrench, title: "Custom PC Building", desc: "From part selection to final testing — we build your dream rig from scratch with meticulous attention to detail.", price: "Starting at $75" },
-  { icon: ArrowUpCircle, title: "Upgrades", desc: "CPU, GPU, RAM, storage upgrades — we'll help you pick the right parts and install them professionally.", price: "Starting at $40" },
+  { icon: Wrench, title: "Custom PC Building", desc: "From part selection to final testing, we build your dream rig from scratch with meticulous attention to detail.", price: "Starting at $75" },
+  { icon: ArrowUpCircle, title: "Upgrades", desc: "CPU, GPU, RAM, storage upgrades. We'll help you pick the right parts and install them professionally.", price: "Starting at $40" },
   { icon: Bug, title: "Troubleshooting & Repair", desc: "Diagnosing hardware failures, software issues, boot problems, and more. Fast turnaround.", price: "Starting at $50" },
   { icon: Sparkles, title: "Cleaning & Optimization", desc: "Deep cleaning, thermal paste replacement, dust removal, OS optimization, and cable management refresh.", price: "Starting at $35" },
 ];

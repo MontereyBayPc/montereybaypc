@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 
 const faqs = [
-  { q: "How long does a custom build take?", a: "Custom PCs take 1–2 weeks to build, thoroughly test, and prepare for pickup." },
+  { q: "How long does a custom build take?", a: "Custom PCs take 1-2 weeks to build, thoroughly test, and prepare for pickup." },
   { q: "Do you offer warranties?", a: "We do not offer warranties on builds. However, every system comes with technical support included with your purchase." },
   { q: "Can I bring my own parts?", a: "Absolutely. We're happy to build with parts you've already purchased." },
   { q: "Do you ship nationwide?", a: "No, we do not ship nationwide. All builds are available for local pickup or delivery in the Monterey Bay area." },

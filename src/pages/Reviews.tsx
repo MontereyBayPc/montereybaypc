@@ -4,9 +4,11 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 
 const testimonials = [
-  { name: "Alex R.", text: "Monterey Bay PCs built me the perfect streaming rig. Incredible cable management and runs silently!", rating: 5 },
-  { name: "Sarah K.", text: "Best investment I've made. My workstation handles 4K video editing like a dream.", rating: 5 },
-  { name: "Mike T.", text: "Fast turnaround, great communication, and the PC looks absolutely insane. 10/10.", rating: 5 },
+  { name: "James R.", text: "Monterey Bay PCs built me the perfect streaming rig. Incredible cable management and runs silently!", rating: 5 },
+  { name: "Tyler K.", text: "Best investment I've made. My workstation handles 4K video editing like a dream.", rating: 5 },
+  { name: "Marcus T.", text: "Fast turnaround, great communication, and the PC looks absolutely insane. 10/10.", rating: 5 },
+  { name: "Brandon L.", text: "Got a budget build that outperforms everything in its price range. Super happy!", rating: 5 },
+  { name: "Ryan W.", text: "The attention to detail is next level. Clean cables, quiet fans, and blazing fast.", rating: 5 },
 ];
 
 const Reviews = () => (
@@ -30,7 +32,7 @@ const Reviews = () => (
                 ))}
               </div>
               <p className="text-foreground text-sm italic mb-4">"{t.text}"</p>
-              <span className="text-muted-foreground text-xs font-heading font-semibold uppercase tracking-wider">— {t.name}</span>
+              <span className="text-muted-foreground text-xs font-heading font-semibold uppercase tracking-wider">{t.name}</span>
             </motion.div>
           ))}
         </div>
