@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
+import PcAnalyzer from "./pages/PcAnalyzer";
 import About from "./pages/About";
 
 import FAQ from "./pages/FAQ";
@@ -22,6 +24,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
+          <Route path="/pc-analyzer" element={<PcAnalyzer />} />
           <Route path="/about" element={<About />} />
           
           <Route path="/faq" element={<FAQ />} />
