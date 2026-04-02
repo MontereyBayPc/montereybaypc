@@ -274,7 +274,7 @@ const Index = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative overflow-hidden rounded-3xl bg-foreground text-background p-12 lg:p-20 text-center"
+            className="relative overflow-hidden rounded-3xl bg-muted text-foreground p-12 lg:p-20 text-center"
           >
             <div className="absolute inset-0 opacity-5">
               <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-background blur-3xl -translate-x-1/2 -translate-y-1/2" />
