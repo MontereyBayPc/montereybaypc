@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Monitor, Cpu, HardDrive, ArrowRight, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Monitor, Cpu, HardDrive, ArrowRight, Star } from "lucide-react";
 import Layout from "@/components/Layout";
 import heroImg1 from "@/assets/hero-pc.jpg";
 import heroImg2 from "@/assets/hero-pc-2.jpg";
@@ -252,28 +252,15 @@ const Index = () => {
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex justify-center gap-3 mt-6">
-              <button
-                onClick={() => setCurrentReview((prev) => (prev - 1 + reviews.length) % reviews.length)}
-                className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-all duration-300"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
+            <div className="flex justify-center gap-2 mt-8">
               {reviews.map((_, i) => (
-                <button
+                <div
                   key={i}
-                  onClick={() => setCurrentReview(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 mt-4 ${
-                    i === currentReview ? "bg-foreground" : "bg-foreground/20"
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
+                    i === currentReview ? "bg-foreground w-6" : "bg-foreground/20"
                   }`}
                 />
               ))}
-              <button
-                onClick={() => setCurrentReview((prev) => (prev + 1) % reviews.length)}
-                className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-all duration-300"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>
@@ -287,7 +274,7 @@ const Index = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative overflow-hidden rounded-3xl bg-foreground text-background p-12 lg:p-20 text-center"
+            className="relative overflow-hidden rounded-3xl bg-muted text-foreground p-12 lg:p-20 text-center"
           >
             <div className="absolute inset-0 opacity-5">
               <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-background blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -308,7 +295,7 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-background/60 mb-10 max-w-lg mx-auto text-lg"
+                className="text-muted-foreground mb-10 max-w-lg mx-auto text-lg"
               >
                 Reach out for a custom quote. We'd love to build something for you.
               </motion.p>
@@ -320,7 +307,7 @@ const Index = () => {
               >
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-background text-foreground px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300"
+                  className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300"
                 >
                   Contact Us <ArrowRight className="w-4 h-4" />
                 </Link>
