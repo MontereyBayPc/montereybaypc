@@ -252,28 +252,15 @@ const Index = () => {
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex justify-center gap-3 mt-6">
-              <button
-                onClick={() => setCurrentReview((prev) => (prev - 1 + reviews.length) % reviews.length)}
-                className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-all duration-300"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
+            <div className="flex justify-center gap-2 mt-8">
               {reviews.map((_, i) => (
-                <button
+                <div
                   key={i}
-                  onClick={() => setCurrentReview(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 mt-4 ${
-                    i === currentReview ? "bg-foreground" : "bg-foreground/20"
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
+                    i === currentReview ? "bg-foreground w-6" : "bg-foreground/20"
                   }`}
                 />
               ))}
-              <button
-                onClick={() => setCurrentReview((prev) => (prev + 1) % reviews.length)}
-                className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-all duration-300"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>
