@@ -307,7 +307,7 @@ const Index = () => {
               >
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-background text-foreground px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300"
+                  className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300"
                 >
                   Contact Us <ArrowRight className="w-4 h-4" />
                 </Link>
