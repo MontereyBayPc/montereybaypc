@@ -295,7 +295,7 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-background/60 mb-10 max-w-lg mx-auto text-lg"
+                className="text-muted-foreground mb-10 max-w-lg mx-auto text-lg"
               >
                 Reach out for a custom quote. We'd love to build something for you.
               </motion.p>
