@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Cpu, MonitorPlay, MemoryStick, Gauge, ArrowRight, RotateCcw, AlertTriangle, CheckCircle, Info, ChevronDown, Search } from "lucide-react";
+import { Cpu, MonitorPlay, MemoryStick, Gauge, ArrowRight, RotateCcw, AlertTriangle, CheckCircle, Info, ChevronDown, Search, Gamepad2, Monitor } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 
@@ -114,7 +114,7 @@ const cpuList = [
   { name: "Intel Core Ultra 9 285K", score: 95 },
   { name: "Intel Core Ultra 7 265K", score: 88 },
   { name: "Intel Core Ultra 5 245K", score: 78 },
-  // Intel 14th Gen (Raptor Lake Refresh)
+  // Intel 14th Gen
   { name: "Intel Core i9-14900KS", score: 94 },
   { name: "Intel Core i9-14900K", score: 92 },
   { name: "Intel Core i9-14900KF", score: 92 },
@@ -129,7 +129,7 @@ const cpuList = [
   { name: "Intel Core i5-14400F", score: 62 },
   { name: "Intel Core i3-14100", score: 45 },
   { name: "Intel Core i3-14100F", score: 45 },
-  // Intel 13th Gen (Raptor Lake)
+  // Intel 13th Gen
   { name: "Intel Core i9-13900KS", score: 90 },
   { name: "Intel Core i9-13900K", score: 88 },
   { name: "Intel Core i9-13900KF", score: 88 },
@@ -144,7 +144,7 @@ const cpuList = [
   { name: "Intel Core i5-13400F", score: 58 },
   { name: "Intel Core i3-13100", score: 40 },
   { name: "Intel Core i3-13100F", score: 40 },
-  // Intel 12th Gen (Alder Lake)
+  // Intel 12th Gen
   { name: "Intel Core i9-12900KS", score: 82 },
   { name: "Intel Core i9-12900K", score: 80 },
   { name: "Intel Core i9-12900KF", score: 80 },
@@ -241,28 +241,77 @@ const ramOptions = [
   { name: "64 GB+", score: 100 },
 ];
 
+// ── Game FPS Database ──
+// Each game has a "baseFps" at 1080p medium for a GPU score of 50, and a "weight" for how demanding it is
+// Lower weight = more demanding game
+interface GameProfile {
+  name: string;
+  icon: string;
+  weight: number; // multiplier: higher = easier to run
+  cpuWeight: number; // how CPU-bound the game is (0-1, higher = more CPU dependent)
+}
+
+const games: GameProfile[] = [
+  { name: "Valorant", icon: "🎯", weight: 2.8, cpuWeight: 0.5 },
+  { name: "Fortnite", icon: "🏗️", weight: 1.8, cpuWeight: 0.35 },
+  { name: "Marvel Rivals", icon: "🦸", weight: 1.4, cpuWeight: 0.3 },
+  { name: "Elden Ring", icon: "⚔️", weight: 1.2, cpuWeight: 0.25 },
+  { name: "Red Dead Redemption 2", icon: "🤠", weight: 0.9, cpuWeight: 0.3 },
+  { name: "Cyberpunk 2077", icon: "🌆", weight: 0.85, cpuWeight: 0.25 },
+  { name: "Call of Duty: Warzone", icon: "🔫", weight: 1.5, cpuWeight: 0.4 },
+  { name: "GTA V", icon: "🚗", weight: 2.0, cpuWeight: 0.3 },
+  { name: "Minecraft (Shaders)", icon: "⛏️", weight: 1.6, cpuWeight: 0.45 },
+  { name: "Apex Legends", icon: "🎮", weight: 1.7, cpuWeight: 0.35 },
+  { name: "Hogwarts Legacy", icon: "🧙", weight: 0.95, cpuWeight: 0.2 },
+  { name: "Starfield", icon: "🚀", weight: 0.8, cpuWeight: 0.35 },
+];
+
+type SettingLevel = "Low" | "Medium" | "High" | "Ultra";
+type Resolution = "1080p" | "1440p" | "4K";
+
+const resolutionMultiplier: Record<Resolution, number> = {
+  "1080p": 1.0,
+  "1440p": 0.62,
+  "4K": 0.33,
+};
+
+const settingsMultiplier: Record<SettingLevel, number> = {
+  Low: 1.5,
+  Medium: 1.0,
+  High: 0.72,
+  Ultra: 0.52,
+};
+
+function estimateFps(gpuScore: number, cpuScore: number, ramScore: number, game: GameProfile, res: Resolution, settings: SettingLevel): number {
+  const basePerf = gpuScore * (1 - game.cpuWeight) + cpuScore * game.cpuWeight;
+  const ramPenalty = ramScore < 30 ? 0.75 : ramScore < 50 ? 0.9 : 1.0;
+  const rawFps = basePerf * game.weight * resolutionMultiplier[res] * settingsMultiplier[settings] * ramPenalty;
+  // Scale so score 50 at 1080p medium gives ~60fps for weight 1.2 game
+  const scaled = rawFps * 1.1;
+  return Math.max(5, Math.round(scaled));
+}
+
+function getFpsColor(fps: number): string {
+  if (fps >= 144) return "text-green-400";
+  if (fps >= 100) return "text-green-500";
+  if (fps >= 60) return "text-emerald-400";
+  if (fps >= 45) return "text-yellow-400";
+  if (fps >= 30) return "text-orange-400";
+  return "text-red-400";
+}
+
 // ── Analysis ──
 interface Results {
   overallScore: number;
-  idealRes: string;
-  fps: string;
   bottleneck: string | null;
   upgrades: string[];
   verdict: string;
+  isHighEnd: boolean;
 }
 
 function analyze(cpuScore: number, gpuScore: number, ramScore: number): Results {
-  // GPU-weighted average for gaming
   const overall = Math.round(gpuScore * 0.5 + cpuScore * 0.35 + ramScore * 0.15);
-
-  let idealRes = "720p";
-  let fps = "30-45 FPS";
-  if (gpuScore >= 85) { idealRes = "4K"; fps = "80-120+ FPS"; }
-  else if (gpuScore >= 70) { idealRes = "4K"; fps = "60-80 FPS"; }
-  else if (gpuScore >= 55) { idealRes = "1440p"; fps = "60-100 FPS"; }
-  else if (gpuScore >= 40) { idealRes = "1080p"; fps = "60-90 FPS"; }
-  else if (gpuScore >= 25) { idealRes = "1080p"; fps = "40-60 FPS"; }
-  else if (gpuScore >= 15) { idealRes = "1080p Low"; fps = "30-50 FPS"; }
+  const isHighEnd = gpuScore >= 85 && cpuScore >= 80 && ramScore >= 50;
 
   let bottleneck: string | null = null;
   const diff = cpuScore - gpuScore;
@@ -271,18 +320,25 @@ function analyze(cpuScore: number, gpuScore: number, ramScore: number): Results 
   else if (ramScore <= 20 && gpuScore >= 40) bottleneck = "Low RAM is causing stutters and limiting multitasking. Upgrade to at least 16 GB.";
 
   const upgrades: string[] = [];
-  if (gpuScore < 45) upgrades.push("Upgrade your GPU for the single biggest boost in gaming performance.");
-  if (cpuScore < 45) upgrades.push("A modern CPU would greatly improve responsiveness and frame consistency.");
-  if (ramScore <= 20) upgrades.push("Upgrade to at least 16 GB of RAM for smooth gameplay in modern titles.");
-  if (ramScore <= 50 && gpuScore >= 65) upgrades.push("Consider 32 GB RAM to fully leverage your GPU in demanding games and workloads.");
+  if (isHighEnd) {
+    upgrades.push("Your setup is already pushing high-end 4K gaming with ease. Make sure you are happy with your aesthetics, case, cooling, and peripherals (monitor, keyboard, mouse, headset).");
+    if (ramScore < 80) upgrades.push("Consider 32 GB+ RAM for future-proofing and heavy multitasking/streaming.");
+  } else {
+    if (gpuScore < 45) upgrades.push("Upgrade your GPU for the single biggest boost in gaming performance.");
+    if (cpuScore < 45) upgrades.push("A modern CPU would greatly improve responsiveness and frame consistency.");
+    if (ramScore <= 20) upgrades.push("Upgrade to at least 16 GB of RAM for smooth gameplay in modern titles.");
+    if (ramScore <= 50 && gpuScore >= 65) upgrades.push("Consider 32 GB RAM to fully leverage your GPU in demanding games and workloads.");
+    if (gpuScore >= 60 && cpuScore >= 60 && ramScore >= 50 && gpuScore < 85) upgrades.push("Your next best upgrade is a top-tier GPU to push into 4K territory.");
+  }
 
   let verdict = "Your system needs significant upgrades to handle modern games.";
-  if (overall >= 80) verdict = "Excellent system. You're set for high-end gaming at high resolutions.";
+  if (isHighEnd) verdict = "Beast mode. Your rig crushes everything. Focus on peripherals and aesthetics.";
+  else if (overall >= 80) verdict = "Excellent system. You are set for high-end gaming at high resolutions.";
   else if (overall >= 65) verdict = "Strong build. You can comfortably game at 1440p with great settings.";
   else if (overall >= 50) verdict = "Solid mid-range setup. A targeted upgrade could take it to the next level.";
   else if (overall >= 35) verdict = "Your system handles lighter games well but will struggle with demanding titles.";
 
-  return { overallScore: overall, idealRes, fps, bottleneck, upgrades, verdict };
+  return { overallScore: overall, bottleneck, upgrades, verdict, isHighEnd };
 }
 
 // ── Searchable Dropdown Component ──
@@ -454,6 +510,88 @@ const ScoreRing = ({ score }: { score: number }) => {
   );
 };
 
+// ── Game FPS Table ──
+const resolutions: Resolution[] = ["1080p", "1440p", "4K"];
+const settings: SettingLevel[] = ["Low", "Medium", "High", "Ultra"];
+
+const GameFpsSection = ({ gpuScore, cpuScore, ramScore }: { gpuScore: number; cpuScore: number; ramScore: number }) => {
+  const [selectedRes, setSelectedRes] = useState<Resolution>("1080p");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+    >
+      <div className="flex items-center gap-3 mb-6">
+        <Gamepad2 className="w-5 h-5 text-foreground" />
+        <h3 className="font-heading text-xl font-bold text-foreground">Game Performance Estimates</h3>
+      </div>
+
+      {/* Resolution tabs */}
+      <div className="flex gap-2 mb-6">
+        {resolutions.map((res) => (
+          <button
+            key={res}
+            onClick={() => setSelectedRes(res)}
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+              selectedRes === res
+                ? "bg-foreground text-background"
+                : "bg-muted text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Monitor className="w-3.5 h-3.5" />
+            {res}
+          </button>
+        ))}
+      </div>
+
+      {/* Games table */}
+      <div className="rounded-2xl border border-border overflow-hidden">
+        {/* Header */}
+        <div className="grid grid-cols-5 gap-0 bg-muted/50 px-4 py-3 text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="col-span-1">Game</div>
+          {settings.map((s) => (
+            <div key={s} className="text-center">{s}</div>
+          ))}
+        </div>
+
+        {/* Rows */}
+        {games.map((game, i) => (
+          <motion.div
+            key={game.name}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.05 * i }}
+            className={`grid grid-cols-5 gap-0 px-4 py-4 items-center ${
+              i < games.length - 1 ? "border-b border-border" : ""
+            } hover:bg-muted/30 transition-colors duration-200`}
+          >
+            <div className="col-span-1 flex items-center gap-3">
+              <span className="text-lg">{game.icon}</span>
+              <span className="text-sm font-medium text-foreground truncate">{game.name}</span>
+            </div>
+            {settings.map((setting) => {
+              const fps = estimateFps(gpuScore, cpuScore, ramScore, game, selectedRes, setting);
+              return (
+                <div key={setting} className="text-center">
+                  <span className={`text-sm font-bold ${getFpsColor(fps)}`}>
+                    {fps} <span className="text-xs font-normal opacity-70">fps</span>
+                  </span>
+                </div>
+              );
+            })}
+          </motion.div>
+        ))}
+      </div>
+
+      <p className="text-xs text-muted-foreground mt-3 text-center">
+        * Estimates based on component scores. Actual performance varies by driver, game version, and system configuration.
+      </p>
+    </motion.div>
+  );
+};
+
 // ── Main Page ──
 const PcAnalyzer = () => {
   const [cpu, setCpu] = useState<{ name: string; score: number } | null>(null);
@@ -484,7 +622,7 @@ const PcAnalyzer = () => {
   return (
     <Layout>
       <section className="pt-32 pb-24 lg:pt-40 lg:pb-32">
-        <div className="container mx-auto px-4 lg:px-8 max-w-3xl">
+        <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -495,14 +633,14 @@ const PcAnalyzer = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-foreground text-background mb-6">
               <Gauge className="w-7 h-7" />
             </div>
-            <h1 className="font-heading text-4xl lg:text-5xl font-bold text-foreground mb-3">PC Health Check</h1>
+            <h1 className="font-heading text-4xl lg:text-5xl font-bold text-foreground mb-3">PC Check</h1>
             <p className="text-muted-foreground text-lg max-w-lg mx-auto">
-              Select your components and we will break down your performance, ideal resolution, and what to upgrade.
+              Select your components and we will show you exactly what FPS you can expect in your favorite games.
             </p>
           </motion.div>
 
           {/* Selectors */}
-          <div className="space-y-6">
+          <div className="max-w-3xl mx-auto space-y-6">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <SearchDropdown label="Processor (CPU)" icon={Cpu} items={cpuList} selected={cpu} onSelect={selectAndClear(setCpu)} />
             </motion.div>
@@ -543,13 +681,13 @@ const PcAnalyzer = () => {
 
           {/* Results */}
           <AnimatePresence>
-            {showResults && results && (
+            {showResults && results && cpu && gpu && ram && (
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.6 }}
-                className="mt-20 space-y-10"
+                className="mt-20 space-y-12"
               >
                 {/* Score */}
                 <div className="text-center">
@@ -557,34 +695,19 @@ const PcAnalyzer = () => {
                   <p className="text-muted-foreground text-xs uppercase tracking-widest mt-4">Performance Score</p>
                 </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    { label: "Ideal Resolution", value: results.idealRes },
-                    { label: "Expected FPS", value: results.fps },
-                  ].map((s) => (
-                    <motion.div
-                      key={s.label}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="border border-border rounded-2xl p-6 text-center"
-                    >
-                      <p className="text-muted-foreground text-xs uppercase tracking-widest mb-2">{s.label}</p>
-                      <p className="font-heading text-2xl font-bold text-foreground">{s.value}</p>
-                    </motion.div>
-                  ))}
-                </div>
-
                 {/* Verdict */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="flex items-start gap-4 p-6 rounded-2xl bg-muted"
+                  className="flex items-start gap-4 p-6 rounded-2xl bg-muted max-w-3xl mx-auto"
                 >
                   <Info className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
                   <p className="text-foreground">{results.verdict}</p>
                 </motion.div>
+
+                {/* Game FPS Table */}
+                <GameFpsSection gpuScore={gpu.score} cpuScore={cpu.score} ramScore={ram.score} />
 
                 {/* Bottleneck */}
                 {results.bottleneck && (
@@ -592,7 +715,7 @@ const PcAnalyzer = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="flex items-start gap-4 p-6 rounded-2xl border border-border"
+                    className="flex items-start gap-4 p-6 rounded-2xl border border-border max-w-3xl mx-auto"
                   >
                     <AlertTriangle className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
                     <div>
@@ -604,8 +727,10 @@ const PcAnalyzer = () => {
 
                 {/* Upgrades */}
                 {results.upgrades.length > 0 && (
-                  <div>
-                    <h3 className="font-heading text-xl font-bold text-foreground mb-4">Recommended Upgrades</h3>
+                  <div className="max-w-3xl mx-auto">
+                    <h3 className="font-heading text-xl font-bold text-foreground mb-4">
+                      {results.isHighEnd ? "You Are Set" : "Recommended Upgrades"}
+                    </h3>
                     <div className="space-y-3">
                       {results.upgrades.map((u, i) => (
                         <motion.div
