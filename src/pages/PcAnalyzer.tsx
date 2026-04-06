@@ -246,24 +246,23 @@ const ramOptions = [
 // Lower weight = more demanding game
 interface GameProfile {
   name: string;
-  icon: string;
-  weight: number; // multiplier: higher = easier to run
+  baseFps: number; // FPS at 1080p medium for a perfect score-100 system
   cpuWeight: number; // how CPU-bound the game is (0-1, higher = more CPU dependent)
 }
 
 const games: GameProfile[] = [
-  { name: "Valorant", icon: "🎯", weight: 2.8, cpuWeight: 0.5 },
-  { name: "Fortnite", icon: "🏗️", weight: 1.8, cpuWeight: 0.35 },
-  { name: "Marvel Rivals", icon: "🦸", weight: 1.4, cpuWeight: 0.3 },
-  { name: "Elden Ring", icon: "⚔️", weight: 1.2, cpuWeight: 0.25 },
-  { name: "Red Dead Redemption 2", icon: "🤠", weight: 0.9, cpuWeight: 0.3 },
-  { name: "Cyberpunk 2077", icon: "🌆", weight: 0.85, cpuWeight: 0.25 },
-  { name: "Call of Duty: Warzone", icon: "🔫", weight: 1.5, cpuWeight: 0.4 },
-  { name: "GTA V", icon: "🚗", weight: 2.0, cpuWeight: 0.3 },
-  { name: "Minecraft (Shaders)", icon: "⛏️", weight: 1.6, cpuWeight: 0.45 },
-  { name: "Apex Legends", icon: "🎮", weight: 1.7, cpuWeight: 0.35 },
-  { name: "Hogwarts Legacy", icon: "🧙", weight: 0.95, cpuWeight: 0.2 },
-  { name: "Starfield", icon: "🚀", weight: 0.8, cpuWeight: 0.35 },
+  { name: "Valorant", baseFps: 500, cpuWeight: 0.5 },
+  { name: "Fortnite", baseFps: 280, cpuWeight: 0.35 },
+  { name: "Marvel Rivals", baseFps: 200, cpuWeight: 0.3 },
+  { name: "Elden Ring", baseFps: 180, cpuWeight: 0.25 },
+  { name: "Red Dead Redemption 2", baseFps: 250, cpuWeight: 0.3 },
+  { name: "Cyberpunk 2077", baseFps: 200, cpuWeight: 0.25 },
+  { name: "Call of Duty: Warzone", baseFps: 260, cpuWeight: 0.4 },
+  { name: "GTA V", baseFps: 300, cpuWeight: 0.3 },
+  { name: "Minecraft (Shaders)", baseFps: 250, cpuWeight: 0.45 },
+  { name: "Apex Legends", baseFps: 270, cpuWeight: 0.35 },
+  { name: "Hogwarts Legacy", baseFps: 190, cpuWeight: 0.2 },
+  { name: "Starfield", baseFps: 170, cpuWeight: 0.35 },
 ];
 
 type SettingLevel = "Low" | "Medium" | "High" | "Ultra";
@@ -271,24 +270,23 @@ type Resolution = "1080p" | "1440p" | "4K";
 
 const resolutionMultiplier: Record<Resolution, number> = {
   "1080p": 1.0,
-  "1440p": 0.62,
-  "4K": 0.33,
+  "1440p": 0.7,
+  "4K": 0.4,
 };
 
 const settingsMultiplier: Record<SettingLevel, number> = {
-  Low: 1.5,
+  Low: 1.4,
   Medium: 1.0,
-  High: 0.72,
-  Ultra: 0.52,
+  High: 0.8,
+  Ultra: 0.65,
 };
 
 function estimateFps(gpuScore: number, cpuScore: number, ramScore: number, game: GameProfile, res: Resolution, settings: SettingLevel): number {
-  const basePerf = gpuScore * (1 - game.cpuWeight) + cpuScore * game.cpuWeight;
+  const blendedScore = (gpuScore * (1 - game.cpuWeight) + cpuScore * game.cpuWeight) / 100;
+  const effectivePerf = Math.pow(blendedScore, 1.5);
   const ramPenalty = ramScore < 30 ? 0.75 : ramScore < 50 ? 0.9 : 1.0;
-  const rawFps = basePerf * game.weight * resolutionMultiplier[res] * settingsMultiplier[settings] * ramPenalty;
-  // Scale so score 50 at 1080p medium gives ~60fps for weight 1.2 game
-  const scaled = rawFps * 1.1;
-  return Math.max(5, Math.round(scaled));
+  const fps = game.baseFps * effectivePerf * resolutionMultiplier[res] * settingsMultiplier[settings] * ramPenalty;
+  return Math.max(5, Math.round(fps));
 }
 
 function getFpsColor(fps: number): string {
@@ -567,8 +565,7 @@ const GameFpsSection = ({ gpuScore, cpuScore, ramScore }: { gpuScore: number; cp
               i < games.length - 1 ? "border-b border-border" : ""
             } hover:bg-muted/30 transition-colors duration-200`}
           >
-            <div className="col-span-1 flex items-center gap-3">
-              <span className="text-lg">{game.icon}</span>
+            <div className="col-span-1 flex items-center">
               <span className="text-sm font-medium text-foreground truncate">{game.name}</span>
             </div>
             {settings.map((setting) => {
