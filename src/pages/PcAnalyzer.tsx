@@ -281,15 +281,44 @@ const settingsMultiplier: Record<SettingLevel, number> = {
   Ultra: 0.65,
 };
 
-function estimateFps(gpuScore: number, cpuScore: number, ramScore: number, game: GameProfile, res: Resolution, settings: SettingLevel): number {
+function estimateFps(gpuScore: number, cpuScore: number, ramScore: number, game: GameProfile, res: Resolution, settings: SettingLevel): number | null {
   const blendedScore = (gpuScore * (1 - game.cpuWeight) + cpuScore * game.cpuWeight) / 100;
   const effectivePerf = Math.pow(blendedScore, 1.5);
   const ramPenalty = ramScore < 30 ? 0.75 : ramScore < 50 ? 0.9 : 1.0;
   const fps = game.baseFps * effectivePerf * resolutionMultiplier[res] * settingsMultiplier[settings] * ramPenalty;
-  return Math.max(5, Math.round(fps));
+  const result = Math.max(1, Math.round(fps));
+
+  // Minimum GPU score thresholds - below these the game won't launch or is unplayable
+  // Game demand factor: heavier games need stronger GPUs
+  const gameDemand = 300 / game.baseFps; // higher = more demanding
+  const minGpuFor1080pLow = Math.round(8 * gameDemand);
+  const minGpuFor1080pMed = Math.round(12 * gameDemand);
+  const minGpuFor1080pHigh = Math.round(18 * gameDemand);
+  const minGpuFor1080pUltra = Math.round(22 * gameDemand);
+
+  const resMin: Record<Resolution, number> = {
+    "1080p": 1,
+    "1440p": 1.4,
+    "4K": 2.2,
+  };
+  const settMin: Record<SettingLevel, number> = {
+    Low: minGpuFor1080pLow,
+    Medium: minGpuFor1080pMed,
+    High: minGpuFor1080pHigh,
+    Ultra: minGpuFor1080pUltra,
+  };
+
+  const requiredGpu = Math.round(settMin[settings] * resMin[res]);
+  if (gpuScore < requiredGpu) return null;
+
+  // If FPS would be below 10, it's essentially unplayable
+  if (result < 10) return null;
+
+  return result;
 }
 
-function getFpsColor(fps: number): string {
+function getFpsColor(fps: number | null): string {
+  if (fps === null) return "text-red-500/60";
   if (fps >= 144) return "text-green-400";
   if (fps >= 100) return "text-green-500";
   if (fps >= 60) return "text-emerald-400";
@@ -572,9 +601,13 @@ const GameFpsSection = ({ gpuScore, cpuScore, ramScore }: { gpuScore: number; cp
               const fps = estimateFps(gpuScore, cpuScore, ramScore, game, selectedRes, setting);
               return (
                 <div key={setting} className="text-center">
-                  <span className={`text-sm font-bold ${getFpsColor(fps)}`}>
-                    {fps} <span className="text-xs font-normal opacity-70">fps</span>
-                  </span>
+                  {fps === null ? (
+                    <span className="text-sm font-bold text-red-500/60">N/A</span>
+                  ) : (
+                    <span className={`text-sm font-bold ${getFpsColor(fps)}`}>
+                      {fps} <span className="text-xs font-normal opacity-70">fps</span>
+                    </span>
+                  )}
                 </div>
               );
             })}
