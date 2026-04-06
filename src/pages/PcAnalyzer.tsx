@@ -622,15 +622,150 @@ const GameFpsSection = ({ gpuScore, cpuScore, ramScore }: { gpuScore: number; cp
   );
 };
 
+// ── Compare FPS Table ──
+const CompareFpsSection = ({ build1, build2, label1, label2 }: {
+  build1: { gpuScore: number; cpuScore: number; ramScore: number };
+  build2: { gpuScore: number; cpuScore: number; ramScore: number };
+  label1: string;
+  label2: string;
+}) => {
+  const [selectedRes, setSelectedRes] = useState<Resolution>("1080p");
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+      <div className="flex items-center gap-3 mb-6">
+        <Gamepad2 className="w-5 h-5 text-foreground" />
+        <h3 className="font-heading text-xl font-bold text-foreground">FPS Comparison</h3>
+      </div>
+
+      <div className="flex gap-2 mb-6">
+        {resolutions.map((res) => (
+          <button
+            key={res}
+            onClick={() => setSelectedRes(res)}
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+              selectedRes === res ? "bg-foreground text-background" : "bg-muted text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Monitor className="w-3.5 h-3.5" />
+            {res}
+          </button>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-border overflow-hidden">
+        <div className="grid grid-cols-[1.5fr_repeat(4,1fr)] gap-0 bg-muted/50 px-4 py-3 text-xs uppercase tracking-widest text-muted-foreground">
+          <div>Game</div>
+          {settings.map((s) => (
+            <div key={s} className="text-center">{s}</div>
+          ))}
+        </div>
+
+        {games.map((game, i) => (
+          <motion.div
+            key={game.name}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.03 * i }}
+            className={`${i < games.length - 1 ? "border-b border-border" : ""}`}
+          >
+            <div className="grid grid-cols-[1.5fr_repeat(4,1fr)] gap-0 px-4 py-3 items-center hover:bg-muted/30 transition-colors">
+              <span className="text-sm font-medium text-foreground truncate">{game.name}</span>
+              {settings.map((setting) => {
+                const fps1 = estimateFps(build1.gpuScore, build1.cpuScore, build1.ramScore, game, selectedRes, setting);
+                const fps2 = estimateFps(build2.gpuScore, build2.cpuScore, build2.ramScore, game, selectedRes, setting);
+                const pctDiff = fps1 !== null && fps2 !== null && fps2 > 0 ? Math.round(((fps1 - fps2) / fps2) * 100) : null;
+
+                return (
+                  <div key={setting} className="text-center space-y-0.5">
+                    <div className="flex items-center justify-center gap-2 text-xs">
+                      {fps1 === null ? (
+                        <span className="text-red-500/60 font-bold">N/A</span>
+                      ) : (
+                        <span className={`font-bold ${getFpsColor(fps1)}`}>{fps1}</span>
+                      )}
+                      <span className="text-muted-foreground/40">vs</span>
+                      {fps2 === null ? (
+                        <span className="text-red-500/60 font-bold">N/A</span>
+                      ) : (
+                        <span className={`font-bold ${getFpsColor(fps2)}`}>{fps2}</span>
+                      )}
+                    </div>
+                    {pctDiff !== null && pctDiff !== 0 && (
+                      <span className={`text-[10px] font-semibold ${pctDiff > 0 ? "text-green-400" : "text-red-400"}`}>
+                        {pctDiff > 0 ? "+" : ""}{pctDiff}%
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-center gap-6 mt-4 text-xs text-muted-foreground">
+        <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-foreground inline-block" /> {label1}</span>
+        <span className="text-muted-foreground/40">vs</span>
+        <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-muted-foreground inline-block" /> {label2}</span>
+      </div>
+
+      <p className="text-xs text-muted-foreground mt-3 text-center">
+        * Estimates based on component scores. Actual performance varies by driver, game version, and system configuration.
+      </p>
+    </motion.div>
+  );
+};
+
+// ── Build Selector Panel (for compare mode) ──
+const BuildPanel = ({ label, cpu, gpu, ram, setCpu, setGpu, setRam, onChanged }: {
+  label: string;
+  cpu: { name: string; score: number } | null;
+  gpu: { name: string; score: number } | null;
+  ram: { name: string; score: number } | null;
+  setCpu: (v: any) => void;
+  setGpu: (v: any) => void;
+  setRam: (v: any) => void;
+  onChanged: () => void;
+}) => {
+  const select = (setter: (v: any) => void) => (item: { name: string; score: number }) => {
+    setter(item);
+    onChanged();
+  };
+
+  return (
+    <div className="space-y-4">
+      <h3 className="font-heading text-lg font-bold text-foreground text-center mb-4">{label}</h3>
+      <SearchDropdown label="CPU" icon={Cpu} items={cpuList} selected={cpu} onSelect={select(setCpu)} />
+      <SearchDropdown label="GPU" icon={MonitorPlay} items={gpuList} selected={gpu} onSelect={select(setGpu)} />
+      <RamSelector selected={ram} onSelect={select(setRam)} />
+    </div>
+  );
+};
+
 // ── Main Page ──
 const PcAnalyzer = () => {
+  const [mode, setMode] = useState<"single" | "compare">("single");
+
+  // Single mode state
   const [cpu, setCpu] = useState<{ name: string; score: number } | null>(null);
   const [gpu, setGpu] = useState<{ name: string; score: number } | null>(null);
   const [ram, setRam] = useState<{ name: string; score: number } | null>(null);
   const [results, setResults] = useState<Results | null>(null);
   const [showResults, setShowResults] = useState(false);
 
+  // Compare mode state
+  const [cpu1, setCpu1] = useState<{ name: string; score: number } | null>(null);
+  const [gpu1, setGpu1] = useState<{ name: string; score: number } | null>(null);
+  const [ram1, setRam1] = useState<{ name: string; score: number } | null>(null);
+  const [cpu2, setCpu2] = useState<{ name: string; score: number } | null>(null);
+  const [gpu2, setGpu2] = useState<{ name: string; score: number } | null>(null);
+  const [ram2, setRam2] = useState<{ name: string; score: number } | null>(null);
+  const [compareResults, setCompareResults] = useState<{ r1: Results; r2: Results } | null>(null);
+  const [showCompare, setShowCompare] = useState(false);
+
   const allSelected = cpu && gpu && ram;
+  const allCompareSelected = cpu1 && gpu1 && ram1 && cpu2 && gpu2 && ram2;
 
   const handleAnalyze = () => {
     if (!allSelected) return;
@@ -638,9 +773,24 @@ const PcAnalyzer = () => {
     setShowResults(true);
   };
 
+  const handleCompare = () => {
+    if (!allCompareSelected) return;
+    setCompareResults({
+      r1: analyze(cpu1.score, gpu1.score, ram1.score),
+      r2: analyze(cpu2.score, gpu2.score, ram2.score),
+    });
+    setShowCompare(true);
+  };
+
   const handleReset = () => {
     setCpu(null); setGpu(null); setRam(null);
     setResults(null); setShowResults(false);
+  };
+
+  const handleResetCompare = () => {
+    setCpu1(null); setGpu1(null); setRam1(null);
+    setCpu2(null); setGpu2(null); setRam2(null);
+    setCompareResults(null); setShowCompare(false);
   };
 
   const selectAndClear = (setter: (v: any) => void) => (item: { name: string; score: number }) => {
@@ -652,13 +802,13 @@ const PcAnalyzer = () => {
   return (
     <Layout>
       <section className="pt-32 pb-24 lg:pt-40 lg:pb-32">
-        <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
+        <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-foreground text-background mb-6">
               <Gauge className="w-7 h-7" />
@@ -669,125 +819,225 @@ const PcAnalyzer = () => {
             </p>
           </motion.div>
 
-          {/* Selectors */}
-          <div className="max-w-3xl mx-auto space-y-6">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <SearchDropdown label="Processor (CPU)" icon={Cpu} items={cpuList} selected={cpu} onSelect={selectAndClear(setCpu)} />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-              <SearchDropdown label="Graphics Card (GPU)" icon={MonitorPlay} items={gpuList} selected={gpu} onSelect={selectAndClear(setGpu)} />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <RamSelector selected={ram} onSelect={selectAndClear(setRam)} />
-            </motion.div>
+          {/* Mode Tabs */}
+          <div className="flex items-center justify-center gap-2 mb-14">
+            {(["single", "compare"] as const).map((m) => (
+              <button
+                key={m}
+                onClick={() => setMode(m)}
+                className={`px-6 py-3 rounded-full text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                  mode === m
+                    ? "bg-foreground text-background"
+                    : "bg-muted text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {m === "single" ? "Single Build" : "Compare Builds"}
+              </button>
+            ))}
           </div>
 
-          {/* Actions */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="flex items-center justify-center gap-4 mt-14"
-          >
-            <motion.button
-              whileHover={allSelected ? { scale: 1.05 } : {}}
-              whileTap={allSelected ? { scale: 0.97 } : {}}
-              onClick={handleAnalyze}
-              disabled={!allSelected}
-              className={`inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest px-10 py-4 rounded-full transition-all duration-300 ${
-                allSelected
-                  ? "bg-foreground text-background"
-                  : "bg-muted text-muted-foreground cursor-not-allowed"
-              }`}
-            >
-              Analyze <ArrowRight className="w-4 h-4" />
-            </motion.button>
-            {(allSelected || showResults) && (
-              <button onClick={handleReset} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
-                <RotateCcw className="w-4 h-4" /> Reset
-              </button>
-            )}
-          </motion.div>
-
-          {/* Results */}
-          <AnimatePresence>
-            {showResults && results && cpu && gpu && ram && (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6 }}
-                className="mt-20 space-y-12"
-              >
-                {/* Score */}
-                <div className="text-center">
-                  <ScoreRing score={results.overallScore} />
-                  <p className="text-muted-foreground text-xs uppercase tracking-widest mt-4">Performance Score</p>
-                </div>
-
-                {/* Verdict */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="flex items-start gap-4 p-6 rounded-2xl bg-muted max-w-3xl mx-auto"
-                >
-                  <Info className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
-                  <p className="text-foreground">{results.verdict}</p>
-                </motion.div>
-
-                {/* Game FPS Table */}
-                <GameFpsSection gpuScore={gpu.score} cpuScore={cpu.score} ramScore={ram.score} />
-
-                {/* Bottleneck */}
-                {results.bottleneck && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex items-start gap-4 p-6 rounded-2xl border border-border max-w-3xl mx-auto"
-                  >
-                    <AlertTriangle className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
-                    <div>
-                      <p className="font-heading font-bold text-foreground mb-1">Potential Bottleneck</p>
-                      <p className="text-muted-foreground text-sm">{results.bottleneck}</p>
-                    </div>
+          <AnimatePresence mode="wait">
+            {mode === "single" ? (
+              <motion.div key="single" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
+                {/* Single mode selectors */}
+                <div className="max-w-3xl mx-auto space-y-6">
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                    <SearchDropdown label="Processor (CPU)" icon={Cpu} items={cpuList} selected={cpu} onSelect={selectAndClear(setCpu)} />
                   </motion.div>
-                )}
-
-                {/* Upgrades */}
-                {results.upgrades.length > 0 && (
-                  <div className="max-w-3xl mx-auto">
-                    <h3 className="font-heading text-xl font-bold text-foreground mb-4">
-                      {results.isHighEnd ? "You Are Set" : "Recommended Upgrades"}
-                    </h3>
-                    <div className="space-y-3">
-                      {results.upgrades.map((u, i) => (
-                        <motion.div
-                          key={u}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.1 * i }}
-                          className="flex items-start gap-3"
-                        >
-                          <CheckCircle className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
-                          <p className="text-muted-foreground">{u}</p>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* CTA */}
-                <div className="text-center pt-6">
-                  <p className="text-muted-foreground mb-4">Need help upgrading? We can do it for you.</p>
-                  <Link
-                    to="/contact"
-                    className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300"
-                  >
-                    Get a Quote <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                    <SearchDropdown label="Graphics Card (GPU)" icon={MonitorPlay} items={gpuList} selected={gpu} onSelect={selectAndClear(setGpu)} />
+                  </motion.div>
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                    <RamSelector selected={ram} onSelect={selectAndClear(setRam)} />
+                  </motion.div>
                 </div>
+
+                {/* Actions */}
+                <div className="flex items-center justify-center gap-4 mt-14">
+                  <motion.button
+                    whileHover={allSelected ? { scale: 1.05 } : {}}
+                    whileTap={allSelected ? { scale: 0.97 } : {}}
+                    onClick={handleAnalyze}
+                    disabled={!allSelected}
+                    className={`inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest px-10 py-4 rounded-full transition-all duration-300 ${
+                      allSelected ? "bg-foreground text-background" : "bg-muted text-muted-foreground cursor-not-allowed"
+                    }`}
+                  >
+                    Analyze <ArrowRight className="w-4 h-4" />
+                  </motion.button>
+                  {(allSelected || showResults) && (
+                    <button onClick={handleReset} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
+                      <RotateCcw className="w-4 h-4" /> Reset
+                    </button>
+                  )}
+                </div>
+
+                {/* Results */}
+                <AnimatePresence>
+                  {showResults && results && cpu && gpu && ram && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.6 }}
+                      className="mt-20 space-y-12"
+                    >
+                      <div className="text-center">
+                        <ScoreRing score={results.overallScore} />
+                        <p className="text-muted-foreground text-xs uppercase tracking-widest mt-4">Performance Score</p>
+                      </div>
+
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+                        className="flex items-start gap-4 p-6 rounded-2xl bg-muted max-w-3xl mx-auto"
+                      >
+                        <Info className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
+                        <p className="text-foreground">{results.verdict}</p>
+                      </motion.div>
+
+                      <GameFpsSection gpuScore={gpu.score} cpuScore={cpu.score} ramScore={ram.score} />
+
+                      {results.bottleneck && (
+                        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
+                          className="flex items-start gap-4 p-6 rounded-2xl border border-border max-w-3xl mx-auto"
+                        >
+                          <AlertTriangle className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
+                          <div>
+                            <p className="font-heading font-bold text-foreground mb-1">Potential Bottleneck</p>
+                            <p className="text-muted-foreground text-sm">{results.bottleneck}</p>
+                          </div>
+                        </motion.div>
+                      )}
+
+                      {results.upgrades.length > 0 && (
+                        <div className="max-w-3xl mx-auto">
+                          <h3 className="font-heading text-xl font-bold text-foreground mb-4">
+                            {results.isHighEnd ? "You Are Set" : "Recommended Upgrades"}
+                          </h3>
+                          <div className="space-y-3">
+                            {results.upgrades.map((u, i) => (
+                              <motion.div key={u} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 * i }}
+                                className="flex items-start gap-3"
+                              >
+                                <CheckCircle className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
+                                <p className="text-muted-foreground">{u}</p>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="text-center pt-6">
+                        <p className="text-muted-foreground mb-4">Need help upgrading? We can do it for you.</p>
+                        <Link to="/contact" className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300">
+                          Get a Quote <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ) : (
+              <motion.div key="compare" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
+                {/* Compare mode: two build panels side by side */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                  <div className="rounded-3xl border border-border bg-card/20 p-6 lg:p-8">
+                    <BuildPanel label="Build 1" cpu={cpu1} gpu={gpu1} ram={ram1} setCpu={setCpu1} setGpu={setGpu1} setRam={setRam1} onChanged={() => setShowCompare(false)} />
+                  </div>
+                  <div className="rounded-3xl border border-border bg-card/20 p-6 lg:p-8">
+                    <BuildPanel label="Build 2" cpu={cpu2} gpu={gpu2} ram={ram2} setCpu={setCpu2} setGpu={setGpu2} setRam={setRam2} onChanged={() => setShowCompare(false)} />
+                  </div>
+                </div>
+
+                {/* Compare Actions */}
+                <div className="flex items-center justify-center gap-4 mt-14">
+                  <motion.button
+                    whileHover={allCompareSelected ? { scale: 1.05 } : {}}
+                    whileTap={allCompareSelected ? { scale: 0.97 } : {}}
+                    onClick={handleCompare}
+                    disabled={!allCompareSelected}
+                    className={`inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest px-10 py-4 rounded-full transition-all duration-300 ${
+                      allCompareSelected ? "bg-foreground text-background" : "bg-muted text-muted-foreground cursor-not-allowed"
+                    }`}
+                  >
+                    Compare <ArrowRight className="w-4 h-4" />
+                  </motion.button>
+                  {(allCompareSelected || showCompare) && (
+                    <button onClick={handleResetCompare} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
+                      <RotateCcw className="w-4 h-4" /> Reset
+                    </button>
+                  )}
+                </div>
+
+                {/* Compare Results */}
+                <AnimatePresence>
+                  {showCompare && compareResults && cpu1 && gpu1 && ram1 && cpu2 && gpu2 && ram2 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.6 }}
+                      className="mt-20 space-y-12"
+                    >
+                      {/* Side by side scores */}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {[
+                          { label: "Build 1", r: compareResults.r1, cpuN: cpu1.name, gpuN: gpu1.name, ramN: ram1.name },
+                          { label: "Build 2", r: compareResults.r2, cpuN: cpu2.name, gpuN: gpu2.name, ramN: ram2.name },
+                        ].map((b, idx) => {
+                          const other = idx === 0 ? compareResults.r2 : compareResults.r1;
+                          const pct = other.overallScore > 0 ? Math.round(((b.r.overallScore - other.overallScore) / other.overallScore) * 100) : 0;
+
+                          return (
+                            <motion.div
+                              key={b.label}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.15 }}
+                              className="rounded-3xl border border-border p-8 text-center"
+                            >
+                              <h3 className="font-heading text-lg font-bold text-foreground mb-1">{b.label}</h3>
+                              <p className="text-xs text-muted-foreground mb-6">{b.cpuN} / {b.gpuN} / {b.ramN}</p>
+                              <ScoreRing score={b.r.overallScore} />
+                              <p className="text-muted-foreground text-xs uppercase tracking-widest mt-4 mb-2">Performance Score</p>
+
+                              {pct !== 0 && (
+                                <motion.div
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: 0.5 + idx * 0.1 }}
+                                  className={`inline-flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold mt-3 ${
+                                    pct > 0 ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"
+                                  }`}
+                                >
+                                  {pct > 0 ? "+" : ""}{pct}% {pct > 0 ? "faster" : "slower"}
+                                </motion.div>
+                              )}
+
+                              <div className="mt-6 p-4 rounded-2xl bg-muted text-left">
+                                <p className="text-sm text-foreground">{b.r.verdict}</p>
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+
+                      {/* FPS comparison table */}
+                      <CompareFpsSection
+                        build1={{ gpuScore: gpu1.score, cpuScore: cpu1.score, ramScore: ram1.score }}
+                        build2={{ gpuScore: gpu2.score, cpuScore: cpu2.score, ramScore: ram2.score }}
+                        label1={`Build 1 (${gpu1.name})`}
+                        label2={`Build 2 (${gpu2.name})`}
+                      />
+
+                      <div className="text-center pt-6">
+                        <p className="text-muted-foreground mb-4">Need help deciding? We will build it for you.</p>
+                        <Link to="/contact" className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300">
+                          Get a Quote <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             )}
           </AnimatePresence>
