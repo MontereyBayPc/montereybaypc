@@ -26,7 +26,7 @@ const reviews = [
 const infoItems = [
   { number: "01", title: "Build Time", desc: "Custom PCs take 1-2 weeks to build, test, and deliver.", icon: "⏱" },
   { number: "02", title: "Local Only", desc: "We do not ship nationwide. Pickup or local delivery only.", icon: "📍" },
-  { number: "03", title: "No Warranties", desc: "We do not offer warranties on builds.", icon: "📋" },
+  { number: "03", title: "Satisfaction Guaranteed", desc: "We work with you until you are 100% happy with your build.", icon: "✅" },
   { number: "04", title: "Technical Support", desc: "Every build comes with technical support included with your purchase.", icon: "🛠" },
 ];
 
