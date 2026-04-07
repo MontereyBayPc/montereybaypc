@@ -470,40 +470,59 @@ const SearchDropdown = ({ label, icon: Icon, items, selected, onSelect }: {
   );
 };
 
-// ── RAM Selector ──
+// ── RAM Selector (Slider) ──
 const RamSelector = ({ selected, onSelect }: {
   selected: { name: string; score: number } | null;
   onSelect: (item: { name: string; score: number }) => void;
-}) => (
-  <div>
-    <div className="flex items-center gap-3 mb-4 px-1">
-      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-muted">
-        <MemoryStick className="w-4 h-4 text-muted-foreground" />
+}) => {
+  const currentIndex = selected ? ramOptions.findIndex(o => o.name === selected.name) : -1;
+
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-4 px-1">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-muted">
+          <MemoryStick className="w-4 h-4 text-muted-foreground" />
+        </div>
+        <p className="text-xs uppercase tracking-widest text-muted-foreground">Memory (RAM)</p>
       </div>
-      <p className="text-xs uppercase tracking-widest text-muted-foreground">Memory (RAM)</p>
-    </div>
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      {ramOptions.map((opt) => {
-        const active = selected?.name === opt.name;
-        return (
-          <motion.button
-            key={opt.name}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => onSelect(opt)}
-            className={`relative px-4 py-5 rounded-2xl border text-center transition-all duration-300 ${
-              active
-                ? "border-foreground bg-foreground text-background"
-                : "border-border hover:border-foreground/20 bg-card/30 text-muted-foreground hover:text-foreground"
-            }`}
+      <div className="rounded-2xl border border-border bg-card/30 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <span className="text-sm text-muted-foreground">RAM Amount</span>
+          <motion.span
+            key={selected?.name}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-lg font-bold text-foreground"
           >
-            <span className="text-sm font-medium">{opt.name}</span>
-          </motion.button>
-        );
-      })}
+            {selected?.name || "Select RAM"}
+          </motion.span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={ramOptions.length - 1}
+          step={1}
+          value={currentIndex >= 0 ? currentIndex : 0}
+          onChange={(e) => onSelect(ramOptions[parseInt(e.target.value)])}
+          className="w-full h-2 rounded-full appearance-none cursor-pointer bg-muted accent-foreground [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-foreground [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-background"
+        />
+        <div className="flex justify-between mt-3">
+          {ramOptions.map((opt, i) => (
+            <button
+              key={opt.name}
+              onClick={() => onSelect(opt)}
+              className={`text-xs transition-colors ${
+                currentIndex === i ? "text-foreground font-semibold" : "text-muted-foreground/60 hover:text-muted-foreground"
+              }`}
+            >
+              {opt.name}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ── Score Ring ──
 const ScoreRing = ({ score }: { score: number }) => {
@@ -1000,16 +1019,14 @@ const PcAnalyzer = () => {
                               <ScoreRing score={b.r.overallScore} />
                               <p className="text-muted-foreground text-xs uppercase tracking-widest mt-4 mb-2">Performance Score</p>
 
-                              {pct !== 0 && (
+                              {pct > 0 && (
                                 <motion.div
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: 0.5 + idx * 0.1 }}
-                                  className={`inline-flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold mt-3 ${
-                                    pct > 0 ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"
-                                  }`}
+                                  className="inline-flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold mt-3 bg-green-500/10 text-green-400"
                                 >
-                                  {pct > 0 ? "+" : ""}{pct}% {pct > 0 ? "faster" : "slower"}
+                                  +{pct}% faster
                                 </motion.div>
                               )}
 
