@@ -235,10 +235,16 @@ const cpuList = [
 ];
 
 const ramOptions = [
-  { name: "8 GB or less", score: 20 },
+  { name: "4 GB", score: 10 },
+  { name: "6 GB", score: 15 },
+  { name: "8 GB", score: 20 },
+  { name: "12 GB", score: 35 },
   { name: "16 GB", score: 50 },
+  { name: "24 GB", score: 65 },
   { name: "32 GB", score: 80 },
-  { name: "64 GB+", score: 100 },
+  { name: "48 GB", score: 90 },
+  { name: "64 GB", score: 95 },
+  { name: "128 GB", score: 100 },
 ];
 
 // ── Game FPS Database ──
@@ -507,17 +513,20 @@ const RamSelector = ({ selected, onSelect }: {
           className="w-full h-2 rounded-full appearance-none cursor-pointer bg-muted accent-foreground [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-foreground [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-background"
         />
         <div className="flex justify-between mt-3">
-          {ramOptions.map((opt, i) => (
-            <button
-              key={opt.name}
-              onClick={() => onSelect(opt)}
-              className={`text-xs transition-colors ${
-                currentIndex === i ? "text-foreground font-semibold" : "text-muted-foreground/60 hover:text-muted-foreground"
-              }`}
-            >
-              {opt.name}
-            </button>
-          ))}
+          {ramOptions.map((opt, i) => {
+            const showLabel = [0, 2, 4, 6, 8, 9].includes(i);
+            return showLabel ? (
+              <button
+                key={opt.name}
+                onClick={() => onSelect(opt)}
+                className={`text-xs transition-colors ${
+                  currentIndex === i ? "text-foreground font-semibold" : "text-muted-foreground/60 hover:text-muted-foreground"
+                }`}
+              >
+                {opt.name}
+              </button>
+            ) : <span key={opt.name} className="text-xs invisible">.</span>;
+          })}
         </div>
       </div>
     </div>
