@@ -235,10 +235,16 @@ const cpuList = [
 ];
 
 const ramOptions = [
-  { name: "8 GB or less", score: 20 },
+  { name: "4 GB", score: 10 },
+  { name: "6 GB", score: 15 },
+  { name: "8 GB", score: 20 },
+  { name: "12 GB", score: 35 },
   { name: "16 GB", score: 50 },
+  { name: "24 GB", score: 65 },
   { name: "32 GB", score: 80 },
-  { name: "64 GB+", score: 100 },
+  { name: "48 GB", score: 90 },
+  { name: "64 GB", score: 95 },
+  { name: "128 GB", score: 100 },
 ];
 
 // ── Game FPS Database ──
