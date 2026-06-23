@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCart } from "@/context/CartContext";
 
 const navLinks = [
   { to: "/", label: "Home" },
+  { to: "/prebuilts", label: "Prebuilts" },
   { to: "/services", label: "Services" },
   { to: "/pc-analyzer", label: "PC Check" },
   { to: "/about", label: "About" },
@@ -15,6 +17,7 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { totalItems } = useCart();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -38,15 +41,37 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            <Link
+              to="/cart"
+              aria-label="Cart"
+              className="relative text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-foreground text-background text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
           </div>
 
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden text-foreground"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center gap-4 lg:hidden">
+            <Link to="/cart" aria-label="Cart" className="relative text-foreground">
+              <ShoppingCart className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-foreground text-background text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-foreground"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
