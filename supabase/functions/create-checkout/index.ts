@@ -38,10 +38,18 @@ async function createCheckoutSession(options: {
     mode: "payment",
     ui_mode: "embedded_page",
     return_url: options.returnUrl,
+    automatic_tax: { enabled: true },
+    phone_number_collection: { enabled: true },
+    ...(options.includeDelivery && {
+      shipping_address_collection: { allowed_countries: ["US"] },
+    }),
     payment_intent_data: {
       description: `Monterey Bay PC order — ${options.items
         .map((i) => `${i.priceId} x${i.quantity}`)
         .join(", ")}`,
+    },
+    metadata: {
+      fulfillment: options.includeDelivery ? "local_delivery" : "local_pickup",
     },
   });
 
