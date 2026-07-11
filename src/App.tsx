@@ -15,6 +15,7 @@ import Prebuilts from "./pages/Prebuilts";
 import PrebuiltDetail from "./pages/PrebuiltDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import CheckoutReturn from "./pages/CheckoutReturn";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
