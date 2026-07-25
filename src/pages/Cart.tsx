@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { useCart } from "@/context/CartContext";
 
 const Cart = () => {

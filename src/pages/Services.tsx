@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Wrench, ArrowUpCircle, Bug, Sparkles, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import SectionHeading from "@/components/SectionHeading";
 
 const services = [

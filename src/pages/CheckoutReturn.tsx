@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { useCart } from "@/context/CartContext";
 
 const CheckoutReturn = () => {

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { Lock } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useCart } from "@/context/CartContext";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";

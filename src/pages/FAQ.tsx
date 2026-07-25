@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 
 const faqs = [
   { q: "How long does a custom build take?", a: "Custom PCs take 1-2 weeks to build, thoroughly test, and prepare for pickup." },

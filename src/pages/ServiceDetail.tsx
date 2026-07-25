@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Wrench, ArrowUpCircle, Bug, Sparkles, CheckCircle, Clock, DollarSign } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 
 const serviceData: Record<string, {
   icon: typeof Wrench;

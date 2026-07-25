@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import SectionHeading from "@/components/SectionHeading";
 import heroImg from "@/assets/hero-pc.jpg";
 
