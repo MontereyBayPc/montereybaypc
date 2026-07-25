@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Monitor, Cpu, HardDrive, ArrowRight, Star } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { prebuilts } from "@/data/prebuilts";
 import heroImg1 from "@/assets/hero-pc.jpg";
 import heroImg2 from "@/assets/hero-pc-2.jpg";
@@ -51,6 +52,7 @@ const Index = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       {/* Hero */}
       <section className="relative min-h-[100vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">

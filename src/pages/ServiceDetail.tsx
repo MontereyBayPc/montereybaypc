@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Wrench, ArrowUpCircle, Bug, Sparkles, CheckCircle, Clock, DollarSign } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 
 const serviceData: Record<string, {
   icon: typeof Wrench;
@@ -110,6 +111,7 @@ const ServiceDetail = () => {
   if (!service) {
     return (
       <Layout>
+        <CanonicalHome />
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="text-center">
             <h1 className="font-heading text-4xl font-bold text-foreground mb-4">Service Not Found</h1>
@@ -126,6 +128,7 @@ const ServiceDetail = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       {/* Header */}
       <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
         <div className="container mx-auto px-4 lg:px-8 max-w-4xl">

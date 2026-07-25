@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { useCart } from "@/context/CartContext";
 
 const CheckoutReturn = () => {
@@ -16,6 +17,7 @@ const CheckoutReturn = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       <section className="py-32 container mx-auto px-4 text-center">
         <motion.div
           initial={{ scale: 0 }}

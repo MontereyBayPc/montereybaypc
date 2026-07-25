@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Cpu, MemoryStick, HardDrive } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { prebuilts } from "@/data/prebuilts";
 
 const Prebuilts = () => {
   return (
     <Layout>
+      <CanonicalHome />
       <section className="py-20 lg:py-28">
         <div className="container mx-auto px-4 lg:px-8">
           <motion.div

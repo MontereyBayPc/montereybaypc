@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Wrench, ArrowUpCircle, Bug, Sparkles, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import SectionHeading from "@/components/SectionHeading";
 
 const services = [
@@ -13,6 +14,7 @@ const services = [
 
 const Services = () => (
   <Layout>
+    <CanonicalHome />
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeading title="What We Offer" description="Professional PC services from passionate enthusiasts." />

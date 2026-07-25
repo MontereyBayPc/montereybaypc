@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import SectionHeading from "@/components/SectionHeading";
 import heroImg from "@/assets/hero-pc.jpg";
 
 const About = () => (
   <Layout>
+    <CanonicalHome />
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeading title="About Us" />

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cpu, MonitorPlay, MemoryStick, Gauge, ArrowRight, RotateCcw, AlertTriangle, CheckCircle, Info, ChevronDown, Search, Gamepad2, Monitor } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { Link } from "react-router-dom";
 
 // ── GPU Database with performance scores (1-100) ──
@@ -829,6 +830,7 @@ const PcAnalyzer = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       <section className="pt-32 pb-24 lg:pt-40 lg:pb-32">
         <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
           {/* Header */}

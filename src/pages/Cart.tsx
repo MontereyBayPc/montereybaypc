@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
+import CanonicalHome from "@/components/CanonicalHome";
 import { useCart } from "@/context/CartContext";
 
 const Cart = () => {
@@ -8,6 +9,7 @@ const Cart = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8 max-w-4xl">
           <h1 className="font-heading text-5xl lg:text-6xl font-bold text-foreground mb-10">Your Cart</h1>
