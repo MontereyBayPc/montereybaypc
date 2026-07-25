@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, ShoppingCart } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { getPrebuilt } from "@/data/prebuilts";
 import { useCart } from "@/context/CartContext";
@@ -32,6 +33,9 @@ const PrebuiltDetail = () => {
 
   return (
     <Layout>
+      <Helmet>
+        <link rel="canonical" href="/" />
+      </Helmet>
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
           <Link to="/prebuilts" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-10">
