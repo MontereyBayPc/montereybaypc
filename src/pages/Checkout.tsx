@@ -60,6 +60,7 @@ const Checkout = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       <PaymentTestModeBanner />
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8 max-w-5xl">

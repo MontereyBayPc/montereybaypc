@@ -111,6 +111,7 @@ const ServiceDetail = () => {
   if (!service) {
     return (
       <Layout>
+        <CanonicalHome />
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="text-center">
             <h1 className="font-heading text-4xl font-bold text-foreground mb-4">Service Not Found</h1>
@@ -127,6 +128,7 @@ const ServiceDetail = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       {/* Header */}
       <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
         <div className="container mx-auto px-4 lg:px-8 max-w-4xl">

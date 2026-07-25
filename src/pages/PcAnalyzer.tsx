@@ -830,6 +830,7 @@ const PcAnalyzer = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       <section className="pt-32 pb-24 lg:pt-40 lg:pb-32">
         <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
           {/* Header */}
