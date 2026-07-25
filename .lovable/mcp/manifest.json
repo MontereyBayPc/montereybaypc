@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "monterey-bay-pcs-mcp",
+      "version": "0.1.0",
+      "title": "Monterey Bay PCs"
+    },
+    "tools": [
+      {
+        "name": "list_services",
+        "title": "List services",
+        "description": "List all Monterey Bay PCs services offered (custom builds, upgrades, repair, cleaning) with descriptions and starting prices in USD.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_prebuilts",
+        "title": "List prebuilt PCs",
+        "description": "List all prebuilt PC models offered by Monterey Bay PCs with tier, price (USD), tagline, and slug. Use `get_prebuilt` for full specs and performance benchmarks.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_prebuilt",
+        "title": "Get prebuilt PC details",
+        "description": "Get full details for one prebuilt PC by slug — specs, performance benchmarks, what's in the box, and best use cases.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Prebuilt slug. One of: starter, mid, high-end, extreme."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_contact_info",
+        "title": "Get contact info",
+        "description": "Get contact information for Monterey Bay PCs — email, Instagram, website, and service area.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

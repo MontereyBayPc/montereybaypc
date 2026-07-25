@@ -21,7 +21,7 @@ const Contact = () => {
     e.preventDefault();
     const result = contactSchema.safeParse(form);
     if (!result.success) {
-      toast.error(result.error.errors[0].message);
+      toast.error(result.error.issues[0].message);
       return;
     }
     toast.success("Message sent! We'll get back to you soon.");
