@@ -8,6 +8,7 @@ import { prebuilts } from "@/data/prebuilts";
 const Prebuilts = () => {
   return (
     <Layout>
+      <CanonicalHome />
       <section className="py-20 lg:py-28">
         <div className="container mx-auto px-4 lg:px-8">
           <motion.div

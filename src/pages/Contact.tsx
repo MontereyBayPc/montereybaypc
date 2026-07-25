@@ -31,6 +31,7 @@ const Contact = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       <section className="py-16 lg:py-24 min-h-[80vh] flex items-center">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-5xl mx-auto items-center">

@@ -17,6 +17,7 @@ const CheckoutReturn = () => {
 
   return (
     <Layout>
+      <CanonicalHome />
       <section className="py-32 container mx-auto px-4 text-center">
         <motion.div
           initial={{ scale: 0 }}
