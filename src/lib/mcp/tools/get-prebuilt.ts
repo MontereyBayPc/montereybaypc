@@ -1,6 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-import { getPrebuilt, prebuilts } from "@/data/prebuilts";
+import { getPrebuilt, prebuilts } from "../../../data/prebuilts";
 
 export default defineTool({
   name: "get_prebuilt",
