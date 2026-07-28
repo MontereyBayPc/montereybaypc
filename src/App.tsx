@@ -7,12 +7,12 @@ import { CartProvider } from "@/context/CartContext";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
-import PcAnalyzer from "./pages/PcAnalyzer";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import Prebuilts from "./pages/Prebuilts";
 import PrebuiltDetail from "./pages/PrebuiltDetail";
+import Subscriptions from "./pages/Subscriptions";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import CheckoutReturn from "./pages/CheckoutReturn";
@@ -31,7 +31,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/services" element={<Services />} />
             <Route path="/services/:slug" element={<ServiceDetail />} />
-            <Route path="/pc-analyzer" element={<PcAnalyzer />} />
+            <Route path="/subscriptions" element={<Subscriptions />} />
             <Route path="/prebuilts" element={<Prebuilts />} />
             <Route path="/prebuilts/:slug" element={<PrebuiltDetail />} />
             <Route path="/cart" element={<Cart />} />

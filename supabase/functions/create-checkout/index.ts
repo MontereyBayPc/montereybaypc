@@ -14,7 +14,6 @@ async function createCheckoutSession(options: {
   const priceIds = [...options.items.map((i) => i.priceId)];
   if (options.includeDelivery) priceIds.push("local_delivery");
 
-  // Resolve human-readable price IDs to Stripe price objects via lookup_keys.
   const prices = await stripe.prices.list({
     lookup_keys: priceIds,
     limit: 100,
@@ -27,7 +26,16 @@ async function createCheckoutSession(options: {
     return { price: p.id, quantity: i.quantity };
   });
 
-  if (options.includeDelivery) {
+  const isSubscription = options.items.some((i) => {
+    const p = priceByLookup.get(i.priceId);
+    return p?.type === "recurring";
+  });
+
+  if (isSubscription && (options.items.length > 1 || options.includeDelivery)) {
+    throw new Error("Subscription checkout supports a single item and no delivery");
+  }
+
+  if (options.includeDelivery && !isSubscription) {
     const p = priceByLookup.get("local_delivery");
     if (!p) throw new Error("Delivery price not found");
     line_items.push({ price: p.id, quantity: 1 });
@@ -35,21 +43,27 @@ async function createCheckoutSession(options: {
 
   const session = await stripe.checkout.sessions.create({
     line_items,
-    mode: "payment",
+    mode: isSubscription ? "subscription" : "payment",
     ui_mode: "embedded_page",
     return_url: options.returnUrl,
     automatic_tax: { enabled: true },
     phone_number_collection: { enabled: true },
-    ...(options.includeDelivery && {
+    ...(options.includeDelivery && !isSubscription && {
       shipping_address_collection: { allowed_countries: ["US"] },
     }),
-    payment_intent_data: {
-      description: `Monterey Bay PC order — ${options.items
-        .map((i) => `${i.priceId} x${i.quantity}`)
-        .join(", ")}`,
-    },
+    ...(!isSubscription && {
+      payment_intent_data: {
+        description: `Monterey Bay PC order — ${options.items
+          .map((i) => `${i.priceId} x${i.quantity}`)
+          .join(", ")}`,
+      },
+    }),
     metadata: {
-      fulfillment: options.includeDelivery ? "local_delivery" : "local_pickup",
+      fulfillment: isSubscription
+        ? "subscription"
+        : options.includeDelivery
+          ? "local_delivery"
+          : "local_pickup",
     },
   });
 
