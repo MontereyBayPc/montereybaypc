@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Monitor, Cpu, HardDrive, ArrowRight, Star } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
-import { prebuilts } from "@/data/prebuilts";
 import heroImg1 from "@/assets/hero-pc.jpg";
 import heroImg2 from "@/assets/hero-pc-2.jpg";
 import heroImg3 from "@/assets/hero-pc-3.jpg";
@@ -174,64 +173,6 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* Prebuilt PCs */}
-      <section className="py-24 lg:py-32 border-t border-border">
-        <div className="container mx-auto px-4 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="flex flex-wrap items-end justify-between gap-6 mb-12"
-          >
-            <div className="max-w-xl">
-              <div className="h-px w-12 bg-foreground/40 mb-6" />
-              <h2 className="font-heading text-3xl lg:text-5xl font-bold text-foreground">Shop Prebuilt PCs</h2>
-              <p className="text-muted-foreground mt-4">
-                Ready-to-order builds across every budget. Click any tier for full specs, benchmarks, and one-click checkout.
-              </p>
-            </div>
-            <Link
-              to="/prebuilts"
-              className="inline-flex items-center gap-2 font-heading text-sm font-semibold uppercase tracking-widest text-foreground border-b border-foreground/30 pb-1 hover:border-foreground transition-colors"
-            >
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {prebuilts.map((pc, i) => (
-              <motion.div
-                key={pc.slug}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-              >
-                <Link
-                  to={`/prebuilts/${pc.slug}`}
-                  className="group block border border-border rounded-2xl p-6 h-full hover:border-foreground/60 hover:-translate-y-1 transition-all duration-500 bg-muted/10"
-                >
-                  <div className="text-xs font-heading font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-                    {pc.tier}
-                  </div>
-                  <h3 className="font-heading text-2xl font-bold text-foreground mb-1">{pc.name}</h3>
-                  <p className="text-muted-foreground text-sm mb-5">{pc.tagline}</p>
-                  <div className="text-xs text-muted-foreground space-y-1 border-t border-border pt-4">
-                    <div className="truncate">{pc.specs.gpu}</div>
-                    <div className="truncate">{pc.specs.cpu}</div>
-                    <div className="truncate">{pc.specs.ram}</div>
-                  </div>
-                  <div className="mt-5 flex items-center justify-between">
-                    <span className="font-heading text-xl font-bold text-foreground">${pc.price.toLocaleString()}</span>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all" />
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* What to Know - Redesigned */}
       <section className="py-24 lg:py-32">
