@@ -4,9 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Monitor, Cpu, HardDrive, ArrowRight, Star } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
-import heroImg1 from "@/assets/hero-pc.jpg";
-import heroImg2 from "@/assets/hero-pc-2.jpg";
-import heroImg3 from "@/assets/hero-pc-3.jpg";
+import heroImg1 from "@/assets/hero-pc.webp";
+import heroImg2 from "@/assets/hero-pc-2.webp";
+import heroImg3 from "@/assets/hero-pc-3.webp";
 
 const heroImages = [heroImg1, heroImg2, heroImg3];
 
@@ -59,9 +59,12 @@ const Index = () => {
             <motion.img
               key={currentImage}
               src={heroImages[currentImage]}
-              alt="Custom gaming PC"
-              width={1920}
-              height={1080}
+              alt="Custom gaming PC built by Monterey Bay PCs"
+              width={1600}
+              height={900}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="w-full h-full object-cover"
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 0.45 }}

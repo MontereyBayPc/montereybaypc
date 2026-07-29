@@ -14,7 +14,10 @@ const services = [
 
 const Services = () => (
   <Layout>
-    <CanonicalHome />
+    <CanonicalHome
+      title={"PC Repair & Upgrade Services in Monterey Bay, CA | Monterey Bay PCs"}
+      description={"PC repair and upgrade services in Monterey Bay, CA: custom builds, GPU and RAM upgrades, troubleshooting, deep cleaning. Fast local turnaround."}
+    />
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeading title="What We Offer" description="Professional PC services from passionate enthusiasts." />

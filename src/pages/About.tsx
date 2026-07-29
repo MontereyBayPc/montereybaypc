@@ -2,11 +2,14 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 import SectionHeading from "@/components/SectionHeading";
-import heroImg from "@/assets/hero-pc.jpg";
+import heroImg from "@/assets/hero-pc.webp";
 
 const About = () => (
   <Layout>
-    <CanonicalHome />
+    <CanonicalHome
+      title={"About Monterey Bay PCs | Local Custom PC Builders"}
+      description={"Meet Monterey Bay PCs, a local custom PC building and repair shop serving the Monterey Bay area with hand-built rigs and honest service."}
+    />
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeading title="About Us" />
@@ -17,7 +20,7 @@ const About = () => (
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <img src={heroImg} alt="Monterey Bay PCs workshop" loading="lazy" width={1920} height={1080} className="rounded-xl border border-border w-full" />
+            <img src={heroImg} alt="Monterey Bay PCs workshop" loading="lazy" width={1365} height={768} className="rounded-xl border border-border w-full" />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
