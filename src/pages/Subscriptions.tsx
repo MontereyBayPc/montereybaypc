@@ -97,7 +97,10 @@ const Subscriptions = () => {
 
   return (
     <Layout>
-      <CanonicalHome />
+      <CanonicalHome
+      title={"PC Detailing Subscriptions | Monterey Bay PCs"}
+      description={"Yearly PC detailing plans in Monterey Bay: Essential, Pro, and Premium cleaning subscriptions to keep your PC and setup running cool."}
+    />
       <PaymentTestModeBanner />
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">

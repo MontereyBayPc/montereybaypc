@@ -6,7 +6,10 @@ import heroImg from "@/assets/hero-pc.jpg";
 
 const About = () => (
   <Layout>
-    <CanonicalHome />
+    <CanonicalHome
+      title={"About Monterey Bay PCs | Local Custom PC Builders"}
+      description={"Meet Monterey Bay PCs, a local custom PC building and repair shop serving the Monterey Bay area with hand-built rigs and honest service."}
+    />
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeading title="About Us" />

@@ -64,7 +64,10 @@ const FAQ = () => {
 
   return (
     <Layout>
-      <CanonicalHome />
+      <CanonicalHome
+      title={"FAQ — Build Times, Pricing & Pickup | Monterey Bay PCs"}
+      description={"Answers about build times, pricing, local pickup and delivery, parts sourcing, and support for Monterey Bay PCs customers."}
+    />
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4 lg:px-8 max-w-3xl">
           <motion.div
