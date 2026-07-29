@@ -39,6 +39,17 @@ const Prebuilts = () => {
                   to={`/prebuilts/${pc.slug}`}
                   className="group block border border-border rounded-2xl p-8 hover:border-foreground/60 transition-all duration-500 hover:-translate-y-1 bg-muted/20"
                 >
+                  <div className="mb-6 overflow-hidden rounded-xl border border-border bg-background/40">
+                    <img
+                      src={pc.image}
+                      alt={`${pc.name} prebuilt gaming PC`}
+                      width={800}
+                      height={600}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
                   <div className="flex items-start justify-between mb-6">
                     <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                       {pc.tier}
