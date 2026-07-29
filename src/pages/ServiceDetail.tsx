@@ -128,7 +128,11 @@ const ServiceDetail = () => {
 
   return (
     <Layout>
-      <CanonicalHome />
+      <CanonicalHome
+        title={`${service.title} in Monterey Bay, CA | Monterey Bay PCs`}
+        description={service.description.slice(0, 155)}
+      />
+
       {/* Header */}
       <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
         <div className="container mx-auto px-4 lg:px-8 max-w-4xl">
