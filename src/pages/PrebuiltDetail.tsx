@@ -34,6 +34,8 @@ const PrebuiltDetail = () => {
   return (
     <Layout>
       <Helmet>
+        <title>{`${pc.name} Prebuilt PC — Monterey Bay PCs`}</title>
+        <meta name="description" content={`${pc.name}: ${pc.tagline} ${pc.specs.cpu}, ${pc.specs.gpu}, ${pc.specs.ram}. Hand-built in Monterey Bay, CA.`} />
         <link rel="canonical" href="/" />
       </Helmet>
       <section className="py-16 lg:py-24">
@@ -41,6 +43,18 @@ const PrebuiltDetail = () => {
           <Link to="/prebuilts" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-10">
             <ArrowLeft className="w-4 h-4" /> All Prebuilts
           </Link>
+
+          <div className="mb-10 overflow-hidden rounded-2xl border border-border">
+            <img
+              src={pc.image}
+              alt={`${pc.name} prebuilt gaming PC`}
+              width={1200}
+              height={600}
+              loading="eager"
+              decoding="async"
+              className="w-full h-64 lg:h-[420px] object-cover"
+            />
+          </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">{pc.tier}</span>
