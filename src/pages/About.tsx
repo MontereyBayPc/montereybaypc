@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 import SectionHeading from "@/components/SectionHeading";
-import heroImg from "@/assets/hero-pc.jpg";
+import heroImg from "@/assets/hero-pc.webp";
 
 const About = () => (
   <Layout>
@@ -20,7 +20,7 @@ const About = () => (
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <img src={heroImg} alt="Monterey Bay PCs workshop" loading="lazy" width={1920} height={1080} className="rounded-xl border border-border w-full" />
+            <img src={heroImg} alt="Monterey Bay PCs workshop" loading="lazy" width={1365} height={768} className="rounded-xl border border-border w-full" />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
