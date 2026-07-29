@@ -59,9 +59,12 @@ const Index = () => {
             <motion.img
               key={currentImage}
               src={heroImages[currentImage]}
-              alt="Custom gaming PC"
-              width={1920}
-              height={1080}
+              alt="Custom gaming PC built by Monterey Bay PCs"
+              width={1600}
+              height={900}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="w-full h-full object-cover"
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 0.45 }}
