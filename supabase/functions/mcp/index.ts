@@ -49,9 +49,14 @@ var list_services_default = defineTool({
 import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.24.0";
 
 // src/data/prebuilts.ts
+import pcBudget from "npm:@/assets/pc-budget.jpg";
+import pcGaming from "npm:@/assets/pc-gaming.jpg";
+import pcHighend from "npm:@/assets/pc-highend.jpg";
+import pcWorkstation from "npm:@/assets/pc-workstation.jpg";
 var prebuilts = [
   {
     slug: "starter",
+    image: pcBudget,
     name: "Bay Starter",
     tier: "Starter",
     price: 899,
@@ -83,6 +88,7 @@ var prebuilts = [
   },
   {
     slug: "mid",
+    image: pcGaming,
     name: "Bay Mid",
     tier: "Mid",
     price: 1599,
@@ -114,6 +120,7 @@ var prebuilts = [
   },
   {
     slug: "high-end",
+    image: pcHighend,
     name: "Bay High-End",
     tier: "High-End",
     price: 2799,
@@ -145,6 +152,7 @@ var prebuilts = [
   },
   {
     slug: "extreme",
+    image: pcWorkstation,
     name: "Bay Extreme",
     tier: "Extreme",
     price: 4499,

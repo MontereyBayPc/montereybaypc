@@ -1,9 +1,15 @@
+import pcBudget from "@/assets/pc-budget.jpg";
+import pcGaming from "@/assets/pc-gaming.jpg";
+import pcHighend from "@/assets/pc-highend.jpg";
+import pcWorkstation from "@/assets/pc-workstation.jpg";
+
 export type Prebuilt = {
   slug: string;
   name: string;
   tier: "Starter" | "Mid" | "High-End" | "Extreme";
   price: number;
   tagline: string;
+  image: string;
   description: string;
   bestFor: string[];
   specs: {
@@ -27,6 +33,7 @@ export type Prebuilt = {
 export const prebuilts: Prebuilt[] = [
   {
     slug: "starter",
+    image: pcBudget,
     name: "Bay Starter",
     tier: "Starter",
     price: 899,
@@ -59,6 +66,7 @@ export const prebuilts: Prebuilt[] = [
   },
   {
     slug: "mid",
+    image: pcGaming,
     name: "Bay Mid",
     tier: "Mid",
     price: 1599,
@@ -91,6 +99,7 @@ export const prebuilts: Prebuilt[] = [
   },
   {
     slug: "high-end",
+    image: pcHighend,
     name: "Bay High-End",
     tier: "High-End",
     price: 2799,
@@ -123,6 +132,7 @@ export const prebuilts: Prebuilt[] = [
   },
   {
     slug: "extreme",
+    image: pcWorkstation,
     name: "Bay Extreme",
     tier: "Extreme",
     price: 4499,
