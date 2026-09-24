@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 @layer base {
   :root {
@@ -22,7 +22,10 @@
     --secondary-foreground: 0 0% 95%;
 
     --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 50%;
+    --muted-foreground: 0 0% 64%;
+
+    --brand: 24 100% 55%;
+    --brand-foreground: 0 0% 4%;
 
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 95%;
@@ -36,9 +39,9 @@
 
     --radius: 0.5rem;
 
-    --font-display: 'Orbitron', sans-serif;
-    --font-heading: 'Rajdhani', sans-serif;
-    --font-body: 'Inter', sans-serif;
+    --font-display: 'Sora', sans-serif;
+    --font-heading: 'Sora', sans-serif;
+    --font-body: 'Manrope', sans-serif;
 
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 95%;
@@ -88,7 +91,20 @@
 }
 
 @layer utilities {
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 font-heading text-sm font-semibold uppercase tracking-widest bg-brand text-brand-foreground px-6 py-3 rounded-full transition-all duration-300 hover:brightness-110 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 font-heading text-sm font-semibold uppercase tracking-widest border border-border text-foreground px-6 py-3 rounded-full transition-all duration-300 hover:border-foreground hover:-translate-y-0.5;
+  }
   .hover-scale {
     @apply transition-transform duration-200 hover:scale-105;
   }
+}
+
+@media print {
+  nav, footer, .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  main { padding-top: 0 !important; }
+  * { color: #000 !important; border-color: #ccc !important; background: transparent !important; }
 }
