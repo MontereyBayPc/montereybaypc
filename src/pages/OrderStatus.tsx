@@ -31,7 +31,7 @@ const OrderStatus = () => {
           <ol className="grid gap-3 mb-14">
             {steps.map((s, i) => (
               <li key={s} className="flex items-center gap-4 border border-border rounded-2xl p-4">
-                <span className="font-heading text-sm font-semibold text-accent-brand w-8">{String(i + 1).padStart(2, "0")}</span>
+                <span className="font-heading text-sm font-semibold text-brand w-8">{String(i + 1).padStart(2, "0")}</span>
                 <span className="text-foreground">{s}</span>
               </li>
             ))}

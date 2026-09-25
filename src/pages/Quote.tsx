@@ -69,7 +69,7 @@ const Quote = () => {
                         key={o.label}
                         onClick={() => setSel((s) => ({ ...s, [g.key]: i }))}
                         aria-pressed={sel[g.key] === i}
-                        className={`px-4 py-2 rounded-full border text-sm transition-colors ${sel[g.key] === i ? "border-accent-brand text-foreground bg-accent-brand/10" : "border-border text-muted-foreground hover:text-foreground"}`}
+                        className={`px-4 py-2 rounded-full border text-sm transition-colors ${sel[g.key] === i ? "border-brand text-foreground bg-brand/10" : "border-border text-muted-foreground hover:text-foreground"}`}
                       >
                         {o.label}
                       </button>
