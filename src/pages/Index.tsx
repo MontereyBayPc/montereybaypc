@@ -17,11 +17,8 @@ const floatingParts = [
 ];
 
 const reviews = [
-  { name: "James R.", text: "Monterey Bay PCs built me the perfect streaming rig. Incredible cable management and runs silently!", rating: 5 },
-  { name: "Tyler K.", text: "Best investment I've made. My workstation handles 4K video editing like a dream.", rating: 5 },
-  { name: "Marcus T.", text: "Fast turnaround, great communication, and the PC looks absolutely insane. 10/10.", rating: 5 },
-  { name: "Brandon L.", text: "Got a budget build that outperforms everything in its price range. Super happy!", rating: 5 },
-  { name: "Ryan W.", text: "The attention to detail is next level. Clean cables, quiet fans, and blazing fast.", rating: 5 },
+  { name: "Michael", text: "I'm really happy with the quality that Monterey Bay PCs delivers. The work was done professionally, and the pricing was fair for the quality of service I received. I would definitely recommend them to anyone looking for reliable PC service.", rating: 5 },
+  { name: "Nicholas O.", text: "I was very happy with the turnaround time from Monterey Bay PCs. They replaced my fans and cleaned up my PC, and the whole process was quick and easy. I'm very satisfied with the service.", rating: 5 },
 ];
 
 const infoItems = [
