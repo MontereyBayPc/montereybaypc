@@ -16,6 +16,9 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import CheckoutReturn from "./pages/CheckoutReturn";
 import NotFound from "./pages/NotFound";
+import Quote from "./pages/Quote";
+import OrderStatus from "./pages/OrderStatus";
+import Legal from "./pages/Legal";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +41,9 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/quote" element={<Quote />} />
+            <Route path="/order-status" element={<OrderStatus />} />
+            <Route path="/legal/:slug" element={<Legal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
