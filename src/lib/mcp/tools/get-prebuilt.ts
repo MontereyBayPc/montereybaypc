@@ -1,6 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-import { getPrebuilt, prebuilts } from "../../../data/prebuilts";
+import { prebuiltCatalog as prebuilts } from "../../../data/prebuilts-catalog";
+const getPrebuilt = (slug: string) => prebuilts.find((p) => p.slug === slug);
 
 export default defineTool({
   name: "get_prebuilt",

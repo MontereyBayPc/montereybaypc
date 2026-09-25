@@ -1,5 +1,5 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { prebuilts } from "../../../data/prebuilts";
+import { prebuiltCatalog as prebuilts } from "../../../data/prebuilts-catalog";
 
 export default defineTool({
   name: "list_prebuilts",
