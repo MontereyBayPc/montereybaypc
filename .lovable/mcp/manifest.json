@@ -1,15 +1,15 @@
 {
   "version": 1,
-  "sdk_version": "0.24.0",
+  "sdk_version": "3.0.4",
   "path": "/functions/v1/mcp",
   "auth": {
     "type": "none"
   },
   "mcp": {
     "server": {
-      "name": "monterey-bay-pcs-mcp",
+      "name": "monterey-bay-pc-forge",
       "version": "0.1.0",
-      "title": "Monterey Bay PCs"
+      "title": "Monterey Bay PC Forge"
     },
     "tools": [
       {
@@ -22,9 +22,10 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
-          "properties": {}
+          "properties": {},
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -38,9 +39,10 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
-          "properties": {}
+          "properties": {},
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -54,7 +56,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "slug": {
@@ -65,7 +67,8 @@
           },
           "required": [
             "slug"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -79,9 +82,10 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
-          "properties": {}
+          "properties": {},
+          "additionalProperties": false
         },
         "outputSchema": null
       }

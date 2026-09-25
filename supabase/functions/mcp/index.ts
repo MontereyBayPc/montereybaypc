@@ -3,10 +3,10 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { defineMcp } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { defineMcp } from "npm:@lovable.dev/mcp-js@3.0.4";
 
 // src/lib/mcp/tools/list-services.ts
-import { defineTool } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { defineTool } from "npm:@lovable.dev/mcp-js@3.0.4";
 var services = [
   {
     slug: "custom-pc-building",
@@ -46,17 +46,12 @@ var list_services_default = defineTool({
 });
 
 // src/lib/mcp/tools/list-prebuilts.ts
-import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@3.0.4";
 
-// src/data/prebuilts.ts
-import pcBudget from "npm:@/assets/pc-budget.jpg";
-import pcGaming from "npm:@/assets/pc-gaming.jpg";
-import pcHighend from "npm:@/assets/pc-highend.jpg";
-import pcWorkstation from "npm:@/assets/pc-workstation.jpg";
-var prebuilts = [
+// src/data/prebuilts-catalog.ts
+var prebuiltCatalog = [
   {
     slug: "starter",
-    image: pcBudget,
     name: "Bay Starter",
     tier: "Starter",
     price: 899,
@@ -88,7 +83,6 @@ var prebuilts = [
   },
   {
     slug: "mid",
-    image: pcGaming,
     name: "Bay Mid",
     tier: "Mid",
     price: 1599,
@@ -120,7 +114,6 @@ var prebuilts = [
   },
   {
     slug: "high-end",
-    image: pcHighend,
     name: "Bay High-End",
     tier: "High-End",
     price: 2799,
@@ -152,7 +145,6 @@ var prebuilts = [
   },
   {
     slug: "extreme",
-    image: pcWorkstation,
     name: "Bay Extreme",
     tier: "Extreme",
     price: 4499,
@@ -190,7 +182,6 @@ var prebuilts = [
     ]
   }
 ];
-var getPrebuilt = (slug) => prebuilts.find((p) => p.slug === slug);
 
 // src/lib/mcp/tools/list-prebuilts.ts
 var list_prebuilts_default = defineTool2({
@@ -200,7 +191,7 @@ var list_prebuilts_default = defineTool2({
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: () => {
-    const summary = prebuilts.map((p) => ({
+    const summary = prebuiltCatalog.map((p) => ({
       slug: p.slug,
       name: p.name,
       tier: p.tier,
@@ -215,15 +206,16 @@ var list_prebuilts_default = defineTool2({
 });
 
 // src/lib/mcp/tools/get-prebuilt.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@3.0.4";
 import { z } from "npm:zod@^4.4.3";
+var getPrebuilt = (slug) => prebuiltCatalog.find((p) => p.slug === slug);
 var get_prebuilt_default = defineTool3({
   name: "get_prebuilt",
   title: "Get prebuilt PC details",
   description: "Get full details for one prebuilt PC by slug \u2014 specs, performance benchmarks, what's in the box, and best use cases.",
   inputSchema: {
     slug: z.string().min(1).describe(
-      `Prebuilt slug. One of: ${prebuilts.map((p) => p.slug).join(", ")}.`
+      `Prebuilt slug. One of: ${prebuiltCatalog.map((p) => p.slug).join(", ")}.`
     )
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
@@ -243,7 +235,7 @@ var get_prebuilt_default = defineTool3({
 });
 
 // src/lib/mcp/tools/get-contact-info.ts
-import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@3.0.4";
 var contact = {
   business: "Monterey Bay PCs",
   location: "Monterey Bay, California",
@@ -266,13 +258,13 @@ var get_contact_info_default = defineTool4({
 
 // src/lib/mcp/index.ts
 var mcp_default = defineMcp({
-  name: "monterey-bay-pcs-mcp",
-  title: "Monterey Bay PCs",
+  name: "monterey-bay-pc-forge",
+  title: "Monterey Bay PC Forge",
   version: "0.1.0",
   instructions: "Public catalog for Monterey Bay PCs, a local custom PC builder and repair shop in the Monterey Bay area. Use `list_services` for repair/build services, `list_prebuilts` + `get_prebuilt` for prebuilt PC models and specs, and `get_contact_info` for how to reach the shop.",
   tools: [list_services_default, list_prebuilts_default, get_prebuilt_default, get_contact_info_default]
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.24.0/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.0.4/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
