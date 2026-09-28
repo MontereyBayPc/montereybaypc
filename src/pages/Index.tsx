@@ -263,7 +263,68 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Why Choose Us */}
+      <section className="py-24 lg:py-32">
+        <div className="container mx-auto px-4 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="max-w-3xl mx-auto text-center mb-16"
+          >
+            <h2 className="font-heading text-3xl lg:text-5xl font-bold text-foreground">Why Choose Us</h2>
+            <p className="text-muted-foreground mt-4">Small shop, big standards.</p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+            {[
+              { value: "2024", label: "Founded in Monterey" },
+              { value: "15+", label: "Custom Builds" },
+              { value: "1-2 wk", label: "Turnaround" },
+              { value: "100%", label: "Satisfaction" },
+            ].map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="text-center"
+              >
+                <span className="font-display text-4xl lg:text-5xl font-bold text-foreground block">{s.value}</span>
+                <span className="text-muted-foreground text-xs uppercase tracking-wider mt-2 block">{s.label}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="max-w-4xl mx-auto grid gap-6 md:grid-cols-3">
+            {[
+              { icon: Hammer, title: "Local Craftsmanship", desc: "Every PC is hand-built, cable-managed, and stress-tested right here in Monterey, California." },
+              { icon: Gauge, title: "Performance Obsessed", desc: "Parts are chosen for real-world speed and reliability, never for marketing numbers." },
+              { icon: LifeBuoy, title: "Support Included", desc: "Technical support comes with your build, and we work with you until you're 100% happy." },
+            ].map((c, i) => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.12 }}
+                className="rounded-3xl border border-border bg-card/40 p-8 hover:border-foreground/30 transition-colors duration-500"
+              >
+                <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-muted-foreground mb-6">
+                  <c.icon className="w-5 h-5" />
+                </div>
+                <h3 className="font-heading text-lg font-bold text-foreground mb-2">{c.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{c.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Reviews Carousel */}
+
       <section className="py-24 lg:py-32 overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8">
           <motion.div
