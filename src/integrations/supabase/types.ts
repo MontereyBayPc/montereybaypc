@@ -14,7 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      parts: {
+        Row: {
+          active: boolean
+          base_price: number
+          category: string
+          created_at: string
+          id: string
+          last_checked_at: string | null
+          name: string
+          price: number
+          price_source: string | null
+          price_updated_at: string | null
+          sort: number
+        }
+        Insert: {
+          active?: boolean
+          base_price: number
+          category: string
+          created_at?: string
+          id?: string
+          last_checked_at?: string | null
+          name: string
+          price: number
+          price_source?: string | null
+          price_updated_at?: string | null
+          sort?: number
+        }
+        Update: {
+          active?: boolean
+          base_price?: number
+          category?: string
+          created_at?: string
+          id?: string
+          last_checked_at?: string | null
+          name?: string
+          price?: number
+          price_source?: string | null
+          price_updated_at?: string | null
+          sort?: number
+        }
+        Relationships: []
+      }
+      price_job_state: {
+        Row: {
+          id: number
+          last_run_at: string | null
+          locked_until: string | null
+          paused_reason: string | null
+        }
+        Insert: {
+          id?: number
+          last_run_at?: string | null
+          locked_until?: string | null
+          paused_reason?: string | null
+        }
+        Update: {
+          id?: number
+          last_run_at?: string | null
+          locked_until?: string | null
+          paused_reason?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
