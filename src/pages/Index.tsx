@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Monitor, Cpu, HardDrive, ArrowRight, Star } from "lucide-react";
+import { Monitor, Cpu, HardDrive, ArrowRight, Star, Clock, MapPin, BadgeCheck, Wrench, Gauge, LifeBuoy, MessageSquare, PackageSearch, Hammer, Truck } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 import heroImg1 from "@/assets/hero-pc.webp";
@@ -17,15 +17,15 @@ const floatingParts = [
 ];
 
 const reviews = [
-  { name: "Michael", text: "I'm really happy with the quality that Monterey Bay PCs delivers. The work was done professionally, and the pricing was fair for the quality of service I received. I would definitely recommend them to anyone looking for reliable PC service.", rating: 5 },
+  { name: "Michael T.", text: "I'm really happy with the quality that Monterey Bay PCs delivers. The work was done professionally, and the pricing was fair for the quality of service I received. I would definitely recommend them to anyone looking for reliable PC service.", rating: 5 },
   { name: "Nicholas O.", text: "I was very happy with the turnaround time from Monterey Bay PCs. They replaced my fans and cleaned up my PC, and the whole process was quick and easy. I'm very satisfied with the service.", rating: 5 },
 ];
 
 const infoItems = [
-  { number: "01", title: "Build Time", desc: "Custom PCs take 1-2 weeks to build, test, and deliver.", icon: "⏱" },
-  { number: "02", title: "Local Only", desc: "We do not ship nationwide. Pickup or local delivery only.", icon: "📍" },
-  { number: "03", title: "Satisfaction Guaranteed", desc: "We work with you until you are 100% happy with your build.", icon: "✅" },
-  { number: "04", title: "Technical Support", desc: "Every build comes with technical support included with your purchase.", icon: "🛠" },
+  { number: "01", title: "Build Time", desc: "Custom PCs take 1-2 weeks to build, test, and deliver.", icon: Clock },
+  { number: "02", title: "Local Only", desc: "We do not ship nationwide. Pickup or local delivery only.", icon: MapPin },
+  { number: "03", title: "Satisfaction Guaranteed", desc: "We work with you until you are 100% happy with your build.", icon: BadgeCheck },
+  { number: "04", title: "Technical Support", desc: "Every build comes with technical support included with your purchase.", icon: Wrench },
 ];
 
 const Index = () => {
@@ -174,7 +174,52 @@ const Index = () => {
       </section>
 
 
+      {/* How It Works */}
+      <section className="py-24 lg:py-32">
+        <div className="container mx-auto px-4 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="max-w-3xl mx-auto text-center mb-16"
+          >
+            <h2 className="font-heading text-3xl lg:text-5xl font-bold text-foreground">How It Works</h2>
+            <p className="text-muted-foreground mt-4">From first message to first boot, in four steps.</p>
+          </motion.div>
+          <div className="max-w-5xl mx-auto grid gap-6 md:grid-cols-2">
+            {[
+              { icon: MessageSquare, step: "01", title: "Tell Us What You Need", desc: "Share your budget and what the PC is for. We'll spec the right parts and send you a quote." },
+              { icon: PackageSearch, step: "02", title: "Approve Your Build", desc: "You pick the final parts and price, then we order everything and get started." },
+              { icon: Hammer, step: "03", title: "Built & Stress-Tested", desc: "Hand-assembled with clean cable management and stress-tested before it ever leaves the bench." },
+              { icon: Truck, step: "04", title: "Pickup or Delivery", desc: "Ready in 1-2 weeks. Pick it up locally or have it delivered to your door in the Monterey Bay area." },
+            ].map((s, i) => (
+              <motion.div
+                key={s.step}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="group relative rounded-3xl border border-border bg-card/40 p-8 hover:border-foreground/30 transition-colors duration-500"
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-muted-foreground group-hover:text-foreground group-hover:border-foreground/50 transition-colors duration-500">
+                    <s.icon className="w-5 h-5" />
+                  </div>
+                  <span className="font-heading text-6xl font-bold text-foreground/5 group-hover:text-foreground/10 transition-colors duration-500 select-none leading-none">
+                    {s.step}
+                  </span>
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-2">{s.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* What to Know - Redesigned */}
+
       <section className="py-24 lg:py-32">
         <div className="container mx-auto px-4 lg:px-8">
           <motion.div
@@ -202,7 +247,7 @@ const Index = () => {
                 </span>
                 <div className="flex-1 pt-2">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl">{item.icon}</span>
+                    <item.icon className="w-7 h-7 text-foreground/70" />
                     <h3 className="font-heading text-xl lg:text-2xl font-bold text-foreground group-hover:tracking-wider transition-all duration-500">
                       {item.title}
                     </h3>
