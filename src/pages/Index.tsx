@@ -415,10 +415,10 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
                 <Link
-                  to="/contact"
+                  to="/quote"
                   className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300"
                 >
-                  Contact Us <ArrowRight className="w-4 h-4" />
+                  Get Your Quote <ArrowRight className="w-4 h-4" />
                 </Link>
               </motion.div>
             </div>
