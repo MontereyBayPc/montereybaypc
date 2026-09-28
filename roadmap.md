@@ -1,8 +1,8 @@
 # Roadmap
 
-## In progress
-- [ ] Rename review to "Michael T." on homepage
-- [ ] Open-ended site improvements (my picks) — this turn
+## Done
+- [x] Review renamed to "Michael T." on homepage (verified in preview)
+- [x] Homepage improvements: How It Works, Why Choose Us + stats strip, emoji icons replaced with line icons, CTA now links to /quote (all verified in preview)
 
 ## Blocked / awaiting user
 - [ ] Contact form email sending: `send-contact-email` function needs an email domain configured (user owns montereybaypcs.com, domain setup not started)
