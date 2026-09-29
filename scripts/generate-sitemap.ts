@@ -25,6 +25,7 @@ const entries: SitemapEntry[] = [
   { path: "/services", changefreq: "monthly", priority: "0.9" },
   ...serviceSlugs.map((s) => ({ path: `/services/${s}`, changefreq: "monthly" as const, priority: "0.7" })),
   { path: "/prebuilts", changefreq: "weekly", priority: "0.9" },
+  { path: "/the-beast", changefreq: "weekly", priority: "0.9" },
   ...prebuiltSlugs.map((s) => ({ path: `/prebuilts/${s}`, changefreq: "weekly" as const, priority: "0.7" })),
   { path: "/about", changefreq: "yearly", priority: "0.6" },
   { path: "/faq", changefreq: "monthly", priority: "0.6" },

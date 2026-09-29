@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import Quote from "./pages/Quote";
 import OrderStatus from "./pages/OrderStatus";
 import Legal from "./pages/Legal";
+import TheBeast from "./pages/TheBeast";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/quote" element={<Quote />} />
             <Route path="/order-status" element={<OrderStatus />} />
             <Route path="/legal/:slug" element={<Legal />} />
+            <Route path="/the-beast" element={<TheBeast />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -14,6 +14,7 @@ const PRICE_ID_BY_SLUG: Record<string, string> = {
   mid: "prebuilt_mid",
   "high-end": "prebuilt_high_end",
   extreme: "prebuilt_extreme",
+  "the-beast": "the_beast",
 };
 
 const Checkout = () => {

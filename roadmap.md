@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Done
+- [x] Added The Beast one-of-one $100,000 showcase page, dedicated navigation tab, cart limit, and checkout product
 - [x] Review renamed to "Michael T." on homepage (verified in preview)
 - [x] Homepage improvements: How It Works, Why Choose Us + stats strip, emoji icons replaced with line icons, CTA now links to /quote (all verified in preview)
 
