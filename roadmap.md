@@ -9,3 +9,4 @@
 - [ ] Real content: gallery photos, build timelapse video, About page photo, Google reviews
 - [ ] Financing (Affirm/Klarna) — needs user's business account
 - [ ] Real part prices / build fee for the quote configurator
+- [x] Quote builder: full part lists per category, "None" option, daily-tracked prices, build fee 10% (min $75)
