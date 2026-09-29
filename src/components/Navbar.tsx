@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import Logo from "./Logo";
 
 const navLinks = [
+  { to: "/the-beast", label: "The Beast", featured: true },
   { to: "/prebuilts", label: "Builds" },
   { to: "/quote", label: "Custom Quote" },
   { to: "/services", label: "Services" },
@@ -32,8 +33,8 @@ const Navbar = () => {
                 to={link.to}
                 className={`font-heading text-sm font-semibold uppercase tracking-widest transition-colors duration-300 ${
                   location.pathname === link.to
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? link.featured ? "text-brand" : "text-foreground"
+                    : link.featured ? "text-brand hover:text-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {link.label}
@@ -90,8 +91,8 @@ const Navbar = () => {
                   onClick={() => setIsOpen(false)}
                   className={`font-heading text-sm font-semibold uppercase tracking-widest py-2 transition-colors duration-300 ${
                     location.pathname === link.to
-                      ? "text-foreground"
-                      : "text-muted-foreground"
+                      ? link.featured ? "text-brand" : "text-foreground"
+                      : link.featured ? "text-brand" : "text-muted-foreground"
                   }`}
                 >
                   {link.label}

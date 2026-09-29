@@ -30,7 +30,7 @@ const Cart = () => {
                 {items.map((item) => (
                   <div key={item.slug} className="p-6 flex items-center gap-4 flex-wrap">
                     <div className="flex-1 min-w-[200px]">
-                      <Link to={`/prebuilts/${item.slug}`} className="font-heading text-xl font-bold text-foreground hover:underline">
+                      <Link to={item.slug === "the-beast" ? "/the-beast" : `/prebuilts/${item.slug}`} className="font-heading text-xl font-bold text-foreground hover:underline">
                         {item.name}
                       </Link>
                       <p className="text-muted-foreground text-sm mt-1">${item.price.toLocaleString()} each</p>
@@ -46,6 +46,7 @@ const Cart = () => {
                       <span className="w-6 text-center text-foreground">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.slug, item.quantity + 1)}
+                        disabled={item.slug === "the-beast"}
                         className="p-1 hover:text-foreground text-muted-foreground"
                         aria-label="Increase"
                       >
