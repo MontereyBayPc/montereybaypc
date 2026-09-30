@@ -88,6 +88,7 @@ Deno.serve(async (req) => {
     for (const i of items) {
       if (!/^[a-zA-Z0-9_-]+$/.test(i.priceId)) throw new Error("Invalid priceId");
       if (!Number.isInteger(i.quantity) || i.quantity < 1) throw new Error("Invalid quantity");
+      if (i.priceId === "the_beast" && i.quantity !== 1) throw new Error("Only one Beast is available");
     }
     const env: StripeEnv = body.environment === "live" ? "live" : "sandbox";
 

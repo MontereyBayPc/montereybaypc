@@ -8,6 +8,8 @@ import { useCart } from "@/context/CartContext";
 import beastImage from "@/assets/the-beast-showcase.png.asset.json";
 import { toast } from "sonner";
 
+const beastImageUrl = `https://montereybaypcs.com${beastImage.url}`;
+
 const beast = {
   slug: "the-beast",
   name: "The Beast",
@@ -55,7 +57,7 @@ const TheBeast = () => {
 
       <section className="relative min-h-[calc(100svh-4rem)] overflow-hidden border-b border-border lg:min-h-[calc(100svh-5rem)]">
         <img
-          src={beastImage.url}
+          src={beastImageUrl}
           alt="The Beast spherical custom PC with its workstation hardware and liquid-cooling components"
           width={1365}
           height={767}
