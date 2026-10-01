@@ -1,60 +1,20 @@
 // Runs before `vite dev` and `vite build` (predev/prebuild hooks); writes public/sitemap.xml.
-
 import { writeFileSync } from "fs";
 import { resolve } from "path";
+import { SITE_URL, seoRoutes } from "../src/seo/routes";
 
-const BASE_URL = "https://montereybaypcs.com";
+const urls = seoRoutes.map((e) =>
+  [
+    `  <url>`,
+    `    <loc>${SITE_URL}${e.path}</loc>`,
+    `    <changefreq>${e.changefreq}</changefreq>`,
+    `    <priority>${e.priority}</priority>`,
+    `  </url>`,
+  ].join("\n"),
+);
 
-interface SitemapEntry {
-  path: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: string;
-}
-
-const serviceSlugs = [
-  "custom-pc-building",
-  "upgrades",
-  "troubleshooting-repair",
-  "cleaning-optimization",
-];
-
-const prebuiltSlugs = ["starter", "mid", "high-end", "extreme"];
-
-const entries: SitemapEntry[] = [
-  { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/services", changefreq: "monthly", priority: "0.9" },
-  ...serviceSlugs.map((s) => ({ path: `/services/${s}`, changefreq: "monthly" as const, priority: "0.7" })),
-  { path: "/prebuilts", changefreq: "weekly", priority: "0.9" },
-  { path: "/the-beast", changefreq: "weekly", priority: "0.9" },
-  ...prebuiltSlugs.map((s) => ({ path: `/prebuilts/${s}`, changefreq: "weekly" as const, priority: "0.7" })),
-  { path: "/about", changefreq: "yearly", priority: "0.6" },
-  { path: "/faq", changefreq: "monthly", priority: "0.6" },
-  { path: "/contact", changefreq: "yearly", priority: "0.7" },
-  { path: "/quote", changefreq: "monthly", priority: "0.8" },
-  { path: "/order-status", changefreq: "yearly", priority: "0.4" },
-  ...["warranty", "returns", "shipping", "terms", "privacy", "accessibility"].map((s) => ({ path: `/legal/${s}`, changefreq: "yearly", priority: "0.3" })),
-];
-
-function generateSitemap(items: SitemapEntry[]) {
-  const urls = items.map((e) =>
-    [
-      `  <url>`,
-      `    <loc>${BASE_URL}${e.path}</loc>`,
-      e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-      e.priority ? `    <priority>${e.priority}</priority>` : null,
-      `  </url>`,
-    ]
-      .filter(Boolean)
-      .join("\n"),
-  );
-
-  return [
-    `<?xml version="1.0" encoding="UTF-8"?>`,
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
-    ...urls,
-    `</urlset>`,
-  ].join("\n");
-}
-
-writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
-console.log(`sitemap.xml written (${entries.length} entries)`);
+writeFileSync(
+  resolve("public/sitemap.xml"),
+  [`<?xml version="1.0" encoding="UTF-8"?>`, `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`, ...urls, `</urlset>`].join("\n"),
+);
+console.log(`sitemap.xml written (${seoRoutes.length} entries)`);
