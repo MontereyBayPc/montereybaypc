@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, ShoppingCart } from "lucide-react";
-import { Helmet } from "react-helmet-async";
+import CanonicalHome from "@/components/CanonicalHome";
 import Layout from "@/components/Layout";
 import { getPrebuilt } from "@/data/prebuilts";
 import { useCart } from "@/context/CartContext";
