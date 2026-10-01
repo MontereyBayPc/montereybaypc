@@ -75,7 +75,7 @@ export const seoRoutes: SeoRoute[] = [
   },
   ...prebuiltCatalog.map<SeoRoute>((p) => ({
     path: `/prebuilts/${p.slug}`,
-    title: `${p.name} ${p.tier} Gaming PC | Monterey Bay PCs`,
+    title: `${p.name} Prebuilt Gaming PC | Monterey Bay PCs`,
     description: `${p.tagline} ${p.specs.cpu}, ${p.specs.gpu}, ${p.specs.ram}. $${p.price.toLocaleString("en-US")}.`,
     h1: p.name,
     body: [
