@@ -11,6 +11,7 @@ export type SeoRoute = {
   description: string;
   h1: string;
   body: string[];
+  sections?: { h: string; items: string[] }[];
   changefreq: "weekly" | "monthly" | "yearly";
   priority: string;
 };
@@ -38,10 +39,45 @@ export const seoRoutes: SeoRoute[] = [
     description: "Custom-built gaming PCs, workstations, and everyday systems from Monterey Bay, CA. Handcrafted for performance, reliability, and style.",
     h1: "Custom Gaming PCs Built in Monterey, CA",
     body: [
-      "Monterey Bay PCs builds custom gaming PCs, workstations, and everyday systems by hand in Monterey, California. Founded in 2024.",
-      "How it works: tell us what you need, approve your build, we build and stress-test it, then pick it up or get it delivered locally.",
-      "Services: custom PC building, upgrades, troubleshooting and repair, cleaning and optimization. Builds take 1-2 weeks.",
-      "Contact: montereybaypc@gmail.com, (831) 718-7730.",
+      "Custom PCs Built for Power. Handcrafted gaming rigs, workstations, and everyday PCs, engineered for performance. Based in Monterey Bay, CA. Founded in 2024.",
+    ],
+    sections: [
+      { h: "How It Works", items: [
+        "01 Tell Us What You Need: Share your budget and what the PC is for. We'll spec the right parts and send you a quote.",
+        "02 Approve Your Build: You pick the final parts and price, then we order everything and get started.",
+        "03 Built & Stress-Tested: Hand-assembled with clean cable management and stress-tested before it ever leaves the bench.",
+        "04 Pickup or Delivery: Ready in 1-2 weeks. Pick it up locally or have it delivered to your door in the Monterey Bay area.",
+      ] },
+      { h: "What to Know", items: [
+        "Build Time: Custom PCs take 1-2 weeks to build, test, and deliver.",
+        "Local Only: We do not ship nationwide. Pickup or local delivery only.",
+        "Satisfaction Guaranteed: We work with you until you are 100% happy with your build.",
+        "Technical Support: Every build comes with technical support included with your purchase.",
+      ] },
+      { h: "Why Choose Us", items: [
+        "Founded in Monterey in 2024. 15+ custom builds. 1-2 week turnaround.",
+        "Local Craftsmanship: Every PC is hand-built, cable-managed, and stress-tested right here in Monterey, California.",
+        "Performance Obsessed: Parts are chosen for real-world speed and reliability, never for marketing numbers.",
+        "Support Included: Technical support comes with your build, and we work with you until you're 100% happy.",
+      ] },
+      { h: "Services", items: services.map((s) => `${s.title}: ${s.text}`) },
+      { h: "Prebuilt Gaming PCs", items: [
+        ...prebuiltCatalog.map((p) => `${p.name} (${p.tier}) - $${p.price.toLocaleString("en-US")}: ${p.tagline} ${p.specs.cpu}, ${p.specs.gpu}, ${p.specs.ram}.`),
+        "The Beast - $100,000: a one-of-one custom PC with NVIDIA RTX PRO 6000 Blackwell graphics in a spherical liquid-cooled showcase. Only 1 available.",
+      ] },
+      { h: "What Our Customers Say", items: [
+        "5 stars - Michael T.: \"I'm really happy with the quality that Monterey Bay PCs delivers. The work was done professionally, and the pricing was fair for the quality of service I received. I would definitely recommend them to anyone looking for reliable PC service.\"",
+        "5 stars - Nicholas O.: \"I was very happy with the turnaround time from Monterey Bay PCs. They replaced my fans and cleaned up my PC, and the whole process was quick and easy. I'm very satisfied with the service.\"",
+      ] },
+      { h: "Frequently Asked Questions", items: [
+        "How long does a custom build take? Custom PCs take 1-2 weeks to build, test, and prepare for pickup.",
+        "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
+        "Do you ship nationwide? No. All builds are available for local pickup or delivery in the Monterey Bay area.",
+        "What support do you offer? Technical support is included with every PC purchase.",
+      ] },
+      { h: "Ready for Your Dream PC?", items: [
+        "Reach out for a custom quote. Email montereybaypc@gmail.com or call (831) 718-7730. Serving Monterey, Salinas, Seaside, Marina, Pacific Grove, Carmel and the greater Monterey Bay area.",
+      ] },
     ],
     changefreq: "weekly",
     priority: "1.0",

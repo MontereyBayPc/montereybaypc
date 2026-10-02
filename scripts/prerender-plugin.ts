@@ -11,8 +11,16 @@ const esc = (s: string) =>
 
 const nav = seoRoutes
   .filter((r) => r.path.split("/").length <= 2)
-  .map((r) => `<a href="${r.path}">${esc(r.h1)}</a>`)
-  .join(" | ");
+  .map((r) => `      <li><a href="${r.path}">${esc(r.h1)}</a></li>`)
+  .join("\n");
+
+const footer = `<footer>
+    <h2>All pages</h2>
+    <ul>
+${seoRoutes.map((r) => `      <li><a href="${r.path}">${esc(r.title)}</a></li>`).join("\n")}
+    </ul>
+    <p>Monterey Bay PCs, Monterey, CA. Email montereybaypc@gmail.com. Phone (831) 718-7730.</p>
+  </footer>`;
 
 function render(template: string, path: string, title: string, description: string, bodyHtml: string, noindex: boolean) {
   const url = `${SITE_URL}${path}`;
@@ -44,9 +52,24 @@ export function prerenderPlugin(): Plugin {
         writeFileSync(join(dir, "index.html"), html);
       };
       for (const r of seoRoutes) {
-        const body = `<header><nav>${nav}</nav></header><main><h1>${esc(r.h1)}</h1>${r.body
-          .map((p) => `<p>${esc(p)}</p>`)
-          .join("")}</main>`;
+        const sections = (r.sections ?? [])
+          .map((sec) => `    <section>\n      <h2>${esc(sec.h)}</h2>\n      <ul>\n${sec.items.map((i) => `        <li>${esc(i)}</li>`).join("\n")}\n      </ul>\n    </section>`)
+          .join("\n");
+        const body = `
+  <header>
+    <nav>
+    <ul>
+${nav}
+    </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>${esc(r.h1)}</h1>
+${r.body.map((p) => `    <p>${esc(p)}</p>`).join("\n")}
+${sections}
+  </main>
+  ${footer}
+`;
         write(r.path, render(template, r.path, r.title, r.description, body, false));
       }
       for (const r of noindexRoutes) {
