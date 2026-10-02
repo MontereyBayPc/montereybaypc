@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -17,12 +18,20 @@ const contactSchema = z.object({
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = contactSchema.safeParse(form);
     if (!result.success) {
       toast.error(result.error.issues[0].message);
+      return;
+    }
+    setSending(true);
+    const { error } = await supabase.from("contact_inquiries").insert({ kind: "contact", ...result.data });
+    setSending(false);
+    if (error) {
+      toast.error("Could not send. Please email montereybaypc@gmail.com or call (831) 718-7730.");
       return;
     }
     toast.success("Message sent! We'll get back to you soon.");
@@ -123,10 +132,11 @@ const Contact = () => {
                 >
                   <Button
                     type="submit"
+                    disabled={sending}
                     className="w-full font-heading font-bold uppercase tracking-widest bg-foreground text-background hover:bg-foreground/90 rounded-full py-6 text-sm hover:scale-[1.02] transition-all duration-300"
                   >
                     <Send className="w-4 h-4 mr-2" />
-                    Send Message
+                    {sending ? "Sending..." : "Send Message"}
                   </Button>
                 </motion.div>
               </div>
