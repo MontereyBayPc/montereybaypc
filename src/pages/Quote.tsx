@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BUSINESS } from "@/lib/business";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Part = { id: string; category: string; name: string; price: number; price_updated_at: string | null };
 
@@ -87,6 +88,31 @@ const Quote = () => {
   const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Custom PC quote request")}&body=${encodeURIComponent(
     `Name: ${name}\nEmail: ${email}\n\n${summary}\n\nParts: $${partsTotal}\nBuild fee: $${buildFee}\nEstimate: $${total}\n\nNotes: ${notes}`,
   )}`;
+
+  const submitQuote = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chosen.length) {
+      toast.error("Pick at least one part first.");
+      return;
+    }
+    setSending(true);
+    const { error } = await supabase.from("quote_requests").insert({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim() || null,
+      notes: notes.trim() || null,
+      parts: CATEGORIES.map((c) => ({ category: c.title, choice: summary.split("\n").find((l) => l.startsWith(c.title + ":"))?.slice(c.title.length + 2) })),
+      parts_total: partsTotal,
+      build_fee: buildFee,
+      estimated_total: total,
+    });
+    setSending(false);
+    if (error) {
+      toast.error("Could not send. Please email or call us instead.");
+      return;
+    }
+    setSent(true);
+  };
 
   const selectCls =
     "w-full bg-transparent border border-border rounded-full px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-brand";

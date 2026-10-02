@@ -13,7 +13,7 @@ const docs: Record<string, Doc> = {
     title: "Warranty & Support",
     intro: "What you can expect from us after you take your PC home.",
     sections: [
-      { h: "Warranty", p: ["We do not offer our own warranty on builds. Individual components keep the manufacturer warranty they ship with, and we are happy to help you file a claim with the manufacturer if a part fails."] },
+      { h: "Workmanship guarantee", p: ["Every PC we build is backed by our workmanship guarantee. If something we assembled, wired, or installed is not right, we fix it at no labor cost.", "Individual components also keep their full manufacturer warranty, and we will help you file a claim with the manufacturer if a part fails."] },
       { h: "Technical support", p: ["Every PC purchase includes technical support. If something is not working right, or you just have a question, reach out and we will help you sort it out."] },
       { h: "How to get help", p: [`Email ${BUSINESS.email} or call ${BUSINESS.phone}. Include your name, what you bought, and a short description of the problem.`] },
     ],
