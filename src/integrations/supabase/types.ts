@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_inquiries: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          kind: string
+          message: string
+          name: string
+          order_ref: string | null
+          phone: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          kind?: string
+          message?: string
+          name: string
+          order_ref?: string | null
+          phone?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          kind?: string
+          message?: string
+          name?: string
+          order_ref?: string | null
+          phone?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       parts: {
         Row: {
           active: boolean
@@ -74,6 +110,48 @@ export type Database = {
           last_run_at?: string | null
           locked_until?: string | null
           paused_reason?: string | null
+        }
+        Relationships: []
+      }
+      quote_requests: {
+        Row: {
+          build_fee: number
+          created_at: string
+          email: string
+          estimated_total: number
+          id: string
+          name: string
+          notes: string | null
+          parts: Json
+          parts_total: number
+          phone: string | null
+          status: string
+        }
+        Insert: {
+          build_fee?: number
+          created_at?: string
+          email: string
+          estimated_total?: number
+          id?: string
+          name: string
+          notes?: string | null
+          parts?: Json
+          parts_total?: number
+          phone?: string | null
+          status?: string
+        }
+        Update: {
+          build_fee?: number
+          created_at?: string
+          email?: string
+          estimated_total?: number
+          id?: string
+          name?: string
+          notes?: string | null
+          parts?: Json
+          parts_total?: number
+          phone?: string | null
+          status?: string
         }
         Relationships: []
       }
