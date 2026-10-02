@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BUSINESS } from "@/lib/business";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Part = { id: string; category: string; name: string; price: number; price_updated_at: string | null };
 
@@ -36,16 +37,24 @@ const Quote = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [notes, setNotes] = useState("");
+  const [phone, setPhone] = useState("");
+  const [loadError, setLoadError] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => { setLoading(false); setLoadError((e) => e || true); }, 15000);
     supabase
       .from("parts")
       .select("id,category,name,price,price_updated_at")
       .order("sort")
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        clearTimeout(timer);
         setParts((data ?? []) as Part[]);
+        setLoadError(!!error || !data?.length);
         setLoading(false);
       });
+    return () => clearTimeout(timer);
   }, []);
 
   const byCat = useMemo(() => {
@@ -80,6 +89,31 @@ const Quote = () => {
     `Name: ${name}\nEmail: ${email}\n\n${summary}\n\nParts: $${partsTotal}\nBuild fee: $${buildFee}\nEstimate: $${total}\n\nNotes: ${notes}`,
   )}`;
 
+  const submitQuote = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chosen.length) {
+      toast.error("Pick at least one part first.");
+      return;
+    }
+    setSending(true);
+    const { error } = await supabase.from("quote_requests").insert({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim() || null,
+      notes: notes.trim() || null,
+      parts: CATEGORIES.map((c) => ({ category: c.title, choice: summary.split("\n").find((l) => l.startsWith(c.title + ":"))?.slice(c.title.length + 2) })),
+      parts_total: partsTotal,
+      build_fee: buildFee,
+      estimated_total: total,
+    });
+    setSending(false);
+    if (error) {
+      toast.error("Could not send. Please email or call us instead.");
+      return;
+    }
+    setSent(true);
+  };
+
   const selectCls =
     "w-full bg-transparent border border-border rounded-full px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-brand";
 
@@ -97,6 +131,11 @@ const Quote = () => {
           <div className="grid lg:grid-cols-[1fr_320px] gap-10">
             <div className="space-y-6">
               {loading && <p className="text-muted-foreground">Loading parts...</p>}
+              {loadError && (
+                <div className="border border-border rounded-2xl p-6 text-muted-foreground">
+                  Parts list could not load right now. Call <a className="text-foreground underline" href={BUSINESS.phoneHref}>{BUSINESS.phone}</a> or email <a className="text-foreground underline" href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a> and we will quote you directly.
+                </div>
+              )}
               {!loading &&
                 CATEGORIES.map((c) => (
                   <fieldset key={c.key}>
@@ -147,12 +186,20 @@ const Quote = () => {
               <p className="text-xs text-muted-foreground mt-3">
                 Tax and delivery not included.{lastUpdated && ` Prices last checked ${new Date(lastUpdated).toLocaleDateString()}.`}
               </p>
-              <form onSubmit={(e) => { e.preventDefault(); window.location.href = mailto; }} className="grid gap-4 mt-6">
-                <Input required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
-                <Input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
-                <Textarea placeholder="Anything else? Games, budget, style..." value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={1000} />
-                <button type="submit" className="btn-brand justify-center"><Mail className="w-4 h-4" /> Send quote request</button>
-              </form>
+              {sent ? (
+                <div className="mt-6 border border-brand rounded-2xl p-5 text-sm text-foreground">
+                  Quote request received. We will reply within 1 business day.
+                  <a href={mailto} className="block mt-3 text-muted-foreground underline">Email a copy instead</a>
+                </div>
+              ) : (
+                <form onSubmit={submitQuote} className="grid gap-4 mt-6">
+                  <Input required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
+                  <Input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
+                  <Input type="tel" placeholder="Phone (optional)" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} />
+                  <Textarea placeholder="Anything else? Games, budget, style..." value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={1000} />
+                  <button type="submit" disabled={sending} className="btn-brand justify-center"><Mail className="w-4 h-4" /> {sending ? "Sending..." : "Send quote request"}</button>
+                </form>
+              )}
             </aside>
           </div>
         </div>

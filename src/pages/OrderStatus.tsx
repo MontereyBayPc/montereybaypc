@@ -5,6 +5,8 @@ import CanonicalHome from "@/components/CanonicalHome";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Input } from "@/components/ui/input";
 import { BUSINESS } from "@/lib/business";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const steps = ["Order received", "Parts sourced", "Building", "Stress testing", "Ready for pickup or delivery"];
 
@@ -12,10 +14,26 @@ const OrderStatus = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [order, setOrder] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Order status request")}&body=${encodeURIComponent(
-    `Name: ${name}\nEmail: ${email}\nOrder / receipt number: ${order}\n\nCould you give me an update on my order?`,
-  )}`;
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
+    const { error } = await supabase.from("contact_inquiries").insert({
+      kind: "order_status",
+      name: name.trim(),
+      email: email.trim(),
+      order_ref: order.trim() || null,
+      message: "Order status update requested",
+    });
+    setSending(false);
+    if (error) {
+      toast.error(`Could not send. Please call ${BUSINESS.phone}.`);
+      return;
+    }
+    setSent(true);
+  };
 
   return (
     <Layout>
@@ -38,15 +56,18 @@ const OrderStatus = () => {
           </ol>
 
           <h2 className="font-heading text-2xl font-semibold text-foreground mb-6">Request an update</h2>
-          <form
-            onSubmit={(e) => { e.preventDefault(); window.location.href = mailto; }}
-            className="grid gap-5"
-          >
-            <Input required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
-            <Input required type="email" placeholder="Email used for your order" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
-            <Input placeholder="Order or receipt number (optional)" value={order} onChange={(e) => setOrder(e.target.value)} maxLength={100} />
-            <button type="submit" className="btn-brand w-fit"><Mail className="w-4 h-4" /> Email us for an update</button>
-          </form>
+          {sent ? (
+            <div className="border border-brand rounded-2xl p-5 text-foreground">
+              Request received. We will send you an update within 1 business day.
+            </div>
+          ) : (
+            <form onSubmit={submit} className="grid gap-5">
+              <Input required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
+              <Input required type="email" placeholder="Email used for your order" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
+              <Input placeholder="Order or receipt number (optional)" value={order} onChange={(e) => setOrder(e.target.value)} maxLength={100} />
+              <button type="submit" disabled={sending} className="btn-brand w-fit"><Mail className="w-4 h-4" /> {sending ? "Sending..." : "Request an update"}</button>
+            </form>
+          )}
           <a href={BUSINESS.phoneHref} className="mt-6 inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
             <Phone className="w-4 h-4" /> Or call {BUSINESS.phone}
           </a>
