@@ -113,7 +113,7 @@ const Checkout = () => {
                   Continue to Payment
                 </button>
                 <p className="text-xs text-muted-foreground mt-3 text-center">
-                  You'll enter contact, shipping, and card details on the next step.
+                  You'll enter contact, shipping, card details, and any promo code on the next step.
                 </p>
               </div>
 
