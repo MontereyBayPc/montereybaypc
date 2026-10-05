@@ -56,6 +56,7 @@ const PrebuiltDetail = () => {
             <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">{pc.tier}</span>
             <h1 className="font-heading text-5xl lg:text-7xl font-bold text-foreground mt-2 leading-[0.95]">{pc.name}</h1>
             <p className="text-muted-foreground text-lg mt-4 max-w-2xl">{pc.description}</p>
+            <p className="mt-4 text-sm text-brand font-heading font-semibold uppercase tracking-widest">Built to order and stress-tested, ready in 1-2 weeks</p>
 
             <div className="flex flex-wrap items-center gap-6 mt-8">
               <span className="font-heading text-4xl font-bold text-foreground">${pc.price.toLocaleString()}</span>

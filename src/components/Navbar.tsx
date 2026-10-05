@@ -52,6 +52,7 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
+            <a href="tel:+18317187730" className="hidden xl:inline font-heading text-sm font-semibold text-muted-foreground hover:text-foreground">(831) 718-7730</a>
             <Link to="/quote" className="btn-brand !px-5 !py-2.5 !text-xs">Get a Quote</Link>
           </div>
 

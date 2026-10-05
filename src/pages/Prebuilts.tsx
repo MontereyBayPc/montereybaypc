@@ -62,7 +62,8 @@ const Prebuilts = () => {
                     </span>
                   </div>
                   <h2 className="font-heading text-3xl lg:text-4xl font-bold text-foreground mb-2">{pc.name}</h2>
-                  <p className="text-muted-foreground mb-6">{pc.tagline}</p>
+                  <p className="text-muted-foreground mb-4">{pc.tagline}</p>
+                  <span className="inline-block mb-6 rounded-full border border-brand/50 px-3 py-1 text-xs font-heading font-semibold uppercase tracking-widest text-brand">Built to order, 1-2 weeks</span>
 
                   <div className="space-y-2 text-sm border-t border-border pt-5">
                     <div className="flex items-center gap-3 text-muted-foreground">

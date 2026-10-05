@@ -1,11 +1,12 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Box, Check, Cpu, Gem, ShieldCheck, Sparkles } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import CanonicalHome from "@/components/CanonicalHome";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/CartContext";
+import { Input } from "@/components/ui/input";
 import beastImage from "@/assets/the-beast-showcase.png.asset.json";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const beastImageUrl = `https://montereybaypcs.com${beastImage.url}`;
@@ -30,22 +31,28 @@ const visibleParts = [
 ];
 
 const TheBeast = () => {
-  const navigate = useNavigate();
-  const { addToCart, items } = useCart();
-  const inCart = items.some((item) => item.slug === beast.slug);
+  const [rName, setRName] = useState("");
+  const [rEmail, setREmail] = useState("");
+  const [rPhone, setRPhone] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const addBeast = () => {
-    if (inCart) {
-      toast.info("The Beast is already reserved in your cart");
+  const reserve = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
+    const { error } = await supabase.from("contact_inquiries").insert({
+      kind: "beast",
+      name: rName.trim(),
+      email: rEmail.trim(),
+      phone: rPhone.trim(),
+      message: "The Beast reservation request",
+    });
+    setSending(false);
+    if (error) {
+      toast.error("Could not send. Please call (831) 718-7730.");
       return;
     }
-    addToCart(beast);
-    toast.success("The Beast is reserved in your cart");
-  };
-
-  const buyNow = () => {
-    if (!inCart) addToCart(beast);
-    navigate("/checkout");
+    setSent(true);
   };
 
   return (
@@ -175,17 +182,23 @@ const TheBeast = () => {
           <Box className="mx-auto h-8 w-8 text-brand" />
           <p className="mt-5 font-heading text-xs font-bold uppercase tracking-widest text-brand">Only 1 available</p>
           <h2 className="mx-auto mt-4 max-w-4xl font-heading text-4xl font-bold text-foreground lg:text-7xl">Once it is claimed, it is gone.</h2>
-          <p className="mx-auto mt-5 max-w-xl text-muted-foreground">Reserve The Beast for $100,000. Monterey Bay PCs will contact you to confirm the final specification, build schedule, pickup or delivery.</p>
-          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button onClick={buyNow} className="h-auto rounded-full bg-brand px-8 py-4 font-heading text-sm font-bold uppercase tracking-widest text-brand-foreground hover:bg-brand/90">
-              Reserve The Beast <ArrowRight />
-            </Button>
-            <Button onClick={addBeast} disabled={inCart} variant="outline" className="h-auto rounded-full px-8 py-4 font-heading text-sm font-bold uppercase tracking-widest">
-              {inCart ? "Reserved in cart" : "Add to cart"}
-            </Button>
-          </div>
+          <p className="mx-auto mt-5 max-w-xl text-muted-foreground">Request a private reservation. We will call you to confirm the final specification, a refundable reservation deposit, and wire transfer terms for the $100,000 balance.</p>
+          {sent ? (
+            <div className="mx-auto mt-9 max-w-md rounded-2xl border border-brand p-6 text-foreground">
+              Reservation request received. We will contact you within 1 business day.
+            </div>
+          ) : (
+            <form onSubmit={reserve} className="mx-auto mt-9 grid max-w-md gap-4 text-left">
+              <Input required placeholder="Full name" value={rName} onChange={(e) => setRName(e.target.value)} maxLength={100} />
+              <Input required type="email" placeholder="Email" value={rEmail} onChange={(e) => setREmail(e.target.value)} maxLength={255} />
+              <Input required type="tel" placeholder="Phone" value={rPhone} onChange={(e) => setRPhone(e.target.value)} maxLength={30} />
+              <Button type="submit" disabled={sending} className="h-auto rounded-full bg-brand px-8 py-4 font-heading text-sm font-bold uppercase tracking-widest text-brand-foreground hover:bg-brand/90">
+                {sending ? "Sending..." : "Request Reservation"} <ArrowRight />
+              </Button>
+            </form>
+          )}
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-            <Check className="h-4 w-4 text-brand" /> One unit maximum per order
+            <Check className="h-4 w-4 text-brand" /> No card charged online. Only one unit exists.
           </div>
         </div>
       </section>
