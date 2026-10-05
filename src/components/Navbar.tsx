@@ -99,6 +99,10 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
+              <div className="flex gap-3 mt-2">
+                <a href="tel:+18317187730" className="flex-1 text-center border border-border rounded-full py-2.5 font-heading text-xs font-semibold uppercase tracking-widest text-foreground">Call</a>
+                <a href="sms:+18317187730" className="flex-1 text-center border border-border rounded-full py-2.5 font-heading text-xs font-semibold uppercase tracking-widest text-foreground">Text</a>
+              </div>
               <Link to="/quote" onClick={() => setIsOpen(false)} className="btn-brand mt-2">Get a Quote</Link>
             </div>
           </motion.div>

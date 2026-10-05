@@ -11,3 +11,5 @@
 - [ ] Financing (Affirm/Klarna) — needs user's business account
 - [ ] Real part prices / build fee for the quote configurator
 - [x] Quote builder: full part lists per category, "None" option, daily-tracked prices, build fee 10% (min $75)
+- [x] Tier 1: contact, quote, order-status and Beast forms save to backend; workmanship guarantee; built-to-order badges; header call/text
+- [ ] Email alerts for new form submissions (needs email domain)
