@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Cpu, MemoryStick, HardDrive } from "lucide-react";
@@ -5,7 +6,22 @@ import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 import { prebuilts } from "@/data/prebuilts";
 
+const FILTERS = ["All", "1080p Esports", "1440p High Refresh", "4K Ultra", "Video Editing"];
+
 const Prebuilts = () => {
+  const [filter, setFilter] = useState("All");
+  const [compare, setCompare] = useState(false);
+  const shown = filter === "All" ? prebuilts : prebuilts.filter((p) => p.useCases.includes(filter));
+  const rows: [string, (p: (typeof prebuilts)[number]) => string][] = [
+    ["Price", (p) => `$${p.price.toLocaleString()}`],
+    ["Best at", (p) => p.performance.resolution],
+    ["Processor", (p) => p.specs.cpu],
+    ["Graphics", (p) => p.specs.gpu],
+    ["Memory", (p) => p.specs.ram],
+    ["Storage", (p) => p.specs.storage],
+    ["Cooling", (p) => p.cooling],
+    ["Size", (p) => p.formFactor],
+  ];
   return (
     <Layout>
       <CanonicalHome
@@ -29,8 +45,50 @@ const Prebuilts = () => {
             </p>
           </motion.div>
 
+          <div className="flex flex-wrap items-center gap-2 mb-10">
+            {FILTERS.map((f) => (
+              <button
+                key={f}
+                type="button"
+                aria-pressed={filter === f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 rounded-full border text-sm transition-colors ${filter === f ? "border-brand text-foreground bg-brand/10" : "border-border text-muted-foreground hover:text-foreground"}`}
+              >
+                {f}
+              </button>
+            ))}
+            <button type="button" onClick={() => setCompare((c) => !c)} className="ml-auto btn-outline !py-2 !text-xs">
+              {compare ? "Hide comparison" : "Compare all builds"}
+            </button>
+          </div>
+
+          {compare && (
+            <div className="mb-12 overflow-x-auto border border-border rounded-2xl">
+              <table className="w-full text-sm min-w-[720px]">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left p-4" />
+                    {prebuilts.map((p) => (
+                      <th key={p.slug} className="text-left p-4 font-heading text-foreground">
+                        <Link to={`/prebuilts/${p.slug}`} className="hover:text-brand">{p.name}</Link>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map(([label, get], i) => (
+                    <tr key={label} className={i % 2 === 0 ? "bg-muted/20" : ""}>
+                      <td className="p-4 font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</td>
+                      {prebuilts.map((p) => <td key={p.slug} className="p-4 text-foreground">{get(p)}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
           <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
-            {prebuilts.map((pc, i) => (
+            {shown.map((pc, i) => (
               <motion.div
                 key={pc.slug}
                 initial={{ opacity: 0, y: 30 }}
