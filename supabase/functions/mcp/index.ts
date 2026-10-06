@@ -52,6 +52,9 @@ import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@3.0.4";
 var prebuiltCatalog = [
   {
     slug: "starter",
+    cooling: "High-airflow air-cooled",
+    formFactor: "Mid-Tower",
+    useCases: ["1080p Esports"],
     name: "Bay Starter",
     tier: "Starter",
     price: 899,
@@ -83,6 +86,9 @@ var prebuiltCatalog = [
   },
   {
     slug: "mid",
+    cooling: "Quiet liquid-cooled",
+    formFactor: "Mid-Tower",
+    useCases: ["1440p High Refresh"],
     name: "Bay Mid",
     tier: "Mid",
     price: 1599,
@@ -114,6 +120,9 @@ var prebuiltCatalog = [
   },
   {
     slug: "high-end",
+    cooling: "Quiet liquid-cooled",
+    formFactor: "Mid-Tower",
+    useCases: ["4K Ultra", "Video Editing"],
     name: "Bay High-End",
     tier: "High-End",
     price: 2799,
@@ -145,6 +154,9 @@ var prebuiltCatalog = [
   },
   {
     slug: "extreme",
+    cooling: "Quiet liquid-cooled",
+    formFactor: "Full-Tower",
+    useCases: ["4K Ultra", "Video Editing"],
     name: "Bay Extreme",
     tier: "Extreme",
     price: 4499,
