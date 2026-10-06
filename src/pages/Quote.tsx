@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Mail } from "lucide-react";
+import { Mail, Link2, AlertTriangle, Star } from "lucide-react";
+import { boardRam, boardSocket, cpuSocket, minPsu, psuWatts, ramGen, RECOMMENDED, systemWatts, formatPhone } from "@/lib/compat";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -53,6 +54,14 @@ const Quote = () => {
         setParts((data ?? []) as Part[]);
         setLoadError(!!error || !data?.length);
         setLoading(false);
+        try {
+          const b = new URLSearchParams(window.location.search).get("b");
+          if (b) {
+            const parsed = JSON.parse(atob(b));
+            if (parsed.s) setSel(parsed.s);
+            if (Array.isArray(parsed.e)) setExtras(parsed.e);
+          }
+        } catch { /* ignore bad link */ }
       });
     return () => clearTimeout(timer);
   }, []);
@@ -68,6 +77,29 @@ const Quote = () => {
     ...Object.values(sel).filter((id) => id && id !== NONE).map((id) => byId[id]),
     ...extras.map((id) => byId[id]),
   ].filter(Boolean) as Part[];
+
+  const pick = (cat: string) => { const id = sel[cat]; return id && id !== NONE ? byId[id] : undefined; };
+  const cpu = pick("cpu"), board = pick("motherboard"), ram = pick("ram"), gpu = pick("gpu"), psu = pick("psu");
+  const isIncompatible = (cat: string, p: Part): string | null => {
+    if (cat === "motherboard" && cpu && cpuSocket(cpu.name) && boardSocket(p.name) && cpuSocket(cpu.name) !== boardSocket(p.name)) return "wrong socket";
+    if (cat === "cpu" && board && boardSocket(board.name) && cpuSocket(p.name) && cpuSocket(p.name) !== boardSocket(board.name)) return "wrong socket";
+    if (cat === "ram" && board && boardRam(board.name) && ramGen(p.name) && ramGen(p.name) !== boardRam(board.name)) return `needs ${boardRam(board.name)}`;
+    if (cat === "motherboard" && ram && boardRam(p.name) && ramGen(ram.name) && ramGen(ram.name) !== boardRam(p.name)) return "wrong memory type";
+    return null;
+  };
+  const warnings: string[] = [];
+  if (board && isIncompatible("motherboard", board) && cpu) warnings.push(`${cpu.name} does not fit the ${board.name}.`);
+  if (ram && board && isIncompatible("ram", ram)) warnings.push(`${board.name} needs ${boardRam(board.name)} memory.`);
+  const watts = systemWatts(cpu?.name, gpu?.name);
+  const neededPsu = minPsu(watts);
+  const psuW = psu ? psuWatts(psu.name) : null;
+  if (psuW && (cpu || gpu) && psuW < neededPsu) warnings.push(`Your power supply (${psuW}W) is too weak. Pick ${neededPsu}W or more.`);
+
+  const shareLink = () => {
+    const b = btoa(JSON.stringify({ s: sel, e: extras }));
+    const url = `${window.location.origin}/quote?b=${b}`;
+    navigator.clipboard?.writeText(url).then(() => toast.success("Build link copied"), () => toast.message(url));
+  };
 
   const partsTotal = chosen.reduce((s, p) => s + Number(p.price), 0);
   const buildFee = Math.max(MIN_BUILD_FEE, Math.round(partsTotal * BUILD_FEE_PCT));
@@ -91,6 +123,10 @@ const Quote = () => {
 
   const submitQuote = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (warnings.length) {
+      toast.error("Fix the compatibility warnings first.");
+      return;
+    }
     if (!chosen.length) {
       toast.error("Pick at least one part first.");
       return;
@@ -125,7 +161,7 @@ const Quote = () => {
           <Breadcrumbs items={[{ label: "Get a Quote" }]} />
           <h1 className="font-heading text-4xl lg:text-5xl font-bold text-foreground mb-4">Get a Quote</h1>
           <p className="text-muted-foreground text-lg mb-12 max-w-2xl">
-            Pick each part, or choose "None" if you already have it. Prices are checked against stores every day.
+            Pick each part, or choose "None" if you already have it. Parts that do not fit together are blocked, and ★ marks our best-value picks. Prices are checked against stores every day.
           </p>
 
           <div className="grid lg:grid-cols-[1fr_320px] gap-10">
@@ -139,7 +175,7 @@ const Quote = () => {
               {!loading &&
                 CATEGORIES.map((c) => (
                   <fieldset key={c.key}>
-                    <legend className="font-heading text-sm font-semibold uppercase tracking-widest text-foreground mb-3">{c.title}</legend>
+                    <legend className="font-heading text-sm font-semibold uppercase tracking-widest text-foreground mb-3">{c.title}{c.key === "psu" && (cpu || gpu) && <span className="ml-2 normal-case tracking-normal font-normal text-muted-foreground">Recommended: {neededPsu}W+ (est. draw {watts}W)</span>}</legend>
                     {c.multi ? (
                       <div className="flex flex-wrap gap-2">
                         {(byCat[c.key] ?? []).map((p) => {
@@ -165,11 +201,14 @@ const Quote = () => {
                       >
                         <option value="" className="bg-background">Choose...</option>
                         <option value={NONE} className="bg-background">None / I already have one</option>
-                        {(byCat[c.key] ?? []).map((p) => (
-                          <option key={p.id} value={p.id} className="bg-background">
-                            {p.name} - ${Number(p.price)}
-                          </option>
-                        ))}
+                        {(byCat[c.key] ?? []).map((p) => {
+                          const bad = isIncompatible(c.key, p);
+                          return (
+                            <option key={p.id} value={p.id} disabled={!!bad} className="bg-background">
+                              {RECOMMENDED.includes(p.name) ? "★ " : ""}{p.name} - ${Number(p.price)}{bad ? ` (${bad})` : ""}
+                            </option>
+                          );
+                        })}
                       </select>
                     )}
                   </fieldset>
@@ -179,10 +218,28 @@ const Quote = () => {
             <aside className="lg:sticky lg:top-24 h-fit border border-border rounded-2xl p-6 bg-card/30">
               <span className="text-xs font-heading font-semibold uppercase tracking-widest text-muted-foreground">Estimated price</span>
               <p className="font-heading text-4xl font-bold text-foreground mt-2">${total.toLocaleString()}</p>
+              {warnings.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  {warnings.map((w) => (
+                    <p key={w} className="flex gap-2 text-sm text-destructive"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />{w}</p>
+                  ))}
+                </div>
+              )}
+              {chosen.length > 0 && (
+                <details className="mt-4 text-sm">
+                  <summary className="cursor-pointer text-foreground">Itemized parts ({chosen.length})</summary>
+                  <ul className="mt-2 space-y-1 text-muted-foreground">
+                    {chosen.map((p) => (
+                      <li key={p.id} className="flex justify-between gap-3"><span>{p.name}</span><span>${Number(p.price).toLocaleString()}</span></li>
+                    ))}
+                  </ul>
+                </details>
+              )}
               <div className="text-sm text-muted-foreground mt-3 space-y-1">
                 <div className="flex justify-between"><span>Parts</span><span>${partsTotal.toLocaleString()}</span></div>
                 <div className="flex justify-between"><span>Build fee (10%, min $75)</span><span>${buildFee.toLocaleString()}</span></div>
               </div>
+              <button type="button" onClick={shareLink} className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Link2 className="w-4 h-4" /> Copy a link to this build</button>
               <p className="text-xs text-muted-foreground mt-3">
                 Tax and delivery not included.{lastUpdated && ` Prices last checked ${new Date(lastUpdated).toLocaleDateString()}.`}
               </p>
@@ -195,7 +252,7 @@ const Quote = () => {
                 <form onSubmit={submitQuote} className="grid gap-4 mt-6">
                   <Input required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
                   <Input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
-                  <Input type="tel" placeholder="Phone (optional)" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} />
+                  <Input type="tel" placeholder="Phone (optional)" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} maxLength={30} />
                   <Textarea placeholder="Anything else? Games, budget, style..." value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={1000} />
                   <button type="submit" disabled={sending} className="btn-brand justify-center"><Mail className="w-4 h-4" /> {sending ? "Sending..." : "Send quote request"}</button>
                 </form>
