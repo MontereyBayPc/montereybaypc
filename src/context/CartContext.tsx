@@ -38,7 +38,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.slug === item.slug);
       if (existing) {
-        if (item.slug === "the-beast") return prev;
+        if (item.slug === "the-beast" || item.slug === "rush-build") return prev;
         return prev.map((i) => (i.slug === item.slug ? { ...i, quantity: i.quantity + 1 } : i));
       }
       return [...prev, { ...item, quantity: 1 }];
@@ -48,7 +48,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const removeFromCart = (slug: string) => setItems((prev) => prev.filter((i) => i.slug !== slug));
   const updateQuantity = (slug: string, qty: number) =>
     setItems((prev) =>
-      qty <= 0 ? prev.filter((i) => i.slug !== slug) : prev.map((i) => (i.slug === slug ? { ...i, quantity: slug === "the-beast" ? 1 : qty } : i))
+      qty <= 0 ? prev.filter((i) => i.slug !== slug) : prev.map((i) => (i.slug === slug ? { ...i, quantity: slug === "the-beast" || slug === "rush-build" ? 1 : qty } : i))
     );
   const clearCart = () => setItems([]);
 

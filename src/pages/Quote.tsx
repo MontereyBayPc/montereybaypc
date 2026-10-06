@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Mail, Link2, AlertTriangle, Star } from "lucide-react";
+import { Mail, Link2, AlertTriangle } from "lucide-react";
 import { boardRam, boardSocket, cpuSocket, minPsu, psuWatts, ramGen, RECOMMENDED, systemWatts, formatPhone } from "@/lib/compat";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";

@@ -1,3 +1,4 @@
+import { formatPhone } from "@/lib/compat";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Box, Check, Cpu, Gem, ShieldCheck, Sparkles } from "lucide-react";
@@ -191,7 +192,7 @@ const TheBeast = () => {
             <form onSubmit={reserve} className="mx-auto mt-9 grid max-w-md gap-4 text-left">
               <Input required placeholder="Full name" value={rName} onChange={(e) => setRName(e.target.value)} maxLength={100} />
               <Input required type="email" placeholder="Email" value={rEmail} onChange={(e) => setREmail(e.target.value)} maxLength={255} />
-              <Input required type="tel" placeholder="Phone" value={rPhone} onChange={(e) => setRPhone(e.target.value)} maxLength={30} />
+              <Input required type="tel" placeholder="Phone" value={rPhone} onChange={(e) => setRPhone(formatPhone(e.target.value))} maxLength={30} />
               <Button type="submit" disabled={sending} className="h-auto rounded-full bg-brand px-8 py-4 font-heading text-sm font-bold uppercase tracking-widest text-brand-foreground hover:bg-brand/90">
                 {sending ? "Sending..." : "Request Reservation"} <ArrowRight />
               </Button>
