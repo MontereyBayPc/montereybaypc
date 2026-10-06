@@ -15,6 +15,9 @@ const PRICE_ID_BY_SLUG: Record<string, string> = {
   "high-end": "prebuilt_high_end",
   extreme: "prebuilt_extreme",
   "the-beast": "the_beast",
+  "upgrade-storage-1tb": "upgrade_storage_1tb",
+  "upgrade-ram-64gb": "upgrade_ram_64gb",
+  "rush-build": "rush_build",
 };
 
 const Checkout = () => {
@@ -85,8 +88,8 @@ const Checkout = () => {
                 </h2>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { id: "pickup", label: "Local Pickup", desc: "Free — Monterey Bay" },
-                    { id: "delivery", label: "Local Delivery", desc: "$75 — Within 30mi" },
+                    { id: "pickup", label: "Local Pickup", desc: "Free, Monterey Bay" },
+                    { id: "delivery", label: "Local Delivery", desc: "$75, within 30 miles" },
                   ].map((opt) => (
                     <button
                       type="button"

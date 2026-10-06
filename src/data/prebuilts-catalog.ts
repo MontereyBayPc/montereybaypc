@@ -23,11 +23,17 @@ export type PrebuiltSpec = {
     games: { name: string; fps: string }[];
   };
   whatsInTheBox: string[];
+  cooling: "Quiet liquid-cooled" | "High-airflow air-cooled";
+  formFactor: "Mid-Tower" | "Full-Tower";
+  useCases: string[];
 };
 
 export const prebuiltCatalog: PrebuiltSpec[] = [
   {
     slug: "starter",
+    cooling: "High-airflow air-cooled",
+    formFactor: "Mid-Tower",
+    useCases: ["1080p Esports"],
     name: "Bay Starter",
     tier: "Starter",
     price: 899,
@@ -60,6 +66,9 @@ export const prebuiltCatalog: PrebuiltSpec[] = [
   },
   {
     slug: "mid",
+    cooling: "Quiet liquid-cooled",
+    formFactor: "Mid-Tower",
+    useCases: ["1440p High Refresh"],
     name: "Bay Mid",
     tier: "Mid",
     price: 1599,
@@ -92,6 +101,9 @@ export const prebuiltCatalog: PrebuiltSpec[] = [
   },
   {
     slug: "high-end",
+    cooling: "Quiet liquid-cooled",
+    formFactor: "Mid-Tower",
+    useCases: ["4K Ultra", "Video Editing"],
     name: "Bay High-End",
     tier: "High-End",
     price: 2799,
@@ -124,6 +136,9 @@ export const prebuiltCatalog: PrebuiltSpec[] = [
   },
   {
     slug: "extreme",
+    cooling: "Quiet liquid-cooled",
+    formFactor: "Full-Tower",
+    useCases: ["4K Ultra", "Video Editing"],
     name: "Bay Extreme",
     tier: "Extreme",
     price: 4499,
