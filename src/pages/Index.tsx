@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Monitor, Cpu, HardDrive, ArrowRight, Star, Clock, MapPin, BadgeCheck, Wrench, Gauge, LifeBuoy, MessageSquare, PackageSearch, Hammer, Truck } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
+import { DELIVERY_TOWNS } from "@/data/info-pages";
 import heroImg1 from "@/assets/hero-pc.webp";
 import heroImg2 from "@/assets/hero-pc-2.webp";
 import heroImg3 from "@/assets/hero-pc-3.webp";
@@ -214,6 +215,44 @@ const Index = () => {
                 <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pickup + delivery area */}
+      <section className="py-24 lg:py-32 border-t border-border">
+        <div className="container mx-auto px-4 lg:px-8 grid lg:grid-cols-2 gap-16 max-w-6xl">
+          <div>
+            <h2 className="font-heading text-3xl lg:text-5xl font-bold text-foreground">What to Expect at Pickup</h2>
+            <ol className="mt-8 grid gap-3">
+              {[
+                "We boot it into Windows in front of you.",
+                "We show you temperatures under full load.",
+                "You get all the original part boxes and extras.",
+              ].map((t, i) => (
+                <li key={t} className="flex items-center gap-4 border border-border rounded-2xl p-4">
+                  <span className="font-heading text-sm font-semibold text-brand w-8">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-foreground">{t}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div>
+            <h2 className="font-heading text-3xl lg:text-5xl font-bold text-foreground">Delivery Area</h2>
+            <p className="text-muted-foreground mt-4">Local delivery within 30 miles of Monterey for $75, or free pickup.</p>
+            <div className="flex flex-wrap gap-2 mt-8">
+              {DELIVERY_TOWNS.map((t) =>
+                t === "Monterey" ? (
+                  <span key={t} className="px-4 py-2 rounded-full border border-brand text-foreground text-sm">{t}</span>
+                ) : (
+                  <Link key={t} to={`/areas/${t.toLowerCase().replace(/ /g, "-")}`} className="px-4 py-2 rounded-full border border-border text-muted-foreground hover:text-foreground text-sm">{t}</Link>
+                ),
+              )}
+            </div>
+            <div className="flex flex-wrap gap-3 mt-8 text-sm">
+              <Link to="/bring-your-own-parts" className="underline text-muted-foreground hover:text-foreground">Have your own parts? $50 assembly</Link>
+              <Link to="/trade-in" className="underline text-muted-foreground hover:text-foreground">Trade in your old gear</Link>
+            </div>
           </div>
         </div>
       </section>
