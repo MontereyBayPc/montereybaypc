@@ -2,6 +2,7 @@
 // used by the sitemap, per-page head tags, and build-time HTML snapshots.
 // Keep this file free of asset imports and "@/" aliases (it is loaded by vite.config.ts).
 import { prebuiltCatalog } from "../data/prebuilts-catalog";
+import { infoPages } from "../data/info-pages";
 
 export const SITE_URL = "https://montereybaypcs.com";
 
@@ -192,6 +193,10 @@ export const seoRoutes: SeoRoute[] = [
     body: [l.text],
     changefreq: "yearly",
     priority: "0.3",
+  })),
+  ...infoPages.map((p): SeoRoute => ({
+    path: p.path, title: p.title, description: p.description, h1: p.h1,
+    body: [p.intro], sections: p.sections, changefreq: "monthly", priority: "0.6",
   })),
 ];
 

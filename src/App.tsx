@@ -20,6 +20,7 @@ import Quote from "./pages/Quote";
 import OrderStatus from "./pages/OrderStatus";
 import Legal from "./pages/Legal";
 import TheBeast from "./pages/TheBeast";
+import InfoPage from "./pages/InfoPage";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,11 @@ const App = () => (
             <Route path="/order-status" element={<OrderStatus />} />
             <Route path="/legal/:slug" element={<Legal />} />
             <Route path="/the-beast" element={<TheBeast />} />
+            <Route path="/trade-in" element={<InfoPage />} />
+            <Route path="/bring-your-own-parts" element={<InfoPage />} />
+            <Route path="/business" element={<InfoPage />} />
+            <Route path="/repair-request" element={<InfoPage />} />
+            <Route path="/areas/:city" element={<InfoPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
