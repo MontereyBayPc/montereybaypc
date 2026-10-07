@@ -263,7 +263,7 @@ const ServiceDetail = () => {
             <h2 className="font-heading text-3xl lg:text-4xl font-bold text-foreground mb-4">Interested?</h2>
             <p className="text-muted-foreground mb-8">Reach out and let's talk about your project.</p>
             <Link
-              to="/contact"
+              to={slug === "troubleshooting-repair" ? "/repair-request" : "/contact"}
               className="inline-flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300"
             >
               Get in Touch <ArrowRight className="w-4 h-4" />
