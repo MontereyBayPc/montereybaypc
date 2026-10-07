@@ -1,15 +1,23 @@
 # Roadmap
 
 ## Done
-- [x] Added The Beast one-of-one $100,000 showcase page, dedicated navigation tab, cart limit, and checkout product
-- [x] Review renamed to "Michael T." on homepage (verified in preview)
-- [x] Homepage improvements: How It Works, Why Choose Us + stats strip, emoji icons replaced with line icons, CTA now links to /quote (all verified in preview)
+- [x] The Beast page, homepage upgrades, quote builder with daily prices, Tier 1 lead forms
+- [x] Promo codes at checkout (6 codes)
+- [x] Quote: socket + memory compatibility blocking, PSU wattage warning, best-value stars, itemized parts, shareable build link, phone formatting
+- [x] Builds: upgrades (+1TB $150, 64GB RAM $800), rush build $100, cooling/size/use badges, Windows/BIOS note, filters, comparison table, product + breadcrumb search data
+- [x] New pages: trade-in, bring your own parts ($50), business workstations, repair request checklist, 6 city pages
+- [x] Homepage pickup walkthrough + delivery towns; mobile call/configure bar; better 404; business hours + service area in search data
+
+## Next (can do)
+- [ ] Slide-over cart drawer
+- [ ] Peripherals add-ons (need products + prices from owner)
+- [ ] Buying guide articles
 
 ## Blocked / awaiting user
-- [ ] Contact form email sending: `send-contact-email` function needs an email domain configured (user owns montereybaypcs.com, domain setup not started)
-- [ ] Real content: gallery photos, build timelapse video, About page photo, Google reviews
-- [ ] Financing (Affirm/Klarna) — needs user's business account
-- [ ] Real part prices / build fee for the quote configurator
-- [x] Quote builder: full part lists per category, "None" option, daily-tracked prices, build fee 10% (min $75)
-- [x] Tier 1: contact, quote, order-status and Beast forms save to backend; workmanship guarantee; built-to-order badges; header call/text
-- [ ] Email alerts for new form submissions (needs email domain)
+- [ ] Email alerts, order confirmation emails, cleaning reminders: need email domain setup
+- [ ] Real photos: gallery, bench photos, customer setups, before/after, Instagram, timelapse videos
+- [ ] Google review badge (needs Google Business profile link)
+- [ ] Financing (Affirm/Klarna) and order status lookup (needs real order records)
+- [ ] Drop-off scheduling calendar (needs booking rules)
+- [ ] Search Console / Bing verification (owner must sign in)
+- [ ] Offline items: printed certificates, case badges, referral cards
