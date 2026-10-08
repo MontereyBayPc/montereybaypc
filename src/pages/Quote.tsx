@@ -262,7 +262,7 @@ const Quote = () => {
                     {drafts.map((d, i) => (
                       <li key={i} className="flex justify-between gap-2">
                         <button type="button" className="text-foreground underline text-left" onClick={() => { setSel(d.s); setExtras(d.e); }}>{d.name}</button>
-                        <span className="text-muted-foreground">\${d.total.toLocaleString()}</span>
+                        <span className="text-muted-foreground">${d.total.toLocaleString()}</span>
                         <button type="button" aria-label="Delete saved build" className="text-muted-foreground" onClick={() => persistDrafts(drafts.filter((_, j) => j !== i))}>×</button>
                       </li>
                     ))}

@@ -21,3 +21,8 @@
 - [ ] Drop-off scheduling calendar (needs booking rules)
 - [ ] Search Console / Bing verification (owner must sign in)
 - [ ] Offline items: printed certificates, case badges, referral cards
+
+## Batch 3 (Oct 2026 list)
+- [x] Slide-out cart drawer, Text an Expert button, saved builds + print/PDF on quote
+- [x] Guides: GPU buying guide, PC care, drop-off prep, custom vs big box, creator packages, esports teams
+- [ ] Remaining items need owner input (emails, photos, Google profile, booking rules, financing, accessory prices)
