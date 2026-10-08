@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import ScrollToTop from "./ScrollToTop";
 import MobileActionBar from "./MobileActionBar";
+import CartDrawer from "./CartDrawer";
 
 const Layout = ({ children }: { children: ReactNode }) => (
   <div className="min-h-screen flex flex-col">
@@ -12,6 +13,7 @@ const Layout = ({ children }: { children: ReactNode }) => (
     <Footer />
     <div className="h-20 lg:hidden" aria-hidden />
     <MobileActionBar />
+    <CartDrawer />
   </div>
 );
 
