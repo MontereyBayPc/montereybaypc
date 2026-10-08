@@ -52,6 +52,11 @@ const App = () => (
             <Route path="/business" element={<InfoPage />} />
             <Route path="/repair-request" element={<InfoPage />} />
             <Route path="/areas/:city" element={<InfoPage />} />
+            <Route path="/guides/:slug" element={<InfoPage />} />
+            <Route path="/drop-off-guide" element={<InfoPage />} />
+            <Route path="/custom-vs-big-box" element={<InfoPage />} />
+            <Route path="/creator-packages" element={<InfoPage />} />
+            <Route path="/esports" element={<InfoPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

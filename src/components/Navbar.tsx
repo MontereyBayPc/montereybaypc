@@ -18,7 +18,7 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { totalItems } = useCart();
+  const { totalItems, setDrawerOpen } = useCart();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -40,31 +40,29 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <Link
-              to="/cart"
-              aria-label="Cart"
+            <button type="button" onClick={() => setDrawerOpen(true)} aria-label="Cart"
               className="relative text-muted-foreground hover:text-foreground transition-colors"
-            >
+>
               <ShoppingCart className="w-5 h-5" />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-brand text-brand-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
-            </Link>
+            </button>
             <a href="tel:+18317187730" className="hidden xl:inline font-heading text-sm font-semibold text-muted-foreground hover:text-foreground">(831) 718-7730</a>
             <Link to="/quote" className="btn-brand !px-5 !py-2.5 !text-xs">Get a Quote</Link>
           </div>
 
           <div className="flex items-center gap-4 lg:hidden">
-            <Link to="/cart" aria-label="Cart" className="relative text-foreground">
+            <button type="button" onClick={() => setDrawerOpen(true)} aria-label="Cart" className="relative text-foreground">
               <ShoppingCart className="w-5 h-5" />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-foreground text-background text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
-            </Link>
+            </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-foreground"

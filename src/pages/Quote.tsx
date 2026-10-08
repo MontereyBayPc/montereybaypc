@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Mail, Link2, AlertTriangle } from "lucide-react";
+import { Mail, Link2, AlertTriangle, Printer, Save } from "lucide-react";
 import { boardRam, boardSocket, cpuSocket, minPsu, psuWatts, ramGen, RECOMMENDED, systemWatts, formatPhone } from "@/lib/compat";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
@@ -94,6 +94,17 @@ const Quote = () => {
   const neededPsu = minPsu(watts);
   const psuW = psu ? psuWatts(psu.name) : null;
   if (psuW && (cpu || gpu) && psuW < neededPsu) warnings.push(`Your power supply (${psuW}W) is too weak. Pick ${neededPsu}W or more.`);
+
+  const DRAFTS_KEY = "mbpc_quote_drafts";
+  const [drafts, setDrafts] = useState<{ name: string; s: Record<string, string>; e: string[]; total: number }[]>(() => {
+    try { return JSON.parse(localStorage.getItem(DRAFTS_KEY) || "[]"); } catch { return []; }
+  });
+  const persistDrafts = (d: typeof drafts) => { setDrafts(d); localStorage.setItem(DRAFTS_KEY, JSON.stringify(d)); };
+  const saveDraft = () => {
+    if (!chosen.length) { toast.error("Pick at least one part first."); return; }
+    persistDrafts([{ name: `Build ${drafts.length + 1} (${new Date().toLocaleDateString()})`, s: sel, e: extras, total }, ...drafts].slice(0, 6));
+    toast.success("Build saved on this device");
+  };
 
   const shareLink = () => {
     const b = btoa(JSON.stringify({ s: sel, e: extras }));
@@ -239,7 +250,25 @@ const Quote = () => {
                 <div className="flex justify-between"><span>Parts</span><span>${partsTotal.toLocaleString()}</span></div>
                 <div className="flex justify-between"><span>Build fee (10%, min $75)</span><span>${buildFee.toLocaleString()}</span></div>
               </div>
-              <button type="button" onClick={shareLink} className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Link2 className="w-4 h-4" /> Copy a link to this build</button>
+              <div className="mt-4 flex flex-col gap-2 print:hidden">
+                <button type="button" onClick={shareLink} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Link2 className="w-4 h-4" /> Copy a link to this build</button>
+                <button type="button" onClick={saveDraft} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Save className="w-4 h-4" /> Save this build</button>
+                <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Printer className="w-4 h-4" /> Print or save as PDF</button>
+              </div>
+              {drafts.length > 0 && (
+                <div className="mt-4 print:hidden">
+                  <p className="text-xs font-heading uppercase tracking-widest text-muted-foreground mb-2">Saved builds</p>
+                  <ul className="space-y-1 text-sm">
+                    {drafts.map((d, i) => (
+                      <li key={i} className="flex justify-between gap-2">
+                        <button type="button" className="text-foreground underline text-left" onClick={() => { setSel(d.s); setExtras(d.e); }}>{d.name}</button>
+                        <span className="text-muted-foreground">${d.total.toLocaleString()}</span>
+                        <button type="button" aria-label="Delete saved build" className="text-muted-foreground" onClick={() => persistDrafts(drafts.filter((_, j) => j !== i))}>×</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <p className="text-xs text-muted-foreground mt-3">
                 Tax and delivery not included.{lastUpdated && ` Prices last checked ${new Date(lastUpdated).toLocaleDateString()}.`}
               </p>

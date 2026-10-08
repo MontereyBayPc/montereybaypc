@@ -15,6 +15,8 @@ type CartContextType = {
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
+  drawerOpen: boolean;
+  setDrawerOpen: (open: boolean) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -30,11 +32,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   });
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
   const addToCart: CartContextType["addToCart"] = (item) => {
+    setDrawerOpen(true);
     setItems((prev) => {
       const existing = prev.find((i) => i.slug === item.slug);
       if (existing) {
@@ -56,7 +61,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, subtotal }}>
+    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, subtotal, drawerOpen, setDrawerOpen }}>
       {children}
     </CartContext.Provider>
   );
