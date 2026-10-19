@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Wrench, MessageSquare } from "lucide-react";
 import { BUSINESS } from "@/lib/business";
+import BayAssistant from "./BayAssistant";
 
 const SMS_HREF = "sms:+18317187730";
 
@@ -17,13 +18,7 @@ const MobileActionBar = () => (
         <Wrench className="w-4 h-4" /> Quote
       </Link>
     </div>
-    <a
-      href={SMS_HREF}
-      className="hidden lg:inline-flex fixed bottom-6 right-6 z-40 items-center gap-2 btn-brand shadow-lg print:hidden"
-      aria-label="Text an expert"
-    >
-      <MessageSquare className="w-4 h-4" /> Text an Expert
-    </a>
+    <BayAssistant />
   </>
 );
 
