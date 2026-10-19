@@ -30,6 +30,10 @@ const InfoPage = () => {
             <nav aria-label="Local service resources" className="flex flex-wrap gap-4 mb-12 text-foreground">
               <Link to="/contact" className="underline underline-offset-4">Confirm pickup or delivery</Link>
               <Link to="/services" className="underline underline-offset-4">PC services</Link>
+              <Link to="/services/custom-pc-building" className="underline underline-offset-4">Custom PC building</Link>
+              <Link to="/services/troubleshooting-repair" className="underline underline-offset-4">Troubleshooting & repair</Link>
+              <Link to="/services/upgrades" className="underline underline-offset-4">Hardware upgrades</Link>
+              <Link to="/quote" className="underline underline-offset-4">Get a custom PC quote</Link>
               <Link to="/repair-request" className="underline underline-offset-4">Request a repair</Link>
               <Link to="/drop-off-guide" className="underline underline-offset-4">Prepare for drop-off</Link>
             </nav>

@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Current request: failing SEO findings
+- [x] Refine homepage/About headings and verify all service/product headings
+- [x] Add specific build, repair, upgrade and quote links to service-area guidance
 - [x] Add descriptive page H1s and named homepage carousel controls
 - [x] Expand existing service-area guidance and link from services/contact
 - [x] Add crawler-visible homepage Open Graph URL and verify page snapshots

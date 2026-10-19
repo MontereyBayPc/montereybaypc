@@ -12,7 +12,7 @@ const About = () => (
     />
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
-        <SectionHeading as="h1" title="About Monterey Bay PCs" />
+        <SectionHeading as="h1" title="About Monterey Bay PCs: Custom Builds & Repair" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, x: -20 }}

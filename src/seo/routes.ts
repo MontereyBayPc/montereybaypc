@@ -38,7 +38,7 @@ export const seoRoutes: SeoRoute[] = [
     path: "/",
     title: "Monterey Bay PCs | Custom Gaming PCs Built in Monterey, CA",
     description: "Custom-built gaming PCs, workstations, and everyday systems from Monterey Bay, CA. Handcrafted for performance, reliability, and style.",
-    h1: "Custom Gaming PCs Built in Monterey, CA",
+    h1: "Custom PCs & Repair in Monterey Bay",
     body: [
       "Custom PCs Built for Power. Handcrafted gaming rigs, workstations, and everyday PCs, engineered for performance. Based in Monterey Bay, CA. Founded in 2024.",
     ],
@@ -148,7 +148,7 @@ export const seoRoutes: SeoRoute[] = [
     path: "/about",
     title: "About Monterey Bay PCs | Local Custom PC Builders",
     description: "Meet Monterey Bay PCs, a local custom PC building and repair shop serving the Monterey Bay area with hand-built rigs and honest service.",
-    h1: "About Monterey Bay PCs",
+    h1: "About Monterey Bay PCs: Custom Builds & Repair",
     body: ["A local custom PC building and repair shop in Monterey, CA, founded in 2024, with 15+ builds completed."],
     changefreq: "yearly",
     priority: "0.6",
