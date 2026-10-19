@@ -126,7 +126,7 @@ const Index = () => {
               transition={{ duration: 0.9, delay: 0.4, ease: "easeOut" }}
               className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95] text-foreground"
             >
-              Custom PCs
+              Custom PCs & Repair
               <br />
               <motion.span
                 initial={{ opacity: 0, x: -30 }}
@@ -134,7 +134,7 @@ const Index = () => {
                 transition={{ duration: 0.8, delay: 0.8 }}
                 className="text-muted-foreground"
               >
-                Built for Power
+                in Monterey Bay
               </motion.span>
             </motion.h1>
             <motion.p
