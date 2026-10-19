@@ -8,3 +8,4 @@
 - Service acknowledgments are server-validated and stored privately before issuing a customer PDF; work scope and price still require a separate technician agreement.
 - Build tracking is service-role-managed in Lovable Cloud with expiring unguessable tokens and short-lived private photo URLs; never expose public table reads or stage writes.
 - Prebuilt benchmark references must identify their source and distinguish CPU-only reference scores from measured complete-system game results.
+- Static route snapshots replace fallback canonical and Open Graph URLs before adding self-referencing page URLs, so social crawlers receive one unambiguous URL per page.

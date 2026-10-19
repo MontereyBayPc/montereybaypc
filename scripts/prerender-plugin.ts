@@ -25,6 +25,8 @@ ${seoRoutes.map((r) => `      <li><a href="${r.path}">${esc(r.title)}</a></li>`)
 function render(template: string, path: string, title: string, description: string, bodyHtml: string, noindex: boolean) {
   const url = `${SITE_URL}${path}`;
   let html = template
+    .replace(/<meta\b[^>]*\bproperty=["']og:url["'][^>]*>\s*/gi, "")
+    .replace(/<link\b[^>]*\brel=["']canonical["'][^>]*>\s*/gi, "")
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
     .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${esc(description)}">`)
     .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${esc(title)}">`)
