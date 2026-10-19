@@ -24,6 +24,8 @@ const cols = [
       { to: "/faq", label: "FAQ" },
       { to: "/contact", label: "Contact" },
       { to: "/order-status", label: "Order Status" },
+      { to: "/service-area-map", label: "Service Area Map" },
+      { to: "/custom-vs-big-box", label: "Why Buy Local" },
     ],
   },
   {
@@ -33,6 +35,7 @@ const cols = [
       { to: "/legal/returns", label: "Returns & Refunds" },
       { to: "/legal/shipping", label: "Pickup & Delivery" },
       { to: "/legal/terms", label: "Terms of Service" },
+      { to: "/service-agreement", label: "Service Work Order" },
       { to: "/legal/privacy", label: "Privacy Policy" },
       { to: "/legal/accessibility", label: "Accessibility" },
     ],

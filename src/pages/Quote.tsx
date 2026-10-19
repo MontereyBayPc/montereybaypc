@@ -9,6 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { BUSINESS } from "@/lib/business";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { checkFitment } from "@/lib/fitment";
+import { exportQuotePdf } from "@/lib/quote-pdf";
 
 type Part = { id: string; category: string; name: string; price: number; price_updated_at: string | null };
 
@@ -18,6 +21,7 @@ const CATEGORIES: { key: string; title: string; multi?: boolean }[] = [
   { key: "motherboard", title: "Motherboard" },
   { key: "ram", title: "Memory" },
   { key: "storage", title: "Storage" },
+  { key: "storage-secondary", title: "Secondary games / scratch drive" },
   { key: "case", title: "Case" },
   { key: "psu", title: "Power supply" },
   { key: "cooler", title: "CPU cooler" },
@@ -94,6 +98,14 @@ const Quote = () => {
   const neededPsu = minPsu(watts);
   const psuW = psu ? psuWatts(psu.name) : null;
   if (psuW && (cpu || gpu) && psuW < neededPsu) warnings.push(`Your power supply (${psuW}W) is too weak. Pick ${neededPsu}W or more.`);
+  const fit = checkFitment(pick('case')?.name,pick('cooler')?.name);
+  if (fit.issue) warnings.push(fit.issue);
+  const splitStorage = (capacity: string) => {
+    const primary = (byCat.storage ?? []).find(p => /\b1TB\b/i.test(p.name) && /NVMe/i.test(p.name));
+    const secondary = (byCat.storage ?? []).find(p => p.name.includes(capacity) && /NVMe/i.test(p.name));
+    if (!primary || !secondary) { toast.error('This drive combination is not currently in the catalog. Ask us for a custom estimate.'); return; }
+    setSel(s => ({...s,storage:primary.id,'storage-secondary':secondary.id}));
+  };
 
   const DRAFTS_KEY = "mbpc_quote_drafts";
   const [drafts, setDrafts] = useState<{ name: string; s: Record<string, string>; e: string[]; total: number }[]>(() => {
@@ -177,6 +189,7 @@ const Quote = () => {
 
           <div className="grid lg:grid-cols-[1fr_320px] gap-10">
             <div className="space-y-6">
+              {!loading && !loadError && <div className="border-b border-border pb-5 flex flex-wrap items-center gap-2 print:hidden"><span className="font-heading text-sm mr-2">Split storage</span><Button type="button" size="sm" variant="outline" onClick={()=>splitStorage('2TB')}>1TB OS + 2TB games</Button><Button type="button" size="sm" variant="outline" onClick={()=>splitStorage('4TB')}>1TB OS + 4TB games</Button></div>}
               {loading && <p className="text-muted-foreground">Loading parts...</p>}
               {loadError && (
                 <div className="border border-border rounded-2xl p-6 text-muted-foreground">
@@ -206,13 +219,14 @@ const Quote = () => {
                       </div>
                     ) : (
                       <select
+                        aria-label={c.title}
                         className={selectCls}
                         value={sel[c.key] ?? ""}
                         onChange={(e) => setSel((s) => ({ ...s, [c.key]: e.target.value }))}
                       >
                         <option value="" className="bg-background">Choose...</option>
                         <option value={NONE} className="bg-background">None / I already have one</option>
-                        {(byCat[c.key] ?? []).map((p) => {
+                        {(byCat[c.key === 'storage-secondary' ? 'storage' : c.key] ?? []).map((p) => {
                           const bad = isIncompatible(c.key, p);
                           return (
                             <option key={p.id} value={p.id} disabled={!!bad} className="bg-background">
@@ -229,6 +243,7 @@ const Quote = () => {
             <aside className="lg:sticky lg:top-24 h-fit border border-border rounded-2xl p-6 bg-card/30">
               <span className="text-xs font-heading font-semibold uppercase tracking-widest text-muted-foreground">Estimated price</span>
               <p className="font-heading text-4xl font-bold text-foreground mt-2">${total.toLocaleString()}</p>
+              {fit.note && <p className="text-xs text-muted-foreground mt-4">{fit.note}</p>}
               {warnings.length > 0 && (
                 <div className="mt-4 space-y-2">
                   {warnings.map((w) => (
@@ -241,7 +256,7 @@ const Quote = () => {
                   <summary className="cursor-pointer text-foreground">Itemized parts ({chosen.length})</summary>
                   <ul className="mt-2 space-y-1 text-muted-foreground">
                     {chosen.map((p) => (
-                      <li key={p.id} className="flex justify-between gap-3"><span>{p.name}</span><span>${Number(p.price).toLocaleString()}</span></li>
+                      <li key={`${p.id}-${chosen.indexOf(p)}`} className="flex justify-between gap-3"><span>{p.name}</span><span>${Number(p.price).toLocaleString()}</span></li>
                     ))}
                   </ul>
                 </details>
@@ -253,7 +268,7 @@ const Quote = () => {
               <div className="mt-4 flex flex-col gap-2 print:hidden">
                 <button type="button" onClick={shareLink} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Link2 className="w-4 h-4" /> Copy a link to this build</button>
                 <button type="button" onClick={saveDraft} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Save className="w-4 h-4" /> Save this build</button>
-                <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Printer className="w-4 h-4" /> Print or save as PDF</button>
+                <Button type="button" variant="ghost" disabled={!chosen.length} onClick={() => exportQuotePdf(chosen,buildFee,[...warnings,...(fit.note ? [fit.note] : []),summary])} className="justify-start h-auto px-0 text-sm text-muted-foreground"><Printer className="w-4 h-4" /> Download branded PDF</Button>
               </div>
               {drafts.length > 0 && (
                 <div className="mt-4 print:hidden">

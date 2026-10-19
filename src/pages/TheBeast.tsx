@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import beastImage from "@/assets/the-beast-showcase.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import BuildBenchmarks from "@/components/BuildBenchmarks";
 
 const beastImageUrl = `https://montereybaypcs.com${beastImage.url}`;
 
@@ -179,6 +180,7 @@ const TheBeast = () => {
       </section>
 
       <section className="border-t border-border bg-card py-16 lg:py-24">
+        <div className="container mx-auto px-4 lg:px-8 pb-16"><BuildBenchmarks slug="the-beast" cpu="Threadripper PRO, exact processor to be confirmed" /></div>
         <div className="container mx-auto px-4 text-center lg:px-8">
           <Box className="mx-auto h-8 w-8 text-brand" />
           <p className="mt-5 font-heading text-xs font-bold uppercase tracking-widest text-brand">Only 1 available</p>

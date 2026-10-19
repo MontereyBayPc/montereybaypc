@@ -9,6 +9,7 @@ import Layout from "@/components/Layout";
 import { getPrebuilt } from "@/data/prebuilts";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
+import BuildBenchmarks from "@/components/BuildBenchmarks";
 
 const PrebuiltDetail = () => {
   const { slug = "" } = useParams();
@@ -202,19 +203,7 @@ const PrebuiltDetail = () => {
             </div>
           </div>
 
-          {/* Performance */}
-          <div className="mt-16">
-            <h2 className="font-heading text-3xl font-bold text-foreground mb-2">Expected Performance</h2>
-            <p className="text-muted-foreground mb-6">Average FPS at {pc.performance.resolution}.</p>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {pc.performance.games.map((g) => (
-                <div key={g.name} className="border border-border rounded-xl px-5 py-4 flex justify-between items-center">
-                  <span className="text-foreground">{g.name}</span>
-                  <span className="font-heading font-bold text-foreground">{g.fps}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <BuildBenchmarks slug={pc.slug} cpu={pc.specs.cpu} />
 
           <div className="mt-16 border-t border-border pt-10 flex flex-wrap gap-4 justify-between items-center">
             <p className="text-muted-foreground text-sm">Built in 1-2 weeks. Local pickup or delivery in Monterey Bay.</p>

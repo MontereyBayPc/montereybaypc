@@ -1,4 +1,5 @@
 // Content for simple info pages. No asset imports: also read by src/seo/routes.ts.
+import { SERVICE_TERMS } from '../lib/service-agreement';
 export type InfoPage = {
   path: string;
   title: string;
@@ -15,16 +16,27 @@ export const DELIVERY_TOWNS = ["Monterey", ...cities];
 
 export const infoPages: InfoPage[] = [
   {
+    path:'/service-agreement', title:'Hardware Service Agreement & Work Order | Monterey Bay PCs', description:'Read the service scope, data backup acknowledgment, 30-day uncollected-property notice process and manufacturer RMA terms. Prepare a work order for drop-off.', h1:'Hardware Service Agreement',
+    intro:'Review these draft service terms before drop-off. California legal review is needed before relying on them as an enforceable contract. Download an acknowledged copy, then agree the final scope and price with your technician.',
+    sections:SERVICE_TERMS.map(t=>({h:t.title,items:[t.text]})),
+  },
+  {
+    path:'/service-area-map', title:'Local Pickup & Delivery Service Map | Monterey Bay PCs', description:'Explore Monterey, Carmel, Pacific Grove, Seaside, Marina and Salinas service towns. Local delivery within an approximate 30-mile radius, subject to confirmation.', h1:'Monterey Bay Service Area',
+    intro:'Local service around Monterey, Carmel, Pacific Grove, Seaside, Marina and Salinas. Free arranged pickup in Monterey; local delivery is $75 within 30 miles, subject to confirming your address.',
+    sections:[{h:'Pickup by appointment',items:['We confirm the exact pickup location and time with you directly. Map markers show town centers, not drop-off spots.']},{h:'Delivery confirmation',items:['The circle is an approximate geographic radius, not a guaranteed route boundary. Contact us with your address before arranging delivery.']}],
+  },
+  {
     path: "/trade-in",
-    title: "Trade In Your Old PC or GPU | Monterey Bay PCs",
-    description: "Trade in your old graphics card or PC for credit toward a new custom build from Monterey Bay PCs.",
-    h1: "Trade In Your Old Gear",
-    intro: "Upgrading? Send us the specs of your old graphics card or PC and we will offer credit toward your new build.",
+    title: "CPU & GPU Trade-In Calculator | Monterey Bay PCs",
+    description: "Estimate credit for a working CPU or graphics card toward a new Monterey Bay PCs build. Final offer after inspection, capped at half of reference price.",
+    h1: "CPU & GPU Trade-Ins",
+    intro: "Upgrading? Estimate trade credit for your working processor or graphics card, then send us the model and condition for an inspected offer.",
     sections: [
       { h: "How it works", items: [
         "01 Tell us what you have: model, age, and condition.",
         "02 We reply with a credit offer, usually within 1 business day.",
         "03 Bring it in when you pick up your new PC and the credit comes off your total.",
+        "Only CPUs and GPUs are accepted. Estimated credit never exceeds 50% of the reference component price and is subject to testing and inspection.",
       ] },
     ],
     form: { kind: "trade_in", heading: "Get a trade-in offer", placeholder: "What are you trading in? (e.g. RTX 3070, good condition, 3 years old)", submit: "Request offer" },

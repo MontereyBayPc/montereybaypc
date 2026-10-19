@@ -57,6 +57,8 @@ const App = () => (
             <Route path="/custom-vs-big-box" element={<InfoPage />} />
             <Route path="/creator-packages" element={<InfoPage />} />
             <Route path="/esports" element={<InfoPage />} />
+            <Route path="/service-area-map" element={<InfoPage />} />
+            <Route path="/service-agreement" element={<InfoPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
