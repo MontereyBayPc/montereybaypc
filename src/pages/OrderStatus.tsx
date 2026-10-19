@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { BUSINESS } from "@/lib/business";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { BUILD_STAGES } from "@/lib/build-stages";
 
-const steps = ["Order received", "Parts sourced", "Building", "Stress testing", "Ready for pickup or delivery"];
+const steps = BUILD_STAGES.map(s=>s.name);
 
 const OrderStatus = () => {
   const [name, setName] = useState("");
@@ -44,6 +45,7 @@ const OrderStatus = () => {
           <h1 className="font-heading text-4xl lg:text-5xl font-bold text-foreground mb-4">Order Status</h1>
           <p className="text-muted-foreground text-lg mb-12">
             Every PC goes through the same stages. We will reach out when yours is ready, but you can ask for an update anytime.
+            If we have sent you a private build link, open it to see your current stage and workbench photos.
           </p>
 
           <ol className="grid gap-3 mb-14">

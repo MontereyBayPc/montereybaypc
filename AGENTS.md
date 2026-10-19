@@ -5,5 +5,6 @@
 - Part compatibility and PSU sizing rules live in src/lib/compat.ts with tests, so the quote builder stays free of hardware logic.
 - Bay uses AI Elements and a server-only Responses endpoint; one browser-local conversation keeps visitor chat lightweight without exposing model credentials.
 - Physical-fit metadata and trade-in estimates live in dedicated tested domain modules; unknown dimensions must remain unverified rather than inferred from product families.
-- Service acknowledgments generate customer-held PDFs until secure online consent storage is available; never treat a local PDF as an online submission.
+- Service acknowledgments are server-validated and stored privately before issuing a customer PDF; work scope and price still require a separate technician agreement.
+- Build tracking is service-role-managed in Lovable Cloud with expiring unguessable tokens and short-lived private photo URLs; never expose public table reads or stage writes.
 - Prebuilt benchmark references must identify their source and distinguish CPU-only reference scores from measured complete-system game results.
