@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   try {
     const body = await req.json();
-    if (!Array.isArray(body.messages) || body.messages.length > 80 || JSON.stringify(body.messages).length > 60000 || body.messages.some((m: UIMessage) => !['user', 'assistant'].includes(m.role) || !Array.isArray(m.parts) || m.parts.some((p) => !['text','reasoning'].includes(p.type)))) {
+    if (!Array.isArray(body.messages) || body.messages.length > 80 || JSON.stringify(body.messages).length > 60000 || body.messages.some((m: UIMessage) => !['user', 'assistant'].includes(m.role) || !Array.isArray(m.parts) || m.parts.some((p) => !['text','reasoning','step-start'].includes(p.type)))) {
       return new Response(JSON.stringify({ error: 'Please start a new chat or shorten your message.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const key = Deno.env.get('LOVABLE_API_KEY');
