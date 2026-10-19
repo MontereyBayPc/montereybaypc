@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Current request: failing SEO findings
-- [ ] Add descriptive page H1s and named homepage carousel controls
-- [ ] Expand existing service-area guidance and link from services/contact
-- [ ] Add crawler-visible homepage Open Graph URL and verify page snapshots
+- [x] Add descriptive page H1s and named homepage carousel controls
+- [x] Expand existing service-area guidance and link from services/contact
+- [x] Add crawler-visible homepage Open Graph URL and verify page snapshots
 
 ## Current request: professional service tools
 - [x] Remove homepage pickup/delivery sections; replace floating text button with mobile-friendly AI assistant
