@@ -102,7 +102,7 @@ const Quote = () => {
   if (fit.issue) warnings.push(fit.issue);
   const splitStorage = (capacity: string) => {
     const primary = (byCat.storage ?? []).find(p => /\b1TB\b/i.test(p.name) && /NVMe/i.test(p.name));
-    const secondary = (byCat.storage ?? []).find(p => p.name.includes(capacity) && /NVMe/i.test(p.name));
+    const secondary = (byCat.storage ?? []).find(p => p.name.includes(capacity) && !/HDD/i.test(p.name));
     if (!primary || !secondary) { toast.error('This drive combination is not currently in the catalog. Ask us for a custom estimate.'); return; }
     setSel(s => ({...s,storage:primary.id,'storage-secondary':secondary.id}));
   };
@@ -255,8 +255,8 @@ const Quote = () => {
                 <details className="mt-4 text-sm">
                   <summary className="cursor-pointer text-foreground">Itemized parts ({chosen.length})</summary>
                   <ul className="mt-2 space-y-1 text-muted-foreground">
-                    {chosen.map((p) => (
-                      <li key={`${p.id}-${chosen.indexOf(p)}`} className="flex justify-between gap-3"><span>{p.name}</span><span>${Number(p.price).toLocaleString()}</span></li>
+                    {chosen.map((p,i) => (
+                      <li key={`${p.id}-${i}`} className="flex justify-between gap-3"><span>{p.name}</span><span>${Number(p.price).toLocaleString()}</span></li>
                     ))}
                   </ul>
                 </details>
