@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Send, Mail, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -84,6 +85,10 @@ const Contact = () => {
                 </div>
                 <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto group-hover:translate-x-1 transition-transform duration-300" />
               </motion.a>
+              <p className="mt-6 text-muted-foreground">
+                Arranging pickup or local delivery?{' '}
+                <Link to="/service-area-map" className="text-foreground underline underline-offset-4">Check our service area and address-confirmation details</Link>.
+              </p>
             </motion.div>
 
             {/* Right side - Form */}

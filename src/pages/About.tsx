@@ -12,7 +12,7 @@ const About = () => (
     />
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
-        <SectionHeading title="About Us" />
+        <SectionHeading as="h1" title="About Monterey Bay PCs" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -28,7 +28,7 @@ const About = () => (
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h3 className="font-heading text-2xl font-bold text-foreground mb-4">Our Story</h3>
+            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Our Story</h2>
             <p className="text-muted-foreground mb-4">
               Monterey Bay PCs is a small business started by a high schooler with a deep passion for technology and a mission to spread the joy of PCs to everyone.
             </p>
