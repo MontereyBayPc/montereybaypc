@@ -21,6 +21,7 @@ import OrderStatus from "./pages/OrderStatus";
 import Legal from "./pages/Legal";
 import TheBeast from "./pages/TheBeast";
 import InfoPage from "./pages/InfoPage";
+import BuildProgress from "./pages/BuildProgress";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,9 @@ const App = () => (
             <Route path="/custom-vs-big-box" element={<InfoPage />} />
             <Route path="/creator-packages" element={<InfoPage />} />
             <Route path="/esports" element={<InfoPage />} />
+            <Route path="/service-area-map" element={<InfoPage />} />
+            <Route path="/service-agreement" element={<InfoPage />} />
+            <Route path="/build/:token" element={<BuildProgress />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

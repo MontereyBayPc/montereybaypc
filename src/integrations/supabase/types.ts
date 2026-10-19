@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      build_tracking: {
+        Row: {
+          build_name: string
+          customer_note: string
+          expires_at: string
+          id: string
+          photo_paths: string[]
+          stage: string
+          tracking_token: string
+          updated_at: string
+        }
+        Insert: {
+          build_name: string
+          customer_note?: string
+          expires_at?: string
+          id?: string
+          photo_paths?: string[]
+          stage?: string
+          tracking_token?: string
+          updated_at?: string
+        }
+        Update: {
+          build_name?: string
+          customer_note?: string
+          expires_at?: string
+          id?: string
+          photo_paths?: string[]
+          stage?: string
+          tracking_token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_inquiries: {
         Row: {
           created_at: string
@@ -152,6 +185,39 @@ export type Database = {
           parts_total?: number
           phone?: string | null
           status?: string
+        }
+        Relationships: []
+      }
+      service_work_orders: {
+        Row: {
+          accepted_at: string
+          agreement_version: string
+          created_at: string
+          customer_email: string
+          customer_name: string
+          hardware: string
+          id: string
+          requested_work: string
+        }
+        Insert: {
+          accepted_at?: string
+          agreement_version: string
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          hardware: string
+          id?: string
+          requested_work: string
+        }
+        Update: {
+          accepted_at?: string
+          agreement_version?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          hardware?: string
+          id?: string
+          requested_work?: string
         }
         Relationships: []
       }

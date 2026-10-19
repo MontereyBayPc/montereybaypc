@@ -1,5 +1,15 @@
 # Roadmap
 
+## Current request: professional service tools
+- [ ] Remove homepage pickup/delivery sections; replace floating text button with mobile-friendly AI assistant
+- [ ] Service work-order acknowledgment with stored consent and legally cautious terms
+- [ ] Private build tracking links with stages and photos
+- [ ] Cooler/case/RAM fit checks; split storage; branded PDF estimate
+- [ ] Sourced benchmark display and resolution performance views
+- [ ] Accessory add-ons using existing prices; GPU/CPU trade-in calculator capped at 50%
+- [ ] Dedicated service map and strengthened local-vs-big-box guide
+- [ ] Recovery emails (marketing unsupported); review requests (blocked on email domain and Google review URL)
+
 ## Done
 - [x] The Beast page, homepage upgrades, quote builder with daily prices, Tier 1 lead forms
 - [x] Promo codes at checkout (6 codes)

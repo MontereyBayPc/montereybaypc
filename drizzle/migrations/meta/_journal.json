@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792425274081,
+      "tag": "0000_customer_service_work_orders_and_private_build_tracking",
+      "breakpoints": true
+    }
+  ]
+}

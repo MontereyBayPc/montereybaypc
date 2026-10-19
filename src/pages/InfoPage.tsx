@@ -7,6 +7,9 @@ import LeadForm from "@/components/LeadForm";
 import { findInfoPage } from "@/data/info-pages";
 import { BUSINESS } from "@/lib/business";
 import NotFound from "./NotFound";
+import TradeInCalculator from "@/components/TradeInCalculator";
+import ServiceAreaMap from "@/components/ServiceAreaMap";
+import ServiceAgreementForm from "@/components/ServiceAgreementForm";
 
 const InfoPage = () => {
   const { pathname } = useLocation();
@@ -21,6 +24,8 @@ const InfoPage = () => {
           <Breadcrumbs items={[{ label: page.h1 }]} />
           <h1 className="font-heading text-4xl lg:text-5xl font-bold text-foreground mb-4">{page.h1}</h1>
           <p className="text-muted-foreground text-lg mb-12">{page.intro}</p>
+          {page.path === '/trade-in' && <TradeInCalculator />}
+          {page.path === '/service-area-map' && <ServiceAreaMap />}
 
           {page.sections.map((s) => (
             <div key={s.h} className="mb-12">
@@ -33,7 +38,7 @@ const InfoPage = () => {
             </div>
           ))}
 
-          {page.form ? (
+          {page.path === '/service-agreement' ? <ServiceAgreementForm /> : page.form ? (
             <>
               <h2 className="font-heading text-2xl font-semibold text-foreground mb-6">{page.form.heading}</h2>
               <LeadForm kind={page.form.kind} messagePlaceholder={page.form.placeholder} submitLabel={page.form.submit} checklist={page.form.checklist} />
