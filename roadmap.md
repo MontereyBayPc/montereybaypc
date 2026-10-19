@@ -1,13 +1,15 @@
 # Roadmap
 
 ## Current request: professional service tools
-- [ ] Remove homepage pickup/delivery sections; replace floating text button with mobile-friendly AI assistant
-- [ ] Service work-order acknowledgment with stored consent and legally cautious terms
-- [ ] Private build tracking links with stages and photos
-- [ ] Cooler/case/RAM fit checks; split storage; branded PDF estimate
-- [ ] Sourced benchmark display and resolution performance views
-- [ ] Accessory add-ons using existing prices; GPU/CPU trade-in calculator capped at 50%
-- [ ] Dedicated service map and strengthened local-vs-big-box guide
+- [x] Remove homepage pickup/delivery sections; replace floating text button with mobile-friendly AI assistant
+- [x] Service work-order acknowledgment with stored consent and legally cautious terms; legal review still required
+- [x] Private token build tracking page and backend; owner must create real build records and attach private photos
+- [x] Exact-model cooler/case fit checks; split storage; branded PDF estimate
+- [x] Sourced CPU reference benchmarks and resolution views; game FPS remain N/A until measured results supplied
+- [x] GPU/CPU trade-in calculator capped at 50%
+- [ ] Checkout peripheral add-ons: no monitor/keyboard/mouse/UPS/CableMod SKUs or approved prices exist in catalog
+- [ ] Full RAM/radiator collision checks: exact RAM heights, radiator thickness and case mounting metadata needed
+- [x] Dedicated approximate service map and existing local-vs-big-box guide; exact pickup spots require owner-approved locations
 - [ ] Recovery emails (marketing unsupported); review requests (blocked on email domain and Google review URL)
 
 ## Done
@@ -19,9 +21,9 @@
 - [x] Homepage pickup walkthrough + delivery towns; mobile call/configure bar; better 404; business hours + service area in search data
 
 ## Next (can do)
-- [ ] Slide-over cart drawer
+- [x] Slide-over cart drawer
 - [ ] Peripherals add-ons (need products + prices from owner)
-- [ ] Buying guide articles
+- [x] Buying guide articles
 
 ## Blocked / awaiting user
 - [ ] Email alerts, order confirmation emails, cleaning reminders: need email domain setup
