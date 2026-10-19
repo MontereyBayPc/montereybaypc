@@ -4,9 +4,10 @@ interface SectionHeadingProps {
   label?: string;
   title: string;
   description?: string;
+  as?: "h1" | "h2";
 }
 
-const SectionHeading = ({ label, title, description }: SectionHeadingProps) => (
+const SectionHeading = ({ label, title, description, as: Heading = "h2" }: SectionHeadingProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -19,7 +20,7 @@ const SectionHeading = ({ label, title, description }: SectionHeadingProps) => (
         {label}
       </span>
     )}
-    <h2 className="font-heading text-3xl lg:text-5xl font-bold text-foreground">{title}</h2>
+    <Heading className="font-heading text-3xl lg:text-5xl font-bold text-foreground">{title}</Heading>
     {description && (
       <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">{description}</p>
     )}

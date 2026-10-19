@@ -77,6 +77,9 @@ const Index = () => {
           {heroImages.map((_, i) => (
             <button
               key={i}
+              type="button"
+              aria-label={`Show hero image ${i + 1}`}
+              aria-pressed={i === currentImage}
               onClick={() => setCurrentImage(i)}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 i === currentImage ? "bg-foreground w-6" : "bg-foreground/30"

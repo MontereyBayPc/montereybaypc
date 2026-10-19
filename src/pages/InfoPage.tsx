@@ -26,6 +26,14 @@ const InfoPage = () => {
           <p className="text-muted-foreground text-lg mb-12">{page.intro}</p>
           {page.path === '/trade-in' && <TradeInCalculator />}
           {page.path === '/service-area-map' && <ServiceAreaMap />}
+          {page.path === '/service-area-map' && (
+            <nav aria-label="Local service resources" className="flex flex-wrap gap-4 mb-12 text-foreground">
+              <Link to="/contact" className="underline underline-offset-4">Confirm pickup or delivery</Link>
+              <Link to="/services" className="underline underline-offset-4">PC services</Link>
+              <Link to="/repair-request" className="underline underline-offset-4">Request a repair</Link>
+              <Link to="/drop-off-guide" className="underline underline-offset-4">Prepare for drop-off</Link>
+            </nav>
+          )}
 
           {page.sections.map((s) => (
             <div key={s.h} className="mb-12">

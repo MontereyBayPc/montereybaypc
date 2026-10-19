@@ -21,9 +21,26 @@ export const infoPages: InfoPage[] = [
     sections:SERVICE_TERMS.map(t=>({h:t.title,items:[t.text]})),
   },
   {
-    path:'/service-area-map', title:'Local Pickup & Delivery Service Map | Monterey Bay PCs', description:'Explore Monterey, Carmel, Pacific Grove, Seaside, Marina and Salinas service towns. Local delivery within an approximate 30-mile radius, subject to confirmation.', h1:'Monterey Bay Service Area',
+    path:'/service-area-map', title:'Monterey Bay PC Service Area, Pickup & Delivery | Monterey Bay PCs', description:'PC builds, repairs and upgrades for Monterey Bay communities. Free arranged pickup in Monterey and $75 local delivery within 30 miles, subject to address confirmation.', h1:'Monterey Bay Service Area',
     intro:'Local service around Monterey, Carmel, Pacific Grove, Seaside, Marina and Salinas. Free arranged pickup in Monterey; local delivery is $75 within 30 miles, subject to confirming your address.',
-    sections:[{h:'Pickup by appointment',items:['We confirm the exact pickup location and time with you directly. Map markers show town centers, not drop-off spots.']},{h:'Delivery confirmation',items:['The circle is an approximate geographic radius, not a guaranteed route boundary. Contact us with your address before arranging delivery.']}],
+    sections:[
+      {h:'PC services for local customers',items:[
+        'Custom gaming PCs and workstations, prebuilt PCs, hardware upgrades, troubleshooting and repair, and cleaning and optimization are available through Monterey Bay PCs.',
+        'We are based in Monterey and serve customers around Carmel, Pacific Grove, Seaside, Marina and Salinas. Ask us to confirm the arrangements for your address before planning a visit or delivery.',
+      ]},
+      {h:'Free pickup by appointment in Monterey',items:[
+        'Local pickup is free. We confirm the exact pickup location and time with you directly; do not travel to a map marker expecting a shop or drop-off point.',
+        'For repair or upgrade drop-off, send a repair request first. Back up important files and review the drop-off guide before bringing your PC.',
+      ]},
+      {h:'Local delivery and address confirmation',items:[
+        'Local delivery costs $75 within 30 miles. We do not ship nationwide. Send your town and delivery address so we can confirm eligibility and arrangements before you book.',
+        'The map circle is an approximate geographic radius, not a guaranteed route boundary. Town-center markers are for orientation only and do not establish delivery eligibility for every address in a town.',
+      ]},
+      {h:'Planning your build or service visit',items:[
+        'Custom builds generally take 1-2 weeks to build and test. Confirm the completion date and pickup or delivery time with us before making travel plans.',
+        'For repairs and upgrades, describe the symptoms or parts you want installed. We will agree the next steps and drop-off arrangements with you.',
+      ]},
+    ],
   },
   {
     path: "/trade-in",
