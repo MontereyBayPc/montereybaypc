@@ -60,8 +60,14 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
       body: { action: 'create-owner', passcode, email, password },
     });
     if (failure || data?.error) {
+      let message: string | undefined = data?.error;
+      // Non-2xx responses arrive as an error; read the server's message from the response body.
+      const ctx = (failure as { context?: Response } | null)?.context;
+      if (!message && ctx && typeof ctx.json === 'function') {
+        try { message = (await ctx.json())?.error; } catch { /* ignore */ }
+      }
       setBusy(false);
-      setError(data?.error ?? 'Setup failed. Please try again.');
+      setError(message ?? 'Setup failed. Please try again.');
       return;
     }
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
