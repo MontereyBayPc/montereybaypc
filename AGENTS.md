@@ -9,3 +9,4 @@
 - Build tracking is service-role-managed in Lovable Cloud with expiring unguessable tokens and short-lived private photo URLs; never expose public table reads or stage writes.
 - Prebuilt benchmark references must identify their source and distinguish CPU-only reference scores from measured complete-system game results.
 - Static route snapshots replace fallback canonical and Open Graph URLs before adding self-referencing page URLs, so social crawlers receive one unambiguous URL per page.
+- Paid Stripe checkouts create their build tracker server-side (webhook plus return-page lookup, idempotent on the checkout session id) so every order is trackable without customer accounts; the staff portal lives at an unlinked, noindexed route.
