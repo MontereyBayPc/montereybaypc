@@ -20,6 +20,7 @@ export type Database = {
           customer_note: string
           expires_at: string
           id: string
+          manage_token: string
           photo_paths: string[]
           stage: string
           tracking_token: string
@@ -30,6 +31,7 @@ export type Database = {
           customer_note?: string
           expires_at?: string
           id?: string
+          manage_token?: string
           photo_paths?: string[]
           stage?: string
           tracking_token?: string
@@ -40,6 +42,7 @@ export type Database = {
           customer_note?: string
           expires_at?: string
           id?: string
+          manage_token?: string
           photo_paths?: string[]
           stage?: string
           tracking_token?: string

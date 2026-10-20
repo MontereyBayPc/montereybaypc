@@ -1,0 +1,2 @@
+ALTER TABLE public.build_tracking ADD COLUMN IF NOT EXISTS manage_token text NOT NULL DEFAULT encode(gen_random_bytes(32), 'hex');
+CREATE UNIQUE INDEX IF NOT EXISTS build_tracking_manage_token_idx ON public.build_tracking (manage_token);
