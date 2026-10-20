@@ -8,6 +8,13 @@
       "when": 1792425274081,
       "tag": "0000_customer_service_work_orders_and_private_build_tracking",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792537302725,
+      "tag": "0001_add_manage_token_to_build_tracking",
+      "breakpoints": true
     }
   ]
 }
