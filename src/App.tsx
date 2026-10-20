@@ -22,6 +22,8 @@ import Legal from "./pages/Legal";
 import TheBeast from "./pages/TheBeast";
 import InfoPage from "./pages/InfoPage";
 import BuildProgress from "./pages/BuildProgress";
+import BuildAdmin from "./pages/BuildAdmin";
+import BuildManage from "./pages/BuildManage";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,8 @@ const App = () => (
             <Route path="/service-area-map" element={<InfoPage />} />
             <Route path="/service-agreement" element={<InfoPage />} />
             <Route path="/build/:token" element={<BuildProgress />} />
+            <Route path="/build-admin" element={<BuildAdmin />} />
+            <Route path="/build-manage/:token" element={<BuildManage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
