@@ -101,7 +101,7 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
           {busy ? 'One moment...' : mode === 'signin' ? 'Sign in' : 'Create owner account'}
         </Button>
       </form>
-      <button
+      {setupAllowed && <button
         onClick={() => { setMode(mode === 'signin' ? 'setup' : 'signin'); setError(''); }}
         className="mt-6 text-sm text-muted-foreground underline"
       >
