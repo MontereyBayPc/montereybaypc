@@ -15,6 +15,13 @@
       "when": 1792537302725,
       "tag": "0001_add_manage_token_to_build_tracking",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792539261580,
+      "tag": "0002_owner_roles_and_admin_lead_access",
+      "breakpoints": true
     }
   ]
 }
