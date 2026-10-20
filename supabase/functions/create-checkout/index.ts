@@ -108,10 +108,27 @@ Deno.serve(async (req) => {
     }
     const env: StripeEnv = body.environment === "live" ? "live" : "sandbox";
 
+    // Only send buyers back to our own site after paying.
+    let returnUrl: string;
+    try {
+      const u = new URL(String(body.returnUrl ?? ""));
+      const allowed = u.protocol === "https:" && (
+        u.hostname === "montereybaypcs.com" ||
+        u.hostname === "www.montereybaypcs.com" ||
+        u.hostname.endsWith(".lovable.app") ||
+        u.hostname.endsWith(".lovableproject.com")
+      );
+      const local = u.protocol === "http:" && u.hostname === "localhost";
+      if (!(allowed || local) || u.pathname !== "/checkout/return") throw new Error();
+      returnUrl = `${u.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`;
+    } catch {
+      throw new Error("Invalid return URL");
+    }
+
     const clientSecret = await createCheckoutSession({
       items,
       includeDelivery: !!body.includeDelivery,
-      returnUrl: body.returnUrl,
+      returnUrl,
       environment: env,
     });
 
