@@ -62,7 +62,7 @@ const App = () => (
             <Route path="/service-area-map" element={<InfoPage />} />
             <Route path="/service-agreement" element={<InfoPage />} />
             <Route path="/build/:token" element={<BuildProgress />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/portal" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

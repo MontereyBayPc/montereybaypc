@@ -15,6 +15,13 @@ type Build = {
   photo_paths: string[];
   updated_at: string;
   expires_at: string;
+  order_ref: string | null;
+  customer_name: string | null;
+  customer_email: string | null;
+  customer_phone: string | null;
+  items: { name: string; quantity: number; amount: number }[];
+  amount_total: number | null;
+  fulfillment: string | null;
 };
 type Inquiry = { id: string; created_at: string; name: string; email: string; phone: string | null; kind: string; message: string; status: string };
 type Quote = { id: string; created_at: string; name: string; email: string; phone: string | null; estimated_total: number; notes: string | null; status: string };
@@ -24,6 +31,8 @@ const stageName = (key: string) => BUILD_STAGES.find((s) => s.key === key)?.name
 // ---------- Sign in / first-time setup ----------
 const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
   const [mode, setMode] = useState<'signin' | 'setup'>('signin');
+  // The one-time setup form only appears at /portal?setup (it locks itself once an owner exists).
+  const setupAllowed = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('setup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passcode, setPasscode] = useState('');
@@ -69,8 +78,9 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
 
   return (
     <div className="max-w-sm mx-auto">
-      <p className="text-xs font-heading text-brand uppercase mb-3">Owner sign in</p>
-      <h1 className="font-heading text-4xl font-bold mb-8">{mode === 'signin' ? 'Owner Dashboard' : 'First-time setup'}</h1>
+      <p className="text-xs font-heading text-brand uppercase mb-3">Monterey Bay PCs</p>
+      <h1 className="font-heading text-4xl font-bold mb-2">{mode === 'signin' ? 'Staff sign in' : 'First-time setup'}</h1>
+      <p className="text-sm text-muted-foreground mb-8">Authorized staff only.</p>
       <form onSubmit={mode === 'signin' ? signIn : setup} className="space-y-5">
         {mode === 'setup' && (
           <div>
@@ -96,7 +106,7 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
         className="mt-6 text-sm text-muted-foreground underline"
       >
         {mode === 'signin' ? 'First time here? Set up your owner account' : 'Already set up? Sign in'}
-      </button>
+      </button>}
     </div>
   );
 };
@@ -150,6 +160,19 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
           {copied ? 'Copied' : 'Copy customer link'}
         </Button>
       </div>
+
+      {build.order_ref && (
+        <div className="bg-muted/40 rounded-md p-4 text-sm space-y-1">
+          <p className="font-heading font-semibold">
+            Paid order {build.amount_total != null && <span className="text-brand">${Number(build.amount_total).toLocaleString()}</span>}
+            {build.fulfillment && <span className="text-muted-foreground font-normal"> - {build.fulfillment === 'local_delivery' ? 'Local delivery' : 'Local pickup'}</span>}
+          </p>
+          <p className="text-muted-foreground">{[build.customer_name, build.customer_email, build.customer_phone].filter(Boolean).join(' - ')}</p>
+          <ul className="list-disc pl-5">
+            {build.items.map((it, i) => <li key={i}>{it.name} x{it.quantity}</li>)}
+          </ul>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-2">
         {BUILD_STAGES.map((stage) => (
@@ -254,7 +277,7 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <p className="text-xs font-heading text-brand uppercase mb-2">Owner dashboard</p>
+          <p className="text-xs font-heading text-brand uppercase mb-2">Staff portal</p>
           <h1 className="font-heading text-4xl font-bold">Your workshop</h1>
         </div>
         <Button variant="outline" size="sm" onClick={onSignOut}>
@@ -263,7 +286,7 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
       </div>
 
       <div className="flex gap-2 border-b border-border mb-8">
-        <button className={tabCls('builds')} onClick={() => setTab('builds')}>Builds ({builds.length})</button>
+        <button className={tabCls('builds')} onClick={() => setTab('builds')}>Orders & builds ({builds.length})</button>
         <button className={tabCls('leads')} onClick={() => setTab('leads')}>Leads ({inquiries.length + quotes.length})</button>
       </div>
 
@@ -353,7 +376,7 @@ export default function Admin() {
   return (
     <Layout>
       <Helmet>
-        <title>Owner Dashboard | Monterey Bay PCs</title>
+        <title>Staff Portal | Monterey Bay PCs</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       <section className="container mx-auto px-4 lg:px-8 py-16 lg:py-24">

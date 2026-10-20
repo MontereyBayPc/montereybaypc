@@ -1,16 +1,31 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /portal
+Disallow: /build/
+Disallow: /checkout/return
 
 User-agent: Bingbot
 Allow: /
+Disallow: /portal
+Disallow: /build/
+Disallow: /checkout/return
 
 User-agent: Twitterbot
 Allow: /
+Disallow: /portal
+Disallow: /build/
+Disallow: /checkout/return
 
 User-agent: facebookexternalhit
 Allow: /
+Disallow: /portal
+Disallow: /build/
+Disallow: /checkout/return
 
 User-agent: *
 Allow: /
+Disallow: /portal
+Disallow: /build/
+Disallow: /checkout/return
 
 Sitemap: https://montereybaypcs.com/sitemap.xml
