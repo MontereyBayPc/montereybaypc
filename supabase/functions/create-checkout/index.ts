@@ -41,12 +41,11 @@ async function createCheckoutSession(options: {
     line_items.push({ price: p.id, quantity: 1 });
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const baseParams = {
     line_items,
     mode: isSubscription ? "subscription" : "payment",
     ui_mode: "embedded_page",
     return_url: options.returnUrl,
-    automatic_tax: { enabled: true },
     phone_number_collection: { enabled: true },
     allow_promotion_codes: true,
     ...(options.includeDelivery && !isSubscription && {
@@ -54,7 +53,7 @@ async function createCheckoutSession(options: {
     }),
     ...(!isSubscription && {
       payment_intent_data: {
-        description: `Monterey Bay PC order — ${options.items
+        description: `Monterey Bay PC order - ${options.items
           .map((i) => `${i.priceId} x${i.quantity}`)
           .join(", ")}`,
       },
@@ -66,7 +65,22 @@ async function createCheckoutSession(options: {
           ? "local_delivery"
           : "local_pickup",
     },
-  });
+  } as const;
+
+  let session;
+  try {
+    // deno-lint-ignore no-explicit-any
+    session = await stripe.checkout.sessions.create({ ...baseParams, automatic_tax: { enabled: true } } as any);
+  } catch (e) {
+    const msg = (e as Error).message?.toLowerCase() ?? "";
+    if (msg.includes("head office") || msg.includes("automatic tax") || msg.includes("tax")) {
+      console.warn("Automatic tax unavailable, retrying without it:", (e as Error).message);
+      // deno-lint-ignore no-explicit-any
+      session = await stripe.checkout.sessions.create({ ...baseParams, automatic_tax: { enabled: false } } as any);
+    } else {
+      throw e;
+    }
+  }
 
   return session.client_secret;
 }
