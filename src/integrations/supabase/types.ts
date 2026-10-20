@@ -16,33 +16,57 @@ export type Database = {
     Tables: {
       build_tracking: {
         Row: {
+          amount_total: number | null
           build_name: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string | null
           customer_note: string
+          customer_phone: string | null
           expires_at: string
+          fulfillment: string | null
           id: string
+          items: Json
           manage_token: string
+          order_ref: string | null
           photo_paths: string[]
           stage: string
           tracking_token: string
           updated_at: string
         }
         Insert: {
+          amount_total?: number | null
           build_name: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
           customer_note?: string
+          customer_phone?: string | null
           expires_at?: string
+          fulfillment?: string | null
           id?: string
+          items?: Json
           manage_token?: string
+          order_ref?: string | null
           photo_paths?: string[]
           stage?: string
           tracking_token?: string
           updated_at?: string
         }
         Update: {
+          amount_total?: number | null
           build_name?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
           customer_note?: string
+          customer_phone?: string | null
           expires_at?: string
+          fulfillment?: string | null
           id?: string
+          items?: Json
           manage_token?: string
+          order_ref?: string | null
           photo_paths?: string[]
           stage?: string
           tracking_token?: string
