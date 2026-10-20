@@ -74,7 +74,12 @@ Deno.serve(async (req) => {
         password: parsed.data.password,
         email_confirm: true,
       });
-      if (createError || !created.user) return json({ error: 'Could not create the account. Try a different email.' }, 400);
+      if (createError || !created.user) {
+        const msg = createError?.message ?? '';
+        if (/weak|easy to guess|pwned/i.test(msg)) return json({ error: 'That password is too common and easy to guess. Choose a longer, unique password (for example 3-4 random words plus a number).' }, 400);
+        if (/already|registered|exists/i.test(msg)) return json({ error: 'That email already has an account. Use a different email.' }, 400);
+        return json({ error: msg || 'Could not create the account. Please try again.' }, 400);
+      }
       const { error: roleError } = await client.from('user_roles').insert({ user_id: created.user.id, role: 'admin' });
       if (roleError) return json({ error: 'Account created but role setup failed. Contact support.' }, 503);
       return json({ ok: true });
