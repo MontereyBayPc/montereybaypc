@@ -8,7 +8,7 @@ const faqs = [
   { q: "How long does a custom build take?", a: "Custom PCs take 1-2 weeks to build, thoroughly test, and prepare for pickup." },
   { q: "Do you offer warranties?", a: "We do not offer warranties on builds. However, every system comes with technical support included with your purchase." },
   { q: "Can I bring my own parts?", a: "Absolutely. We're happy to build with parts you've already purchased." },
-  { q: "Do you ship nationwide?", a: "No, we do not ship nationwide. All builds are available for local pickup or delivery in the Monterey Bay area." },
+  { q: "Do you ship nationwide?", a: "Yes. We ship insured anywhere in the US: $59 West Coast, $85 Mountain and Central, $115 East Coast and South, $165 Alaska and Hawaii. Every PC is foam-packed and needs a signature on delivery. Local pickup and delivery in the Monterey Bay area are still available." },
   { q: "What kind of support do you offer?", a: "We offer technical support with every PC purchase. If you ever have questions or issues, we're here to help." },
 ];
 

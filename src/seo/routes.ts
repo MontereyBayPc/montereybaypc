@@ -18,7 +18,7 @@ export type SeoRoute = {
 };
 
 const services = [
-  { slug: "custom-pc-building", title: "Custom PC Building", text: "Hand-built custom gaming PCs and workstations, built to your budget, stress-tested, and ready for local pickup or delivery in the Monterey Bay area." },
+  { slug: "custom-pc-building", title: "Custom PC Building", text: "Hand-built custom gaming PCs and workstations, built to your budget, stress-tested, and ready for local pickup, delivery, or insured US shipping." },
   { slug: "upgrades", title: "Upgrades", text: "GPU, CPU, RAM, storage, and cooling upgrades for your existing PC, installed and tested by a local builder." },
   { slug: "troubleshooting-repair", title: "Troubleshooting & Repair", text: "Diagnosis and repair for PCs that crash, won't boot, overheat, or run slow." },
   { slug: "cleaning-optimization", title: "Cleaning & Optimization", text: "Deep cleaning, fan replacement, fresh thermal paste, and software tune-ups for quieter, cooler, faster performance." },
@@ -27,7 +27,7 @@ const services = [
 const legal = [
   { slug: "warranty", title: "Warranty & Support", text: "Components keep their manufacturer warranty and every PC purchase includes technical support." },
   { slug: "returns", title: "Returns & Refunds", text: "How returns, cancellations, and refunds work for prebuilt and custom PCs." },
-  { slug: "shipping", title: "Pickup & Delivery", text: "Free local pickup in Monterey, CA, and local delivery within 30 miles for $75. We do not ship nationwide." },
+  { slug: "shipping", title: "Pickup & Delivery", text: "Free local pickup in Monterey, CA, local delivery within 30 miles for $75, and insured shipping anywhere in the US from $59 based on your ZIP code." },
   { slug: "terms", title: "Terms of Service", text: "The basic rules for using this website and buying from Monterey Bay PCs." },
   { slug: "privacy", title: "Privacy Policy", text: "What information we collect and how we use it. We never sell your information." },
   { slug: "accessibility", title: "Accessibility", text: "We aim to keep the site readable, keyboard friendly, and usable with screen readers." },
@@ -47,11 +47,11 @@ export const seoRoutes: SeoRoute[] = [
         "01 Tell Us What You Need: Share your budget and what the PC is for. We'll spec the right parts and send you a quote.",
         "02 Approve Your Build: You pick the final parts and price, then we order everything and get started.",
         "03 Built & Stress-Tested: Hand-assembled with clean cable management and stress-tested before it ever leaves the bench.",
-        "04 Pickup or Delivery: Ready in 1-2 weeks. Pick it up locally or have it delivered to your door in the Monterey Bay area.",
+        "04 Pickup or Delivery: Ready in 1-2 weeks. Pick it up locally, get local delivery, or have it shipped insured anywhere in the US.",
       ] },
       { h: "What to Know", items: [
         "Build Time: Custom PCs take 1-2 weeks to build, test, and deliver.",
-        "Local Only: We do not ship nationwide. Pickup or local delivery only.",
+        "Ships Nationwide: Insured shipping anywhere in the US, plus local pickup and delivery in Monterey Bay.",
         "Satisfaction Guaranteed: We work with you until you are 100% happy with your build.",
         "Technical Support: Every build comes with technical support included with your purchase.",
       ] },
@@ -73,7 +73,7 @@ export const seoRoutes: SeoRoute[] = [
       { h: "Frequently Asked Questions", items: [
         "How long does a custom build take? Custom PCs take 1-2 weeks to build, test, and prepare for pickup.",
         "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
-        "Do you ship nationwide? No. All builds are available for local pickup or delivery in the Monterey Bay area.",
+        "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up or get local delivery in the Monterey Bay area.",
         "What support do you offer? Technical support is included with every PC purchase.",
       ] },
       { h: "Ready for Your Dream PC?", items: [
@@ -161,7 +161,7 @@ export const seoRoutes: SeoRoute[] = [
     body: [
       "How long does a custom build take? Custom PCs take 1-2 weeks to build, test, and prepare for pickup.",
       "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
-      "Do you ship nationwide? No. All builds are available for local pickup or delivery in the Monterey Bay area.",
+      "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up or get local delivery in the Monterey Bay area.",
       "What support do you offer? Technical support is included with every PC purchase.",
     ],
     changefreq: "monthly",

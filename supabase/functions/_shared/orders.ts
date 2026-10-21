@@ -7,6 +7,19 @@ export const ORDER_SELECT =
 export const serviceClient = () =>
   createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
 
+// deno-lint-ignore no-explicit-any
+function shippingAddress(session: any) {
+  const d = session.collected_information?.shipping_details ?? session.shipping_details ?? null;
+  const a = d?.address;
+  if (!a?.line1) return null;
+  return {
+    name: d.name ?? session.customer_details?.name ?? "",
+    line1: a.line1, line2: a.line2 ?? "", city: a.city ?? "", state: a.state ?? "",
+    postal_code: a.postal_code ?? "", country: a.country ?? "US",
+    quoted_zip: session.metadata?.ship_zip ?? null,
+  };
+}
+
 // Creates (once) the build tracker for a paid Stripe checkout session. Idempotent on order_ref.
 export async function ensureOrderTracker(sessionId: string, env: StripeEnv) {
   const db = serviceClient();
@@ -37,6 +50,7 @@ export async function ensureOrderTracker(sessionId: string, env: StripeEnv) {
       items,
       amount_total: (session.amount_total ?? 0) / 100,
       fulfillment: session.metadata?.fulfillment ?? null,
+      shipping_address: shippingAddress(session),
     })
     .select(ORDER_SELECT)
     .single();

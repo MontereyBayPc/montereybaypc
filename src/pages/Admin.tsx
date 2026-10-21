@@ -23,11 +23,16 @@ type Build = {
   items: { name: string; quantity: number; amount: number }[];
   amount_total: number | null;
   fulfillment: string | null;
+  shipping_address?: ShippingAddress | null;
 };
+type ShippingAddress = { name: string; line1: string; line2: string; city: string; state: string; postal_code: string; country: string; quoted_zip: string | null };
 type Inquiry = { id: string; created_at: string; name: string; email: string; phone: string | null; kind: string; message: string; status: string };
 type Quote = { id: string; created_at: string; name: string; email: string; phone: string | null; estimated_total: number; notes: string | null; status: string };
 
 const stageName = (key: string) => BUILD_STAGES.find((s) => s.key === key)?.name ?? key;
+const FULFILLMENT_LABEL: Record<string, string> = { local_pickup: 'Local pickup', local_delivery: 'Local delivery', us_shipping: 'US shipping (UPS/FedEx)' };
+const addressText = (a: ShippingAddress) =>
+  [a.name, a.line1, a.line2, `${a.city}, ${a.state} ${a.postal_code}`].filter(Boolean).join('\n');
 
 // ---------- Sign in / first-time setup ----------
 const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
@@ -158,6 +163,14 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const [addrCopied, setAddrCopied] = useState(false);
+  const copyAddress = async () => {
+    if (!build.shipping_address) return;
+    await navigator.clipboard.writeText(addressText(build.shipping_address));
+    setAddrCopied(true);
+    setTimeout(() => setAddrCopied(false), 2000);
+  };
+
   return (
     <div className="border border-border rounded-md p-5 space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -177,12 +190,32 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
         <div className="bg-muted/40 rounded-md p-4 text-sm space-y-1">
           <p className="font-heading font-semibold">
             Paid order {build.amount_total != null && <span className="text-brand">${Number(build.amount_total).toLocaleString()}</span>}
-            {build.fulfillment && <span className="text-muted-foreground font-normal"> - {build.fulfillment === 'local_delivery' ? 'Local delivery' : 'Local pickup'}</span>}
+            {build.fulfillment && <span className="text-muted-foreground font-normal"> - {FULFILLMENT_LABEL[build.fulfillment] ?? build.fulfillment}</span>}
           </p>
           <p className="text-muted-foreground">{[build.customer_name, build.customer_email, build.customer_phone].filter(Boolean).join(' - ')}</p>
           <ul className="list-disc pl-5">
             {build.items.map((it, i) => <li key={i}>{it.name} x{it.quantity}</li>)}
           </ul>
+          {build.shipping_address && (
+            <div className="pt-3 mt-2 border-t border-border">
+              <p className="text-xs font-heading uppercase text-muted-foreground mb-1">Ship to</p>
+              <p className="whitespace-pre-line">{addressText(build.shipping_address)}</p>
+              {build.shipping_address.quoted_zip && build.shipping_address.quoted_zip !== build.shipping_address.postal_code.slice(0, 5) && (
+                <p className="text-destructive text-xs mt-1">
+                  Shipping was priced for ZIP {build.shipping_address.quoted_zip}, but the address ZIP is {build.shipping_address.postal_code}. Check the shipping charge.
+                </p>
+              )}
+              <div className="flex flex-wrap gap-2 mt-2">
+                <Button variant="outline" size="sm" onClick={copyAddress}>
+                  {addrCopied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
+                  {addrCopied ? 'Copied' : 'Copy shipping label'}
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressText(build.shipping_address).replace(/\n/g, ', '))}`} target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

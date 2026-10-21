@@ -33,7 +33,7 @@ const cols = [
     links: [
       { to: "/legal/warranty", label: "Warranty & Support" },
       { to: "/legal/returns", label: "Returns & Refunds" },
-      { to: "/legal/shipping", label: "Pickup & Delivery" },
+      { to: "/legal/shipping", label: "Shipping & Delivery" },
       { to: "/legal/terms", label: "Terms of Service" },
       { to: "/service-agreement", label: "Service Work Order" },
       { to: "/legal/privacy", label: "Privacy Policy" },
@@ -54,7 +54,7 @@ const Footer = () => (
           <ul className="space-y-2.5 text-sm">
             <li><a href={BUSINESS.phoneHref} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"><Phone className="w-4 h-4" />{BUSINESS.phone}</a></li>
             <li><a href={`mailto:${BUSINESS.email}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"><Mail className="w-4 h-4" />{BUSINESS.email}</a></li>
-            <li className="flex items-center gap-2 text-muted-foreground"><MapPin className="w-4 h-4" />{BUSINESS.city}, {BUSINESS.region} (local pickup & delivery)</li>
+            <li className="flex items-center gap-2 text-muted-foreground"><MapPin className="w-4 h-4" />{BUSINESS.city}, {BUSINESS.region} (ships nationwide)</li>
             <li><a href={BUSINESS.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"><Instagram className="w-4 h-4" />@montereybaypc</a></li>
           </ul>
           <Link to="/quote" className="btn-brand">Get a Quote <ArrowRight className="w-4 h-4" /></Link>

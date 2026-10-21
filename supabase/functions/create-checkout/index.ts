@@ -1,18 +1,24 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
+import { shippingZoneForZip } from "../_shared/shipping.ts";
 
 type LineItemInput = { priceId: string; quantity: number };
+type Fulfillment = "pickup" | "delivery" | "shipping";
 
 async function createCheckoutSession(options: {
   items: LineItemInput[];
-  includeDelivery: boolean;
+  fulfillment: Fulfillment;
+  shipZip: string | null;
   returnUrl: string;
   environment: StripeEnv;
 }) {
   const stripe = createStripeClient(options.environment);
+  const includeDelivery = options.fulfillment === "delivery";
+  const shipZone = options.fulfillment === "shipping" ? shippingZoneForZip(options.shipZip ?? "") : null;
+  if (options.fulfillment === "shipping" && !shipZone) throw new Error("Enter a valid 5-digit US ZIP code for shipping");
 
   const priceIds = [...options.items.map((i) => i.priceId)];
-  if (options.includeDelivery) priceIds.push("local_delivery");
+  if (includeDelivery) priceIds.push("local_delivery");
 
   const prices = await stripe.prices.list({
     lookup_keys: priceIds,
@@ -20,7 +26,8 @@ async function createCheckoutSession(options: {
   });
   const priceByLookup = new Map(prices.data.map((p) => [p.lookup_key!, p]));
 
-  const line_items = options.items.map((i) => {
+  // deno-lint-ignore no-explicit-any
+  const line_items: any[] = options.items.map((i) => {
     const p = priceByLookup.get(i.priceId);
     if (!p) throw new Error(`Price not found: ${i.priceId}`);
     return { price: p.id, quantity: i.quantity };
@@ -31,14 +38,24 @@ async function createCheckoutSession(options: {
     return p?.type === "recurring";
   });
 
-  if (isSubscription && (options.items.length > 1 || options.includeDelivery)) {
+  if (isSubscription && (options.items.length > 1 || options.fulfillment !== "pickup")) {
     throw new Error("Subscription checkout supports a single item and no delivery");
   }
 
-  if (options.includeDelivery && !isSubscription) {
+  if (includeDelivery) {
     const p = priceByLookup.get("local_delivery");
     if (!p) throw new Error("Delivery price not found");
     line_items.push({ price: p.id, quantity: 1 });
+  }
+  if (shipZone) {
+    line_items.push({
+      price_data: {
+        currency: "usd",
+        product_data: { name: `Insured US Shipping (${shipZone.label}, ZIP ${options.shipZip})` },
+        unit_amount: shipZone.price * 100,
+      },
+      quantity: 1,
+    });
   }
 
   const baseParams = {
@@ -48,7 +65,7 @@ async function createCheckoutSession(options: {
     return_url: options.returnUrl,
     phone_number_collection: { enabled: true },
     allow_promotion_codes: true,
-    ...(options.includeDelivery && !isSubscription && {
+    ...(options.fulfillment !== "pickup" && !isSubscription && {
       shipping_address_collection: { allowed_countries: ["US"] },
     }),
     ...(!isSubscription && {
@@ -61,9 +78,12 @@ async function createCheckoutSession(options: {
     metadata: {
       fulfillment: isSubscription
         ? "subscription"
-        : options.includeDelivery
-          ? "local_delivery"
-          : "local_pickup",
+        : options.fulfillment === "shipping"
+          ? "us_shipping"
+          : includeDelivery
+            ? "local_delivery"
+            : "local_pickup",
+      ...(shipZone && { ship_zip: options.shipZip!, ship_zone: shipZone.key }),
     },
   } as const;
 
@@ -127,7 +147,10 @@ Deno.serve(async (req) => {
 
     const clientSecret = await createCheckoutSession({
       items,
-      includeDelivery: !!body.includeDelivery,
+      fulfillment: body.fulfillment === "shipping" || body.fulfillment === "delivery"
+        ? body.fulfillment
+        : body.includeDelivery ? "delivery" : "pickup",
+      shipZip: typeof body.shipZip === "string" ? body.shipZip.trim() : null,
       returnUrl,
       environment: env,
     });

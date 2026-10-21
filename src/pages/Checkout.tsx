@@ -8,6 +8,7 @@ import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useCart } from "@/context/CartContext";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { supabase } from "@/integrations/supabase/client";
+import { shippingZoneForZip } from "../../supabase/functions/_shared/shipping";
 
 const PRICE_ID_BY_SLUG: Record<string, string> = {
   starter: "prebuilt_starter",
@@ -20,13 +21,17 @@ const PRICE_ID_BY_SLUG: Record<string, string> = {
   "rush-build": "rush_build",
 };
 
+type Fulfillment = "pickup" | "delivery" | "shipping";
+
 const Checkout = () => {
   const { items, subtotal } = useCart();
-  const [delivery, setDelivery] = useState<"pickup" | "delivery">("pickup");
+  const [delivery, setDelivery] = useState<Fulfillment>("pickup");
+  const [zip, setZip] = useState("");
   const [started, setStarted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const deliveryFee = delivery === "delivery" ? 75 : 0;
+  const zone = delivery === "shipping" ? shippingZoneForZip(zip) : null;
+  const deliveryFee = delivery === "delivery" ? 75 : zone ? zone.price : 0;
   const total = subtotal + deliveryFee;
 
   const fetchClientSecret = useMemo(
@@ -39,7 +44,8 @@ const Checkout = () => {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         body: {
           items: mappedItems,
-          includeDelivery: delivery === "delivery",
+          fulfillment: delivery,
+          shipZip: delivery === "shipping" ? zip : undefined,
           returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
           environment: getStripeEnvironment(),
         },
@@ -49,11 +55,15 @@ const Checkout = () => {
       }
       return data.clientSecret;
     },
-    [items, delivery],
+    [items, delivery, zip],
   );
 
   const handleStart = () => {
     setError(null);
+    if (delivery === "shipping" && !zone) {
+      setError("Enter your 5-digit ZIP code to calculate shipping.");
+      return;
+    }
     try {
       getStripeEnvironment();
       setStarted(true);
@@ -86,15 +96,16 @@ const Checkout = () => {
                 <h2 className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
                   Delivery
                 </h2>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid sm:grid-cols-3 gap-3">
                   {[
                     { id: "pickup", label: "Local Pickup", desc: "Free, Monterey Bay" },
                     { id: "delivery", label: "Local Delivery", desc: "$75, within 30 miles" },
+                    { id: "shipping", label: "US Shipping", desc: "Insured, from $59" },
                   ].map((opt) => (
                     <button
                       type="button"
                       key={opt.id}
-                      onClick={() => setDelivery(opt.id as "pickup" | "delivery")}
+                      onClick={() => setDelivery(opt.id as Fulfillment)}
                       className={`text-left border rounded-xl p-4 transition-colors ${
                         delivery === opt.id ? "border-foreground bg-muted/30" : "border-border hover:border-foreground/50"
                       }`}
@@ -104,6 +115,29 @@ const Checkout = () => {
                     </button>
                   ))}
                 </div>
+
+                {delivery === "shipping" && (
+                  <div className="mt-6">
+                    <label htmlFor="ship-zip" className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                      Shipping ZIP code
+                    </label>
+                    <input
+                      id="ship-zip"
+                      inputMode="numeric"
+                      autoComplete="postal-code"
+                      maxLength={5}
+                      value={zip}
+                      onChange={(e) => setZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
+                      placeholder="e.g. 90210"
+                      className="mt-2 w-full bg-transparent border-b border-border py-2 text-lg outline-none focus:border-foreground"
+                    />
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {zone
+                        ? `${zone.label}: $${zone.price} insured UPS/FedEx Ground, foam-packed with signature on delivery.`
+                        : "Enter your ZIP to see your shipping price. Use the same ZIP as your shipping address."}
+                    </p>
+                  </div>
+                )}
 
                 {error && (
                   <div className="mt-6 border border-red-300 bg-red-50 text-red-800 rounded-xl p-4 text-sm">{error}</div>
@@ -140,8 +174,10 @@ const Checkout = () => {
                     <span className="text-foreground">${subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Delivery</span>
-                    <span className="text-foreground">{deliveryFee ? `$${deliveryFee}` : "Free"}</span>
+                    <span className="text-muted-foreground">{delivery === "shipping" ? "Shipping" : "Delivery"}</span>
+                    <span className="text-foreground">
+                      {delivery === "shipping" && !zone ? "Enter ZIP" : deliveryFee ? `$${deliveryFee}` : "Free"}
+                    </span>
                   </div>
                   <p className="text-xs text-muted-foreground pt-2">Tax calculated at checkout.</p>
                 </div>
