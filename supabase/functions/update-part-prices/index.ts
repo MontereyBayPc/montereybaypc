@@ -4,7 +4,8 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { consensusPrice, type Hit } from "../_shared/price-consensus.ts";
 
 const BATCH = 200; // once-daily run checks every active part
-const CONCURRENCY = 6;
+const CONCURRENCY = 2;
+const TIME_BUDGET_MS = 110_000; // stay under the function time limit; next run continues
 const GATEWAY = "https://connector-gateway.lovable.dev/firecrawl/v2";
 
 const json = (body: unknown, status = 200) =>
@@ -58,7 +59,7 @@ Deno.serve(async (req) => {
     let stop = false;
     const queue = [...(parts ?? [])];
     const worker = async () => {
-    while (queue.length && !stop) {
+    while (queue.length && !stop && Date.now() - now.getTime() < TIME_BUDGET_MS) {
       const p = queue.shift()!;
       const res = await fetch(`${GATEWAY}/search`, {
         method: "POST",
@@ -78,8 +79,9 @@ Deno.serve(async (req) => {
         break;
       }
       if (res.status === 429) {
-        results.push({ name: p.name, error: 429 });
-        if (++rateLimited >= 5) stop = true;
+        if (++rateLimited >= 20) stop = true;
+        queue.push(p);
+        await new Promise((r) => setTimeout(r, 3000));
         continue;
       }
       await db.from("parts").update({ last_checked_at: new Date().toISOString() }).eq("id", p.id);
