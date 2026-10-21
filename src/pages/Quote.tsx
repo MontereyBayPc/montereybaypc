@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { buildFee as calcBuildFee } from "../../supabase/functions/_shared/price-consensus";
 import { Mail, Link2, AlertTriangle, Printer, Save } from "lucide-react";
 import { boardRam, boardSocket, cpuSocket, minPsu, psuWatts, ramGen, RECOMMENDED, systemWatts, formatPhone } from "@/lib/compat";
 import Layout from "@/components/Layout";
@@ -31,8 +32,6 @@ const CATEGORIES: { key: string; title: string; multi?: boolean }[] = [
 ];
 
 const NONE = "none";
-const BUILD_FEE_PCT = 0.1;
-const MIN_BUILD_FEE = 75;
 
 const Quote = () => {
   const [parts, setParts] = useState<Part[]>([]);
@@ -125,7 +124,7 @@ const Quote = () => {
   };
 
   const partsTotal = chosen.reduce((s, p) => s + Number(p.price), 0);
-  const buildFee = Math.max(MIN_BUILD_FEE, Math.round(partsTotal * BUILD_FEE_PCT));
+  const buildFee = calcBuildFee(partsTotal);
   const total = partsTotal + buildFee;
 
   const lastUpdated = parts.reduce<string | null>(
@@ -263,7 +262,7 @@ const Quote = () => {
               )}
               <div className="text-sm text-muted-foreground mt-3 space-y-1">
                 <div className="flex justify-between"><span>Parts</span><span>${partsTotal.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span>Build fee (10%, min $75)</span><span>${buildFee.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span>Build fee (20%, min $75)</span><span>${buildFee.toLocaleString()}</span></div>
               </div>
               <div className="mt-4 flex flex-col gap-2 print:hidden">
                 <button type="button" onClick={shareLink} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Link2 className="w-4 h-4" /> Copy a link to this build</button>

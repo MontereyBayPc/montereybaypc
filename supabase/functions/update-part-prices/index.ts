@@ -1,6 +1,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
+import { consensusPrice, type Hit } from "../_shared/price-consensus.ts";
+
 const BATCH = 8;
 const GATEWAY = "https://connector-gateway.lovable.dev/firecrawl/v2";
 
@@ -15,10 +17,6 @@ function extractPrices(text: string): number[] {
   return out;
 }
 
-const median = (a: number[]) => {
-  const s = [...a].sort((x, y) => x - y);
-  return s[Math.floor(s.length / 2)];
-};
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -61,7 +59,7 @@ Deno.serve(async (req) => {
           Authorization: `Bearer ${lovableKey}`,
           "X-Connection-Api-Key": fcKey,
         },
-        body: JSON.stringify({ query: `${p.name} price USD`, limit: 6, country: "us" }),
+        body: JSON.stringify({ query: `${p.name} price newegg amazon bestbuy microcenter`, limit: 10, country: "us" }),
       });
 
       if (res.status === 402 || res.status === 403) {
@@ -82,23 +80,22 @@ Deno.serve(async (req) => {
       const data = await res.json();
       const hits = (data?.data?.web ?? data?.data ?? []) as { title?: string; description?: string; url?: string }[];
       const base = Number(p.base_price);
-      const found: { price: number; url?: string }[] = [];
+      const found: Hit[] = [];
       for (const h of hits) {
         for (const v of extractPrices(`${h.title ?? ""} ${h.description ?? ""}`)) {
           if (v >= base * 0.5 && v <= base * 2) found.push({ price: v, url: h.url });
         }
       }
-      if (!found.length) {
-        results.push({ name: p.name, updated: false });
+      const c = consensusPrice(found, Number(p.price));
+      if (c.price === null) {
+        results.push({ name: p.name, updated: false, reason: c.reason });
         continue;
       }
-      const m = median(found.map((f) => f.price));
-      const src = found.find((f) => f.price === m)?.url ?? null;
       await db
         .from("parts")
-        .update({ price: Math.round(m), price_source: src, price_updated_at: new Date().toISOString() })
+        .update({ price: c.price, price_source: c.sources.join(" | "), price_updated_at: new Date().toISOString() })
         .eq("id", p.id);
-      results.push({ name: p.name, updated: true, price: Math.round(m) });
+      results.push({ name: p.name, updated: true, price: c.price, sources: c.sources.length });
     }
   } finally {
     await db.from("price_job_state").update({ locked_until: null }).eq("id", 1);
