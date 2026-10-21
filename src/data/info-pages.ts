@@ -33,7 +33,7 @@ export const infoPages: InfoPage[] = [
         'For repair or upgrade drop-off, send a repair request first. Back up important files and review the drop-off guide before bringing your PC.',
       ]},
       {h:'Local delivery and address confirmation',items:[
-        'Local delivery costs $75 within 30 miles. We do not ship nationwide. Send your town and delivery address so we can confirm eligibility and arrangements before you book.',
+        'Local delivery costs $75 within 30 miles. Outside the area, we ship insured anywhere in the US from $59. Send your town and delivery address so we can confirm eligibility and arrangements before you book.',
         'The map circle is an approximate geographic radius, not a guaranteed route boundary. Town-center markers are for orientation only and do not establish delivery eligibility for every address in a town.',
       ]},
       {h:'Planning your build or service visit',items:[

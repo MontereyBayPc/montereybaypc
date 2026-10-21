@@ -23,7 +23,7 @@ const reviews = [
 
 const infoItems = [
   { number: "01", title: "Build Time", desc: "Custom PCs take 1-2 weeks to build, test, and deliver.", icon: Clock },
-  { number: "02", title: "Local Only", desc: "We do not ship nationwide. Pickup or local delivery only.", icon: MapPin },
+  { number: "02", title: "Ships Nationwide", desc: "Insured shipping anywhere in the US, plus local pickup and delivery.", icon: MapPin },
   { number: "03", title: "Satisfaction Guaranteed", desc: "We work with you until you are 100% happy with your build.", icon: BadgeCheck },
   { number: "04", title: "Technical Support", desc: "Every build comes with technical support included with your purchase.", icon: Wrench },
 ];
@@ -195,7 +195,7 @@ const Index = () => {
               { icon: MessageSquare, step: "01", title: "Tell Us What You Need", desc: "Share your budget and what the PC is for. We'll spec the right parts and send you a quote." },
               { icon: PackageSearch, step: "02", title: "Approve Your Build", desc: "You pick the final parts and price, then we order everything and get started." },
               { icon: Hammer, step: "03", title: "Built & Stress-Tested", desc: "Hand-assembled with clean cable management and stress-tested before it ever leaves the bench." },
-              { icon: Truck, step: "04", title: "Pickup or Delivery", desc: "Ready in 1-2 weeks. Pick it up locally or have it delivered to your door in the Monterey Bay area." },
+              { icon: Truck, step: "04", title: "Pickup or Delivery", desc: "Ready in 1-2 weeks. Pick it up locally, get local delivery, or have it shipped insured anywhere in the US." },
             ].map((s, i) => (
               <motion.div
                 key={s.step}

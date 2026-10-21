@@ -6,7 +6,7 @@ const contact = {
   email: "montereybaypc@gmail.com",
   instagram: "https://instagram.com/montereybaypcs",
   website: "https://montereybaypcs.com",
-  serviceArea: "Local pickup in Monterey Bay; local delivery within 30 miles ($75).",
+  serviceArea: "Local pickup in Monterey Bay; local delivery within 30 miles ($75); insured US shipping by ZIP zone ($59-$165).",
 };
 
 export default defineTool({

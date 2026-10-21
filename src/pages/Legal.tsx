@@ -29,11 +29,12 @@ const docs: Record<string, Doc> = {
     ],
   },
   shipping: {
-    title: "Pickup & Delivery",
-    intro: "We serve the Monterey Bay area only. We do not ship nationwide.",
+    title: "Shipping, Pickup & Delivery",
+    intro: "We ship insured anywhere in the US, and offer local pickup and delivery in the Monterey Bay area.",
     sections: [
       { h: "Local pickup", p: [`Free pickup in ${BUSINESS.city}, ${BUSINESS.region}. We will contact you to schedule a time once your PC is ready.`] },
       { h: "Local delivery", p: ["Delivery within 30 miles is available for $75. We bring the PC to your door."] },
+      { h: "US shipping", p: ["We ship anywhere in the US by UPS or FedEx Ground, fully insured, foam-packed to protect the parts, with a signature required on delivery.", "Shipping is priced by ZIP code: $59 West Coast, $85 Mountain and Central, $115 East Coast and South, $165 Alaska and Hawaii.", "You get a tracking number when your PC ships."] },
       { h: "Turnaround", p: ["Custom PCs usually take 1-2 weeks to build, test, and prepare."] },
       { h: "Service area", p: [BUSINESS.serviceArea + "."] },
     ],
