@@ -99,12 +99,6 @@ const Quote = () => {
   if (psuW && (cpu || gpu) && psuW < neededPsu) warnings.push(`Your power supply (${psuW}W) is too weak. Pick ${neededPsu}W or more.`);
   const fit = checkFitment(pick('case')?.name,pick('cooler')?.name);
   if (fit.issue) warnings.push(fit.issue);
-  const splitStorage = (capacity: string) => {
-    const primary = (byCat.storage ?? []).find(p => /\b1TB\b/i.test(p.name) && /NVMe/i.test(p.name));
-    const secondary = (byCat.storage ?? []).find(p => p.name.includes(capacity) && !/HDD/i.test(p.name));
-    if (!primary || !secondary) { toast.error('This drive combination is not currently in the catalog. Ask us for a custom estimate.'); return; }
-    setSel(s => ({...s,storage:primary.id,'storage-secondary':secondary.id}));
-  };
 
   const DRAFTS_KEY = "mbpc_quote_drafts";
   const [drafts, setDrafts] = useState<{ name: string; s: Record<string, string>; e: string[]; total: number }[]>(() => {
@@ -188,7 +182,6 @@ const Quote = () => {
 
           <div className="grid lg:grid-cols-[1fr_320px] gap-10">
             <div className="space-y-6">
-              {!loading && !loadError && <div className="border-b border-border pb-5 flex flex-wrap items-center gap-2 print:hidden"><span className="font-heading text-sm mr-2">Split storage</span><Button type="button" size="sm" variant="outline" onClick={()=>splitStorage('2TB')}>1TB OS + 2TB games</Button><Button type="button" size="sm" variant="outline" onClick={()=>splitStorage('4TB')}>1TB OS + 4TB games</Button></div>}
               {loading && <p className="text-muted-foreground">Loading parts...</p>}
               {loadError && (
                 <div className="border border-border rounded-2xl p-6 text-muted-foreground">
