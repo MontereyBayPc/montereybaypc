@@ -154,18 +154,21 @@ export type Database = {
       }
       price_job_state: {
         Row: {
+          cron_token: string
           id: number
           last_run_at: string | null
           locked_until: string | null
           paused_reason: string | null
         }
         Insert: {
+          cron_token?: string
           id?: number
           last_run_at?: string | null
           locked_until?: string | null
           paused_reason?: string | null
         }
         Update: {
+          cron_token?: string
           id?: number
           last_run_at?: string | null
           locked_until?: string | null
