@@ -31,7 +31,10 @@ Deno.serve(async (req) => {
   const { data: state } = await db.from("price_job_state").select("*").eq("id", 1).single();
   const token = req.headers.get("x-cron-token") ?? "";
   if (!state?.cron_token || token !== state.cron_token) return json({ error: "Unauthorized" }, 401);
-  if (state?.paused_reason) return json({ skipped: "paused", reason: state.paused_reason });
+  // Out-of-credit pauses retry automatically after 6 hours.
+  const pausedRecently = state?.last_run_at && Date.now() - new Date(state.last_run_at).getTime() < 6 * 3600_000;
+  if (state?.paused_reason && pausedRecently) return json({ skipped: "paused", reason: state.paused_reason });
+  if (state?.paused_reason) await db.from("price_job_state").update({ paused_reason: null }).eq("id", 1);
   const now = new Date();
   const { data: locked } = await db
     .from("price_job_state")
@@ -79,11 +82,11 @@ Deno.serve(async (req) => {
       }
       const data = await res.json();
       const hits = (data?.data?.web ?? data?.data ?? []) as { title?: string; description?: string; url?: string }[];
-      const base = Number(p.base_price);
+      const base = Math.max(Number(p.base_price), Number(p.price));
       const found: Hit[] = [];
       for (const h of hits) {
         for (const v of extractPrices(`${h.title ?? ""} ${h.description ?? ""}`)) {
-          if (v >= base * 0.5 && v <= base * 2) found.push({ price: v, url: h.url });
+          if (v >= base * 0.5 && v <= base * 3) found.push({ price: v, url: h.url });
         }
       }
       const c = consensusPrice(found, Number(p.price));
