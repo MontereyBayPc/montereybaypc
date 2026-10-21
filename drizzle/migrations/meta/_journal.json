@@ -29,6 +29,13 @@
       "when": 1792539767876,
       "tag": "0003_build_tracking_order_details",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792546442407,
+      "tag": "0004_workshop_schedule",
+      "breakpoints": true
     }
   ]
 }
