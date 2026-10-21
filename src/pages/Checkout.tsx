@@ -8,6 +8,7 @@ import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useCart } from "@/context/CartContext";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { supabase } from "@/integrations/supabase/client";
+import { shippingZoneForZip } from "../../supabase/functions/_shared/shipping";
 
 const PRICE_ID_BY_SLUG: Record<string, string> = {
   starter: "prebuilt_starter",
@@ -20,13 +21,17 @@ const PRICE_ID_BY_SLUG: Record<string, string> = {
   "rush-build": "rush_build",
 };
 
+type Fulfillment = "pickup" | "delivery" | "shipping";
+
 const Checkout = () => {
   const { items, subtotal } = useCart();
-  const [delivery, setDelivery] = useState<"pickup" | "delivery">("pickup");
+  const [delivery, setDelivery] = useState<Fulfillment>("pickup");
+  const [zip, setZip] = useState("");
   const [started, setStarted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const deliveryFee = delivery === "delivery" ? 75 : 0;
+  const zone = delivery === "shipping" ? shippingZoneForZip(zip) : null;
+  const deliveryFee = delivery === "delivery" ? 75 : zone ? zone.price : 0;
   const total = subtotal + deliveryFee;
 
   const fetchClientSecret = useMemo(
@@ -39,7 +44,8 @@ const Checkout = () => {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         body: {
           items: mappedItems,
-          includeDelivery: delivery === "delivery",
+          fulfillment: delivery,
+          shipZip: delivery === "shipping" ? zip : undefined,
           returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
           environment: getStripeEnvironment(),
         },
@@ -49,11 +55,15 @@ const Checkout = () => {
       }
       return data.clientSecret;
     },
-    [items, delivery],
+    [items, delivery, zip],
   );
 
   const handleStart = () => {
     setError(null);
+    if (delivery === "shipping" && !zone) {
+      setError("Enter your 5-digit ZIP code to calculate shipping.");
+      return;
+    }
     try {
       getStripeEnvironment();
       setStarted(true);
