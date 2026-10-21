@@ -11,12 +11,15 @@ type Doc = { title: string; intro: string; sections: Section[] };
 
 const docs: Record<string, Doc> = {
   warranty: {
-    title: "Warranty & Support",
-    intro: "What you can expect from us after you take your PC home.",
+    title: "Limited Workmanship Warranty & Support",
+    intro: "A limited warranty on our assembly work, plus help with manufacturer part warranties.",
     sections: [
-      { h: "Workmanship guarantee", p: ["Every PC we build is backed by our workmanship guarantee. If something we assembled, wired, or installed is not right, we fix it at no labor cost.", "Individual components also keep their full manufacturer warranty, and we will help you file a claim with the manufacturer if a part fails."] },
-      { h: "Technical support", p: ["Every PC purchase includes technical support. If something is not working right, or you just have a question, reach out and we will help you sort it out."] },
-      { h: "How to get help", p: [`Email ${BUSINESS.email} or call ${BUSINESS.phone}. Include your name, what you bought, and a short description of the problem.`] },
+      { h: "Limited warranty", p: ["This is a LIMITED WARRANTY on our workmanship. For one (1) year from pickup or delivery, if something we assembled, wired, or installed fails because of our workmanship, we will repair it at no labor cost. This warranty is given by Monterey Bay PCs to the original purchaser and is not transferable."] },
+      { h: "What is not covered", p: ["Physical damage, liquid damage, power surges, overclocking or modifications made by others, software, viruses, data loss, normal wear, and parts you supplied yourself are not covered by our workmanship warranty."] },
+      { h: "Component warranties", p: ["Individual components keep their full manufacturer warranty, which is provided by the manufacturer, not by us. We will help you troubleshoot and file a claim, but we cannot guarantee a manufacturer's decision."] },
+      { h: "How to make a claim", p: [`Email ${BUSINESS.email} or call ${BUSINESS.phone} with your name, order details, and a short description of the problem. We will tell you whether to bring the PC in or how to ship it. Do not send anything until we confirm.`] },
+      { h: "Your state law rights", p: ["Implied warranties, including any implied warranty of merchantability or fitness for a particular purpose, are not disclaimed and apply as provided by law. This warranty gives you specific legal rights, and you may also have other rights which vary from state to state."] },
+      { h: "Technical support", p: ["Every PC purchase includes technical support. If something is not working right, or you just have a question, reach out and we will help."] },
     ],
   },
   returns: {
@@ -36,9 +39,14 @@ const docs: Record<string, Doc> = {
     title: "Terms of Service",
     intro: "The basic rules for using this website and buying from us.",
     sections: [
-      { h: "Orders", p: ["Placing an order means you agree to pay the listed price plus any applicable sales tax and delivery fee. Prices and availability can change."] },
+      { h: "Orders", p: ["Placing an order means you agree to pay the listed price plus any applicable sales tax and delivery fee. Prices and availability can change before you pay. If we made a clear pricing error, we will contact you before building and you may cancel for a full refund."] },
       { h: "Payments", p: ["Payments are processed securely by Stripe. We never see or store your full card number."] },
       { h: "Your own parts", p: ["When you bring your own parts, you are responsible for their condition and compatibility. We will tell you about any issues we find."] },
+      { h: "Warranty", p: ["Our assembly work is covered by our Limited Workmanship Warranty. Components are covered by their manufacturers. See the warranty page for details."] },
+      { h: "Limitation of liability", p: ["To the fullest extent allowed by law, our total liability for any claim related to an order or service is limited to the amount you paid for that order or service, and we are not liable for indirect, incidental, or consequential damages such as lost data, lost profits, or lost time.", "This does not limit liability for personal injury, fraud, gross negligence, willful misconduct, or any rights that cannot legally be limited, including your rights under California consumer protection law."] },
+      { h: "Delays outside our control", p: ["We are not responsible for delays caused by events beyond our reasonable control, such as part shortages, manufacturer recalls, carrier disruptions, natural disasters, or power outages. If a delay affects your order, we will tell you and you may choose to wait or cancel an unshipped order for a refund."] },
+      { h: "Governing law", p: ["These terms are governed by the laws of the State of California. Any dispute will be handled in the state or federal courts located in Monterey County, California, unless the law where you live gives you the right to bring a claim there or in small claims court."] },
+      { h: "Changes", p: ["We may update these terms. The terms shown when you placed your order apply to that order. Effective October 21, 2026."] },
       { h: "Contact", p: [`Questions about these terms can go to ${BUSINESS.email}.`] },
     ],
   },
