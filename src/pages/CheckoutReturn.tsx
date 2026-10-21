@@ -88,7 +88,7 @@ const CheckoutReturn = () => {
               )}
               {order.fulfillment && (
                 <p className="text-xs text-muted-foreground mt-2">
-                  {order.fulfillment === "local_delivery" ? "Local delivery" : "Free local pickup in Monterey"}
+                  {order.fulfillment === "local_delivery" ? "Local delivery" : order.fulfillment === "us_shipping" ? "Insured US shipping, tracking number sent when it ships" : "Free local pickup in Monterey"}
                 </p>
               )}
             </div>
