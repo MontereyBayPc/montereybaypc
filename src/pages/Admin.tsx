@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { BUILD_STAGES } from '@/lib/build-stages';
 import Workshop from '@/components/Workshop';
+import ShippingLabel from '@/components/ShippingLabel';
 import type { WorkshopBuild } from '@/lib/workshop';
 
 type Build = WorkshopBuild & {
@@ -29,6 +30,8 @@ type Build = WorkshopBuild & {
   shipping_address?: ShippingAddress | null;
   carrier?: 'ups' | 'fedex' | 'usps' | null;
   tracking_number?: string | null;
+  label_url?: string | null;
+  label_cost?: number | null;
 };
 type ShippingAddress = { name: string; line1: string; line2: string; city: string; state: string; postal_code: string; country: string; quoted_zip: string | null };
 type Inquiry = { id: string; created_at: string; name: string; email: string; phone: string | null; kind: string; message: string; status: string };
@@ -270,6 +273,17 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
           </select>
           <Button size="sm" disabled={!!trackNo.trim() && !carrier} onClick={() => void call({ action: 'update', tracking_number: trackNo.trim() || null, carrier: trackNo.trim() ? carrier : null }, trackNo.trim() ? 'Tracking saved. Customer can now track the package.' : 'Tracking removed.')}>Save tracking</Button>
         </div>
+        {build.fulfillment === 'us_shipping' && build.shipping_address && (
+          <ShippingLabel
+            buildId={build.id}
+            labelUrl={build.label_url}
+            labelCost={build.label_cost}
+            onSaved={(s) => {
+              setTrackNo(s.tracking_number); setCarrier(s.carrier);
+              onChange({ ...build, tracking_number: s.tracking_number, carrier: s.carrier as Build['carrier'], label_url: s.label_url, label_cost: s.label_cost });
+            }}
+          />
+        )}
       </div>
 
       <div>
