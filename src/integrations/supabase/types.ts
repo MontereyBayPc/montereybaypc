@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           amount_total: number | null
           build_name: string
+          carrier: string | null
           created_at: string
           customer_email: string | null
           customer_name: string | null
@@ -32,12 +33,14 @@ export type Database = {
           photo_paths: string[]
           shipping_address: Json | null
           stage: string
+          tracking_number: string | null
           tracking_token: string
           updated_at: string
         }
         Insert: {
           amount_total?: number | null
           build_name: string
+          carrier?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
@@ -52,12 +55,14 @@ export type Database = {
           photo_paths?: string[]
           shipping_address?: Json | null
           stage?: string
+          tracking_number?: string | null
           tracking_token?: string
           updated_at?: string
         }
         Update: {
           amount_total?: number | null
           build_name?: string
+          carrier?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
@@ -72,6 +77,7 @@ export type Database = {
           photo_paths?: string[]
           shipping_address?: Json | null
           stage?: string
+          tracking_number?: string | null
           tracking_token?: string
           updated_at?: string
         }
