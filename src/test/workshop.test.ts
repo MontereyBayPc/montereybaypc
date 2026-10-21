@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayHasCapacity, scheduleError, WORKSHOP_CAPACITY } from '../../supabase/functions/_shared/workshop';
+import { dayHasCapacity, dispatchError, scheduleError, WORKSHOP_CAPACITY } from '../../supabase/functions/_shared/workshop';
 describe('workshop scheduling', () => {
   it('allows one active build per day, not two', () => {
     expect(WORKSHOP_CAPACITY).toBe(1);
@@ -17,5 +17,11 @@ describe('workshop scheduling', () => {
   });
   it('rejects impossible dates', () => {
     expect(scheduleError('2026-02-30',null)).toBe('Enter a valid calendar date.');
+  });
+  it('requires carrier and tracking to dispatch shipping orders', () => {
+    expect(dispatchError('shipped','us_shipping',null,'ups')).toBe('Save a carrier tracking number before marking this shipping order dispatched.');
+    expect(dispatchError('shipped','us_shipping','1Z9999999999999999',null)).not.toBeNull();
+    expect(dispatchError('shipped','us_shipping','1Z9999999999999999','ups')).toBeNull();
+    expect(dispatchError('shipped','local_pickup',null,null)).toBeNull();
   });
 });

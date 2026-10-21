@@ -1,7 +1,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { z } from 'npm:zod@3';
-import { scheduleError, WORKSHOP_STATUSES } from '../_shared/workshop.ts';
+import { dispatchError, scheduleError, WORKSHOP_STATUSES } from '../_shared/workshop.ts';
 
 const STAGES = ['parts_ordered', 'bench_assembly', 'cable_management', 'stress_testing', 'ready_for_pickup', 'completed'] as const;
 const tokenSchema = z.string().regex(/^[a-f0-9]{64}$/);
@@ -131,7 +131,8 @@ Deno.serve(async (req) => {
       }
       const tracking = parsed.data.tracking_number === undefined ? existing.tracking_number : parsed.data.tracking_number;
       const carrier = parsed.data.carrier === undefined ? existing.carrier : parsed.data.carrier;
-      if (parsed.data.workshop_status === 'shipped' && existing.fulfillment === 'us_shipping' && (!tracking || !carrier)) return json({ error: 'Save a carrier tracking number before marking this shipping order dispatched.' }, 400);
+      const invalidDispatch = dispatchError(parsed.data.workshop_status, existing.fulfillment, tracking, carrier);
+      if (invalidDispatch) return json({ error: invalidDispatch }, 400);
       const { data, error } = await client.from('build_tracking').update(patch).eq('id', parsed.data.id).select(BUILD_SELECT).maybeSingle();
       if (error?.code === '23505') return json({ error: 'That date already has its one active build. Choose another day.' }, 409);
       if (error) return json({ error: 'Build updates are temporarily unavailable.' }, 503);
