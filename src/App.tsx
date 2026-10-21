@@ -23,6 +23,7 @@ import TheBeast from "./pages/TheBeast";
 import InfoPage from "./pages/InfoPage";
 import BuildProgress from "./pages/BuildProgress";
 import Admin from "./pages/Admin";
+import OAuthConsent from "./pages/OAuthConsent";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/service-agreement" element={<InfoPage />} />
             <Route path="/build/:token" element={<BuildProgress />} />
             <Route path="/portal" element={<Admin />} />
+            <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

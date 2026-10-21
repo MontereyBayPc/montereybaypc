@@ -3,13 +3,17 @@
   "sdk_version": "3.0.4",
   "path": "/functions/v1/mcp",
   "auth": {
-    "type": "none"
+    "type": "oauth",
+    "issuer": "https://uxkkzutipaynmrrawdew.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
   },
   "mcp": {
     "server": {
-      "name": "monterey-bay-pc-forge",
+      "name": "monterey-bay-pcs",
       "version": "0.1.0",
-      "title": "Monterey Bay PC Forge"
+      "title": "Monterey Bay PCs"
     },
     "tools": [
       {

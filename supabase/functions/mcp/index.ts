@@ -3,7 +3,7 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { defineMcp } from "npm:@lovable.dev/mcp-js@3.0.4";
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.0.4";
 
 // src/lib/mcp/tools/list-services.ts
 import { defineTool } from "npm:@lovable.dev/mcp-js@3.0.4";
@@ -269,11 +269,16 @@ var get_contact_info_default = defineTool4({
 });
 
 // src/lib/mcp/index.ts
+var projectRef = "uxkkzutipaynmrrawdew";
 var mcp_default = defineMcp({
-  name: "monterey-bay-pc-forge",
-  title: "Monterey Bay PC Forge",
+  name: "monterey-bay-pcs",
+  title: "Monterey Bay PCs",
   version: "0.1.0",
-  instructions: "Public catalog for Monterey Bay PCs, a local custom PC builder and repair shop in the Monterey Bay area. Use `list_services` for repair/build services, `list_prebuilts` + `get_prebuilt` for prebuilt PC models and specs, and `get_contact_info` for how to reach the shop.",
+  instructions: "Catalog for Monterey Bay PCs, a local custom PC builder and repair shop in the Monterey Bay area. Use `list_services` for repair/build services, `list_prebuilts` + `get_prebuilt` for prebuilt PC models and specs, and `get_contact_info` for how to reach the shop.",
+  auth: auth.oauth.issuer({
+    issuer: `https://${projectRef}.supabase.co/auth/v1`,
+    acceptedAudiences: "authenticated"
+  }),
   tools: [list_services_default, list_prebuilts_default, get_prebuilt_default, get_contact_info_default]
 });
 
