@@ -384,7 +384,7 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
 
       <div className="flex flex-wrap gap-2 border-b border-border mb-8">
         <Button variant="ghost" className={tabCls('builds')} onClick={() => changeTab('builds')}>Orders & builds ({builds.filter((b) => b.stage !== 'completed').length})</Button>
-        <Button variant="ghost" className={tabCls('queue')} onClick={() => changeTab('queue')}>Technician queue</Button>
+        <Button variant="ghost" className={tabCls('queue')} onClick={() => changeTab('queue')}>Build queue</Button>
         <Button variant="ghost" className={tabCls('schedule')} onClick={() => changeTab('schedule')}>Build schedule</Button>
         <Button variant="ghost" className={tabCls('leads')} onClick={() => changeTab('leads')}>Leads ({inquiries.length + quotes.length})</Button>
       </div>
