@@ -242,6 +242,11 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
           </button>
         ))}
       </div>
+      {build.stage === 'completed' ? (
+        <Button variant="outline" size="sm" onClick={() => void call({ action: 'update', stage: 'ready_for_pickup' }, 'Moved back to active.')}>Move back to active</Button>
+      ) : (
+        <Button size="sm" onClick={() => void call({ action: 'update', stage: 'completed' }, 'Moved to Completed.')}>Move to Completed</Button>
+      )}
 
       <div>
         <textarea
