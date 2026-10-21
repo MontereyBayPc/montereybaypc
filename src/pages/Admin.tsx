@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { oauthReturnPath } from '@/lib/oauth-return-path';
 import { Check, Copy, Camera, LogOut, Trash2, Plus } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
