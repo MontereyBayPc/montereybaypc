@@ -3,7 +3,9 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 import { consensusPrice, type Hit } from "../_shared/price-consensus.ts";
 
-const BATCH = 8;
+const BATCH = 200; // once-daily run checks every active part
+const CONCURRENCY = 2;
+const TIME_BUDGET_MS = 110_000; // stay under the function time limit; next run continues
 const GATEWAY = "https://connector-gateway.lovable.dev/firecrawl/v2";
 
 const json = (body: unknown, status = 200) =>
@@ -38,7 +40,7 @@ Deno.serve(async (req) => {
   const now = new Date();
   const { data: locked } = await db
     .from("price_job_state")
-    .update({ locked_until: new Date(now.getTime() + 5 * 60_000).toISOString(), last_run_at: now.toISOString() })
+    .update({ locked_until: new Date(now.getTime() + 10 * 60_000).toISOString(), last_run_at: now.toISOString() })
     .eq("id", 1)
     .or(`locked_until.is.null,locked_until.lt.${now.toISOString()}`)
     .select();
@@ -51,10 +53,16 @@ Deno.serve(async (req) => {
       .from("parts")
       .select("id,name,base_price,price")
       .eq("active", true)
+      // once a day: skip parts already checked in the last 20 hours
+      .or(`last_checked_at.is.null,last_checked_at.lt.${new Date(now.getTime() - 20 * 3600_000).toISOString()}`)
       .order("last_checked_at", { ascending: true, nullsFirst: true })
       .limit(BATCH);
 
-    for (const p of parts ?? []) {
+    let stop = false;
+    const queue = [...(parts ?? [])];
+    const worker = async () => {
+    while (queue.length && !stop && Date.now() - now.getTime() < TIME_BUDGET_MS) {
+      const p = queue.shift()!;
       const res = await fetch(`${GATEWAY}/search`, {
         method: "POST",
         headers: {
@@ -69,10 +77,13 @@ Deno.serve(async (req) => {
         const body = await res.text();
         await db.from("price_job_state").update({ paused_reason: `[${res.status}] ${body.slice(0, 300)}` }).eq("id", 1);
         results.push({ name: p.name, error: res.status });
+        stop = true;
         break;
       }
       if (res.status === 429) {
-        if (++rateLimited >= 2) break;
+        if (++rateLimited >= 20) stop = true;
+        queue.push(p);
+        await new Promise((r) => setTimeout(r, 3000));
         continue;
       }
       await db.from("parts").update({ last_checked_at: new Date().toISOString() }).eq("id", p.id);
@@ -100,6 +111,8 @@ Deno.serve(async (req) => {
         .eq("id", p.id);
       results.push({ name: p.name, updated: true, price: c.price, sources: c.sources.length });
     }
+    };
+    await Promise.all(Array.from({ length: CONCURRENCY }, worker));
   } finally {
     await db.from("price_job_state").update({ locked_until: null }).eq("id", 1);
   }
