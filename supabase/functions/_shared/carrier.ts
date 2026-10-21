@@ -14,6 +14,15 @@ export function detectCarrier(raw: string): Carrier | null {
   return null;
 }
 
+/** Maps a label-service provider name (e.g. "UPS", "FedEx", "USPS") to our carrier key. */
+export function carrierFromProvider(provider: string): Carrier | null {
+  const p = provider.toLowerCase();
+  if (p.includes('ups') && !p.includes('usps')) return 'ups';
+  if (p.includes('fedex')) return 'fedex';
+  if (p.includes('usps')) return 'usps';
+  return null;
+}
+
 export function trackingUrl(carrier: Carrier, raw: string): string {
   const n = encodeURIComponent(normalizeTracking(raw));
   if (carrier === 'ups') return `https://www.ups.com/track?tracknum=${n}`;

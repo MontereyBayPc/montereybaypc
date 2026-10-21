@@ -29,10 +29,13 @@ export type Database = {
           id: string
           internal_note: string
           items: Json
+          label_cost: number | null
+          label_url: string | null
           manage_token: string
           order_ref: string | null
           photo_paths: string[]
           planned_ship_date: string | null
+          quote_request_id: string | null
           scheduled_build_date: string | null
           shipping_address: Json | null
           stage: string
@@ -56,10 +59,13 @@ export type Database = {
           id?: string
           internal_note?: string
           items?: Json
+          label_cost?: number | null
+          label_url?: string | null
           manage_token?: string
           order_ref?: string | null
           photo_paths?: string[]
           planned_ship_date?: string | null
+          quote_request_id?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           stage?: string
@@ -83,10 +89,13 @@ export type Database = {
           id?: string
           internal_note?: string
           items?: Json
+          label_cost?: number | null
+          label_url?: string | null
           manage_token?: string
           order_ref?: string | null
           photo_paths?: string[]
           planned_ship_date?: string | null
+          quote_request_id?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           stage?: string
