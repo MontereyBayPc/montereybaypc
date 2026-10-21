@@ -24,7 +24,7 @@ function Assignment<T extends WorkshopBuild>({ build, builds, onChange }: {build
     if(date && !dayHasCapacity(builds,date,build.id)) {setMessage('That day already has its one build. Choose another day.');return;}
     setBusy(true);setMessage('');
     try {
-      const {data,error}=await supabase.functions.invoke('manage-build',{body:{action:'update',id:build.id,technician_name:tech,scheduled_build_date:date || null,planned_ship_date:ship || null,workshop_status:state,internal_note:note}});
+      const {data,error}=await supabase.functions.invoke('manage-build',{body:{action:'update',id:build.id,scheduled_build_date:date || null,planned_ship_date:ship || null,workshop_status:state,internal_note:note}});
       let failure=data?.error;
       if(error && 'context' in error) {try {failure=(await (error.context as Response).json()).error;}catch{/* use fallback */}}
       if(error || failure) {setMessage(failure || 'Could not save the schedule.');return;}
