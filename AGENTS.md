@@ -10,3 +10,6 @@
 - Prebuilt benchmark references must identify their source and distinguish CPU-only reference scores from measured complete-system game results.
 - Static route snapshots replace fallback canonical and Open Graph URLs before adding self-referencing page URLs, so social crawlers receive one unambiguous URL per page.
 - Paid Stripe checkouts create their build tracker server-side (webhook plus return-page lookup, idempotent on the checkout session id) so every order is trackable without customer accounts; the staff portal lives at an unlinked, noindexed route.
+
+- Workshop assignments and internal notes stay private on build_tracking; manage-build validates dates and the database enforces one active assembly slot per day to prevent concurrent overbooking. Queue state is internal and does not automatically claim carrier dispatch on customer pages.
+- Shipping policy content is shared by the legal page and SEO snapshots so carrier timing and coverage terms remain consistent.

@@ -1,6 +1,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { z } from 'npm:zod@3';
+import { scheduleError, WORKSHOP_STATUSES } from '../_shared/workshop.ts';
 
 const STAGES = ['parts_ordered', 'bench_assembly', 'cable_management', 'stress_testing', 'ready_for_pickup', 'completed'] as const;
 const tokenSchema = z.string().regex(/^[a-f0-9]{64}$/);
@@ -23,6 +24,11 @@ const updateSchema = z.object({
   customer_note: z.string().max(2000).optional(),
   carrier: z.enum(['ups','fedex','usps']).nullable().optional(),
   tracking_number: z.string().max(40).nullable().optional(),
+  technician_name: z.string().trim().max(120).optional(),
+  scheduled_build_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  planned_ship_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  workshop_status: z.enum(WORKSHOP_STATUSES).optional(),
+  internal_note: z.string().max(2000).optional(),
 });
 const uploadSchema = z.object({
   action: z.literal('upload-photo'),
@@ -39,7 +45,7 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
 const MIME: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
-const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at';
+const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at, technician_name, scheduled_build_date, planned_ship_date, workshop_status, internal_note';
 
 const serviceClient = () =>
   createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
@@ -110,12 +116,24 @@ Deno.serve(async (req) => {
     if (body?.action === 'update') {
       const parsed = updateSchema.safeParse(body);
       if (!parsed.success) return json({ error: 'Invalid update.' }, 400);
+      const { data: existing, error: readError } = await client.from('build_tracking').select(BUILD_SELECT).eq('id', parsed.data.id).maybeSingle();
+      if (readError) return json({ error: 'Could not load this build.' }, 503);
+      if (!existing) return json({ error: 'Build not found.' }, 404);
+      const invalidDate = scheduleError(parsed.data.scheduled_build_date === undefined ? existing.scheduled_build_date : parsed.data.scheduled_build_date, parsed.data.planned_ship_date === undefined ? existing.planned_ship_date : parsed.data.planned_ship_date);
+      if (invalidDate) return json({ error: invalidDate }, 400);
       const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
       if (parsed.data.stage) patch.stage = parsed.data.stage;
       if (parsed.data.customer_note !== undefined) patch.customer_note = parsed.data.customer_note;
       if (parsed.data.carrier !== undefined) patch.carrier = parsed.data.carrier;
       if (parsed.data.tracking_number !== undefined) patch.tracking_number = parsed.data.tracking_number ? parsed.data.tracking_number.replace(/[\s-]/g, '').toUpperCase() : null;
+      for (const key of ['technician_name','scheduled_build_date','planned_ship_date','workshop_status','internal_note'] as const) {
+        if (parsed.data[key] !== undefined) patch[key] = parsed.data[key];
+      }
+      const tracking = parsed.data.tracking_number === undefined ? existing.tracking_number : parsed.data.tracking_number;
+      const carrier = parsed.data.carrier === undefined ? existing.carrier : parsed.data.carrier;
+      if (parsed.data.workshop_status === 'shipped' && existing.fulfillment === 'us_shipping' && (!tracking || !carrier)) return json({ error: 'Save a carrier tracking number before marking this shipping order dispatched.' }, 400);
       const { data, error } = await client.from('build_tracking').update(patch).eq('id', parsed.data.id).select(BUILD_SELECT).maybeSingle();
+      if (error?.code === '23505') return json({ error: 'That date already has its one active build. Choose another day.' }, 409);
       if (error) return json({ error: 'Build updates are temporarily unavailable.' }, 503);
       if (!data) return json({ error: 'Build not found.' }, 404);
       return json({ build: data });

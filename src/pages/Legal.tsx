@@ -4,6 +4,7 @@ import CanonicalHome from "@/components/CanonicalHome";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import NotFound from "./NotFound";
 import { BUSINESS } from "@/lib/business";
+import { shippingPolicy } from "@/data/shipping-policy";
 
 type Section = { h: string; p: string[] };
 type Doc = { title: string; intro: string; sections: Section[] };
@@ -23,22 +24,14 @@ const docs: Record<string, Doc> = {
     intro: "How returns, cancellations, and refunds work.",
     sections: [
       { h: "Prebuilt PCs", p: ["If there is a problem with your prebuilt PC at pickup or delivery, let us know right away and we will make it right."] },
+      { h: "Return authorization", p: ["Contact us before shipping anything back for a confirmed address and safe packing instructions. Change-of-mind returns are considered case by case; we do not promise an automatic return window. We confirm eligibility, condition requirements, return shipping costs and any lawful deduction in writing. Damaged, faulty or incorrect orders are handled separately under applicable law."] },
       { h: "Custom builds", p: ["Custom builds are made from parts ordered for you. Contact us as early as possible if you need to cancel so we can see what options are available."] },
       { h: "Refunds", p: ["Approved refunds are sent back to the original payment method through Stripe."] },
+      { h: "Consumer rights", p: ["See our US Shipping, Pickup & Delivery policy for damaged or missing parcels and delayed shipment cancellations. Nothing in these terms limits rights that cannot legally be waived. Your bank determines when an issued refund appears."] },
       { h: "Questions", p: [`Email ${BUSINESS.email} and we will walk you through it.`] },
     ],
   },
-  shipping: {
-    title: "Shipping, Pickup & Delivery",
-    intro: "We ship insured anywhere in the US, and offer local pickup and delivery in the Monterey Bay area.",
-    sections: [
-      { h: "Local pickup", p: [`Free pickup in ${BUSINESS.city}, ${BUSINESS.region}. We will contact you to schedule a time once your PC is ready.`] },
-      { h: "Local delivery", p: ["Delivery within 30 miles is available for $75. We bring the PC to your door."] },
-      { h: "US shipping", p: ["We ship anywhere in the US by UPS or FedEx Ground, fully insured, foam-packed to protect the parts, with a signature required on delivery.", "Shipping is priced by ZIP code: $59 West Coast, $85 Mountain and Central, $115 East Coast and South, $165 Alaska and Hawaii.", "You get a tracking number when your PC ships."] },
-      { h: "Turnaround", p: ["Custom PCs usually take 1-2 weeks to build, test, and prepare."] },
-      { h: "Service area", p: [BUSINESS.serviceArea + "."] },
-    ],
-  },
+  shipping: shippingPolicy,
   terms: {
     title: "Terms of Service",
     intro: "The basic rules for using this website and buying from us.",
@@ -85,7 +78,7 @@ const Legal = () => {
             {doc.sections.map((s) => (
               <div key={s.h} className="border-t border-border pt-6">
                 <h2 className="font-heading text-xl font-semibold text-foreground mb-3">{s.h}</h2>
-                {s.p.map((t) => <p key={t} className="text-muted-foreground leading-relaxed">{t}</p>)}
+                {s.p.map((t) => <p key={t} className="text-muted-foreground leading-relaxed mb-3">{t}</p>)}
               </div>
             ))}
           </div>
