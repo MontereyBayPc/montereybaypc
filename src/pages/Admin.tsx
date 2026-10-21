@@ -1,3 +1,4 @@
+import { detectCarrier } from '../../supabase/functions/_shared/carrier';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { oauthReturnPath } from '@/lib/oauth-return-path';
@@ -24,6 +25,8 @@ type Build = {
   amount_total: number | null;
   fulfillment: string | null;
   shipping_address?: ShippingAddress | null;
+  carrier?: 'ups' | 'fedex' | 'usps' | null;
+  tracking_number?: string | null;
 };
 type ShippingAddress = { name: string; line1: string; line2: string; city: string; state: string; postal_code: string; country: string; quoted_zip: string | null };
 type Inquiry = { id: string; created_at: string; name: string; email: string; phone: string | null; kind: string; message: string; status: string };
@@ -131,6 +134,8 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
 // ---------- Build card ----------
 const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => void }) => {
   const [note, setNote] = useState(build.customer_note ?? '');
+  const [trackNo, setTrackNo] = useState(build.tracking_number ?? '');
+  const [carrier, setCarrier] = useState<string>(build.carrier ?? '');
   const [status, setStatus] = useState('');
   const [copied, setCopied] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -243,6 +248,26 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
           className="w-full bg-transparent border border-border rounded-md p-3 text-sm outline-none focus:border-brand"
         />
         <Button size="sm" className="mt-2" onClick={() => void call({ action: 'update', customer_note: note }, 'Note saved.')}>Save note</Button>
+      </div>
+
+      <div>
+        <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Package tracking</p>
+        <div className="flex flex-wrap gap-2">
+          <input
+            value={trackNo}
+            onChange={(e) => { setTrackNo(e.target.value); const c = detectCarrier(e.target.value); if (c) setCarrier(c); }}
+            maxLength={40}
+            placeholder="Paste tracking number"
+            className="flex-1 min-w-[180px] bg-transparent border border-border rounded-md px-3 py-2 text-sm outline-none focus:border-brand font-mono"
+          />
+          <select value={carrier} onChange={(e) => setCarrier(e.target.value)} className="bg-background border border-border rounded-md px-3 py-2 text-sm">
+            <option value="">Carrier</option>
+            <option value="ups">UPS</option>
+            <option value="fedex">FedEx</option>
+            <option value="usps">USPS</option>
+          </select>
+          <Button size="sm" disabled={!!trackNo.trim() && !carrier} onClick={() => void call({ action: 'update', tracking_number: trackNo.trim() || null, carrier: trackNo.trim() ? carrier : null }, trackNo.trim() ? 'Tracking saved. Customer can now track the package.' : 'Tracking removed.')}>Save tracking</Button>
+        </div>
       </div>
 
       <div>

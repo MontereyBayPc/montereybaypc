@@ -21,6 +21,8 @@ const updateSchema = z.object({
   id: z.string().uuid(),
   stage: z.enum(STAGES).optional(),
   customer_note: z.string().max(2000).optional(),
+  carrier: z.enum(['ups','fedex','usps']).nullable().optional(),
+  tracking_number: z.string().max(40).nullable().optional(),
 });
 const uploadSchema = z.object({
   action: z.literal('upload-photo'),
@@ -37,7 +39,7 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
 const MIME: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
-const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, created_at';
+const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at';
 
 const serviceClient = () =>
   createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
@@ -111,6 +113,8 @@ Deno.serve(async (req) => {
       const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
       if (parsed.data.stage) patch.stage = parsed.data.stage;
       if (parsed.data.customer_note !== undefined) patch.customer_note = parsed.data.customer_note;
+      if (parsed.data.carrier !== undefined) patch.carrier = parsed.data.carrier;
+      if (parsed.data.tracking_number !== undefined) patch.tracking_number = parsed.data.tracking_number ? parsed.data.tracking_number.replace(/[\s-]/g, '').toUpperCase() : null;
       const { data, error } = await client.from('build_tracking').update(patch).eq('id', parsed.data.id).select(BUILD_SELECT).maybeSingle();
       if (error) return json({ error: 'Build updates are temporarily unavailable.' }, 503);
       if (!data) return json({ error: 'Build not found.' }, 404);
