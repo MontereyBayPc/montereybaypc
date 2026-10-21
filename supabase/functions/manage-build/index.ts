@@ -45,7 +45,7 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
 const MIME: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
-const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at, technician_name, scheduled_build_date, planned_ship_date, const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at, technician_name, scheduled_build_date, planned_ship_date, workshop_status, internal_note, label_url, label_cost';
+const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at, technician_name, scheduled_build_date, planned_ship_date, workshop_status, internal_note, label_url, label_cost';
 
 const serviceClient = () =>
   createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
