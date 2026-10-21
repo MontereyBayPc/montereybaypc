@@ -43,6 +43,13 @@
       "when": 1792546981274,
       "tag": "0005_allow_completed_build_stage",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792593186318,
+      "tag": "0006_shipping_label_fields",
+      "breakpoints": true
     }
   ]
 }
