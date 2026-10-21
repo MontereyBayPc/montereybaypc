@@ -2,7 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { z } from 'npm:zod@3';
 
-const STAGES = ['parts_ordered', 'bench_assembly', 'cable_management', 'stress_testing', 'ready_for_pickup'] as const;
+const STAGES = ['parts_ordered', 'bench_assembly', 'cable_management', 'stress_testing', 'ready_for_pickup', 'completed'] as const;
 const tokenSchema = z.string().regex(/^[a-f0-9]{64}$/);
 
 const createOwnerSchema = z.object({

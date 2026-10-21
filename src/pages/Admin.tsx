@@ -298,7 +298,7 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
       </div>
 
       <div className="flex gap-2 border-b border-border mb-8">
-        <button className={tabCls('builds')} onClick={() => setTab('builds')}>Orders & builds ({builds.length})</button>
+        <button className={tabCls('builds')} onClick={() => setTab('builds')}>Orders & builds ({builds.filter((b) => b.stage !== 'completed').length})</button>
         <button className={tabCls('leads')} onClick={() => setTab('leads')}>Leads ({inquiries.length + quotes.length})</button>
       </div>
 
@@ -317,8 +317,15 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
             />
             <Button type="submit"><Plus className="w-4 h-4 mr-2" /> New build</Button>
           </form>
-          {builds.length === 0 && <p className="text-muted-foreground">No builds yet. Create one above, then send the customer their link.</p>}
-          {builds.map((b) => <BuildCard key={b.id} build={b} onChange={replaceBuild} />)}
+          {builds.filter((b) => b.stage !== 'completed').length === 0 && <p className="text-muted-foreground">No active builds. Create one above, then send the customer their link.</p>}
+          {builds.filter((b) => b.stage !== 'completed').map((b) => <BuildCard key={b.id} build={b} onChange={replaceBuild} />)}
+          <details className="border-t border-border pt-6">
+            <summary className="cursor-pointer font-heading text-2xl font-semibold">Completed ({builds.filter((b) => b.stage === 'completed').length})</summary>
+            <p className="text-sm text-muted-foreground mt-2 mb-4">Tap "Completed" on a build once it is picked up or delivered. Tap another stage to reopen it.</p>
+            <div className="space-y-6">
+              {builds.filter((b) => b.stage === 'completed').map((b) => <BuildCard key={b.id} build={b} onChange={replaceBuild} />)}
+            </div>
+          </details>
         </div>
       )}
 
