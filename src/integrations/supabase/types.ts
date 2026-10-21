@@ -30,6 +30,7 @@ export type Database = {
           manage_token: string
           order_ref: string | null
           photo_paths: string[]
+          shipping_address: Json | null
           stage: string
           tracking_token: string
           updated_at: string
@@ -49,6 +50,7 @@ export type Database = {
           manage_token?: string
           order_ref?: string | null
           photo_paths?: string[]
+          shipping_address?: Json | null
           stage?: string
           tracking_token?: string
           updated_at?: string
@@ -68,6 +70,7 @@ export type Database = {
           manage_token?: string
           order_ref?: string | null
           photo_paths?: string[]
+          shipping_address?: Json | null
           stage?: string
           tracking_token?: string
           updated_at?: string
