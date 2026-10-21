@@ -31,6 +31,8 @@ Deno.serve(async (req) => {
 
   // Paused-state guard + single-flight lock
   const { data: state } = await db.from("price_job_state").select("*").eq("id", 1).single();
+  const token = req.headers.get("x-cron-token") ?? "";
+  if (!state?.cron_token || token !== state.cron_token) return json({ error: "Unauthorized" }, 401);
   if (state?.paused_reason) return json({ skipped: "paused", reason: state.paused_reason });
   const now = new Date();
   const { data: locked } = await db
