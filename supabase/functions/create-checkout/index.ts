@@ -147,7 +147,10 @@ Deno.serve(async (req) => {
 
     const clientSecret = await createCheckoutSession({
       items,
-      includeDelivery: !!body.includeDelivery,
+      fulfillment: body.fulfillment === "shipping" || body.fulfillment === "delivery"
+        ? body.fulfillment
+        : body.includeDelivery ? "delivery" : "pickup",
+      shipZip: typeof body.shipZip === "string" ? body.shipZip.trim() : null,
       returnUrl,
       environment: env,
     });
