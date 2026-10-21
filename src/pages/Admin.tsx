@@ -49,6 +49,11 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
       setError('Wrong email or password.');
       return;
     }
+    const next = new URLSearchParams(window.location.search).get('next');
+    if (next) {
+      const target = oauthReturnPath(next);
+      if (target !== '/') { window.location.assign(target); return; }
+    }
     onReady();
   };
 
