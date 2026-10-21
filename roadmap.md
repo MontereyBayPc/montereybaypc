@@ -1,5 +1,11 @@
 # Roadmap
 
+## Current request: nationwide shipping and workshop
+- [ ] Paid shipping checkout and package tracking end-to-end test (live payment requires Stripe go-live)
+- [ ] Full shipping policy, returns guidance and FAQ wording
+- [ ] Private technician queue and one-build-per-day schedule
+- [ ] Verify saved schedule, stages and customer tracking
+
 ## Current request: failing SEO findings
 - [x] Refine homepage/About headings and verify all service/product headings
 - [x] Add specific build, repair, upgrade and quote links to service-area guidance
