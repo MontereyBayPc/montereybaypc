@@ -133,7 +133,7 @@ const Checkout = () => {
                     />
                     <p className="text-sm text-muted-foreground mt-2">
                       {zone
-                        ? `${zone.label}: $${zone.price} insured UPS/FedEx Ground, foam-packed with signature on delivery.`
+                        ? `${zone.label}: $${zone.price} covered shipping, foam-packed with signature on delivery. Service depends on destination.`
                         : "Enter your ZIP to see your shipping price. Use the same ZIP as your shipping address."}
                     </p>
                   </div>
@@ -152,6 +152,7 @@ const Checkout = () => {
                 <p className="text-xs text-muted-foreground mt-3 text-center">
                   You'll enter contact, shipping, card details, and any promo code on the next step.
                 </p>
+                <p className="text-xs text-muted-foreground mt-3 text-center">Ordering is subject to our <Link to="/legal/shipping" className="underline">shipping policy</Link>, <Link to="/legal/returns" className="underline">returns policy</Link> and <Link to="/legal/terms" className="underline">terms</Link>. Build time excludes carrier transit.</p>
               </div>
 
               <aside className="lg:sticky lg:top-28 h-fit border border-border rounded-2xl p-6 bg-muted/20">

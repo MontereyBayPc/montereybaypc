@@ -7,8 +7,10 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { BUILD_STAGES } from '@/lib/build-stages';
+import Workshop from '@/components/Workshop';
+import type { WorkshopBuild } from '@/lib/workshop';
 
-type Build = {
+type Build = WorkshopBuild & {
   id: string;
   build_name: string;
   tracking_token: string;
@@ -303,7 +305,13 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
 
 // ---------- Dashboard ----------
 const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
-  const [tab, setTab] = useState<'builds' | 'leads'>('builds');
+  const [tab, setTab] = useState<'builds' | 'leads' | 'queue' | 'schedule'>(() => {
+    const view = new URLSearchParams(window.location.search).get('view');
+    return view === 'queue' || view === 'schedule' || view === 'leads' ? view : 'builds';
+  });
+  const changeTab = (next: 'builds' | 'leads' | 'queue' | 'schedule') => {
+    setTab(next); window.history.replaceState(null, '', `${window.location.pathname}?view=${next}`);
+  };
   const [builds, setBuilds] = useState<Build[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -355,12 +363,16 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
         </Button>
       </div>
 
-      <div className="flex gap-2 border-b border-border mb-8">
-        <button className={tabCls('builds')} onClick={() => setTab('builds')}>Orders & builds ({builds.filter((b) => b.stage !== 'completed').length})</button>
-        <button className={tabCls('leads')} onClick={() => setTab('leads')}>Leads ({inquiries.length + quotes.length})</button>
+      <div className="flex flex-wrap gap-2 border-b border-border mb-8">
+        <Button variant="ghost" className={tabCls('builds')} onClick={() => changeTab('builds')}>Orders & builds ({builds.filter((b) => b.stage !== 'completed').length})</Button>
+        <Button variant="ghost" className={tabCls('queue')} onClick={() => changeTab('queue')}>Technician queue</Button>
+        <Button variant="ghost" className={tabCls('schedule')} onClick={() => changeTab('schedule')}>Build schedule</Button>
+        <Button variant="ghost" className={tabCls('leads')} onClick={() => changeTab('leads')}>Leads ({inquiries.length + quotes.length})</Button>
       </div>
 
       {error && <p role="alert" className="text-destructive text-sm mb-6">{error}</p>}
+
+      {(tab === 'queue' || tab === 'schedule') && <Workshop builds={builds} onChange={replaceBuild} view={tab} />}
 
       {tab === 'builds' && (
         <div className="space-y-6">

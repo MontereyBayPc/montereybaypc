@@ -22,7 +22,7 @@ const reviews = [
 ];
 
 const infoItems = [
-  { number: "01", title: "Build Time", desc: "Custom PCs take 1-2 weeks to build, test, and deliver.", icon: Clock },
+  { number: "01", title: "Build Time", desc: "Custom PCs usually take 1-2 weeks to build, test, and prepare. Shipping transit time is additional.", icon: Clock },
   { number: "02", title: "Ships Nationwide", desc: "Insured shipping anywhere in the US, plus local pickup and delivery.", icon: MapPin },
   { number: "03", title: "Satisfaction Guaranteed", desc: "We work with you until you are 100% happy with your build.", icon: BadgeCheck },
   { number: "04", title: "Technical Support", desc: "Every build comes with technical support included with your purchase.", icon: Wrench },

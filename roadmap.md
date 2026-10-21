@@ -1,5 +1,12 @@
 # Roadmap
 
+## Current request: nationwide shipping and workshop
+- [x] Paid sandbox shipping checkout, portal tracking and customer link verified; fake tracking removed and test order archived
+- [ ] Real-money shipping order: blocked on Stripe live onboarding; physical parcel tracking requires purchased carrier label
+- [x] Full shipping policy, returns guidance and FAQ wording; legal review recommended before publication
+- [x] Private technician queue and one-build-per-day schedule
+- [x] Verify saved schedule, stages and customer tracking; fix completed-order constraint
+
 ## Current request: failing SEO findings
 - [x] Refine homepage/About headings and verify all service/product headings
 - [x] Add specific build, repair, upgrade and quote links to service-area guidance

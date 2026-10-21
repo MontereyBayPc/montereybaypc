@@ -3,6 +3,7 @@
 // Keep this file free of asset imports and "@/" aliases (it is loaded by vite.config.ts).
 import { prebuiltCatalog } from "../data/prebuilts-catalog";
 import { infoPages } from "../data/info-pages";
+import { shippingPolicy } from "../data/shipping-policy";
 
 export const SITE_URL = "https://montereybaypcs.com";
 
@@ -27,7 +28,7 @@ const services = [
 const legal = [
   { slug: "warranty", title: "Warranty & Support", text: "Components keep their manufacturer warranty and every PC purchase includes technical support." },
   { slug: "returns", title: "Returns & Refunds", text: "How returns, cancellations, and refunds work for prebuilt and custom PCs." },
-  { slug: "shipping", title: "Pickup & Delivery", text: "Free local pickup in Monterey, CA, local delivery within 30 miles for $75, and insured shipping anywhere in the US from $59 based on your ZIP code." },
+  { slug: "shipping", title: shippingPolicy.title, text: shippingPolicy.intro },
   { slug: "terms", title: "Terms of Service", text: "The basic rules for using this website and buying from Monterey Bay PCs." },
   { slug: "privacy", title: "Privacy Policy", text: "What information we collect and how we use it. We never sell your information." },
   { slug: "accessibility", title: "Accessibility", text: "We aim to keep the site readable, keyboard friendly, and usable with screen readers." },
@@ -50,7 +51,7 @@ export const seoRoutes: SeoRoute[] = [
         "04 Pickup or Delivery: Ready in 1-2 weeks. Pick it up locally, get local delivery, or have it shipped insured anywhere in the US.",
       ] },
       { h: "What to Know", items: [
-        "Build Time: Custom PCs take 1-2 weeks to build, test, and deliver.",
+        "Build Time: Custom PCs usually take 1-2 weeks to build, test, and prepare. Carrier transit time is additional.",
         "Ships Nationwide: Insured shipping anywhere in the US, plus local pickup and delivery in Monterey Bay.",
         "Satisfaction Guaranteed: We work with you until you are 100% happy with your build.",
         "Technical Support: Every build comes with technical support included with your purchase.",
@@ -71,7 +72,7 @@ export const seoRoutes: SeoRoute[] = [
         "5 stars - Nicholas O.: \"I was very happy with the turnaround time from Monterey Bay PCs. They replaced my fans and cleaned up my PC, and the whole process was quick and easy. I'm very satisfied with the service.\"",
       ] },
       { h: "Frequently Asked Questions", items: [
-        "How long does a custom build take? Custom PCs take 1-2 weeks to build, test, and prepare for pickup.",
+        "How long does a custom build take? Custom PCs usually take 1-2 weeks to build, test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional.",
         "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
         "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up or get local delivery in the Monterey Bay area.",
         "What support do you offer? Technical support is included with every PC purchase.",
@@ -159,7 +160,7 @@ export const seoRoutes: SeoRoute[] = [
     description: "Answers about build times, pricing, local pickup and delivery, parts sourcing, and support for Monterey Bay PCs customers.",
     h1: "Frequently Asked Questions",
     body: [
-      "How long does a custom build take? Custom PCs take 1-2 weeks to build, test, and prepare for pickup.",
+      "How long does a custom build take? Custom PCs usually take 1-2 weeks to build, test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional.",
       "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
       "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up or get local delivery in the Monterey Bay area.",
       "What support do you offer? Technical support is included with every PC purchase.",
@@ -191,6 +192,7 @@ export const seoRoutes: SeoRoute[] = [
     description: l.text,
     h1: l.title,
     body: [l.text],
+    ...(l.slug === "shipping" ? { sections: shippingPolicy.sections.map(s => ({h:s.h, items:s.p})) } : {}),
     changefreq: "yearly",
     priority: "0.3",
   })),

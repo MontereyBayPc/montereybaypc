@@ -1,0 +1,2 @@
+ALTER TABLE public.build_tracking DROP CONSTRAINT build_tracking_stage_check;
+ALTER TABLE public.build_tracking ADD CONSTRAINT build_tracking_stage_check CHECK (stage IN ('parts_ordered','bench_assembly','cable_management','stress_testing','ready_for_pickup','completed'));

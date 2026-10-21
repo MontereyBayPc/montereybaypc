@@ -27,15 +27,20 @@ export type Database = {
           expires_at: string
           fulfillment: string | null
           id: string
+          internal_note: string
           items: Json
           manage_token: string
           order_ref: string | null
           photo_paths: string[]
+          planned_ship_date: string | null
+          scheduled_build_date: string | null
           shipping_address: Json | null
           stage: string
+          technician_name: string
           tracking_number: string | null
           tracking_token: string
           updated_at: string
+          workshop_status: string
         }
         Insert: {
           amount_total?: number | null
@@ -49,15 +54,20 @@ export type Database = {
           expires_at?: string
           fulfillment?: string | null
           id?: string
+          internal_note?: string
           items?: Json
           manage_token?: string
           order_ref?: string | null
           photo_paths?: string[]
+          planned_ship_date?: string | null
+          scheduled_build_date?: string | null
           shipping_address?: Json | null
           stage?: string
+          technician_name?: string
           tracking_number?: string | null
           tracking_token?: string
           updated_at?: string
+          workshop_status?: string
         }
         Update: {
           amount_total?: number | null
@@ -71,15 +81,20 @@ export type Database = {
           expires_at?: string
           fulfillment?: string | null
           id?: string
+          internal_note?: string
           items?: Json
           manage_token?: string
           order_ref?: string | null
           photo_paths?: string[]
+          planned_ship_date?: string | null
+          scheduled_build_date?: string | null
           shipping_address?: Json | null
           stage?: string
+          technician_name?: string
           tracking_number?: string | null
           tracking_token?: string
           updated_at?: string
+          workshop_status?: string
         }
         Relationships: []
       }
