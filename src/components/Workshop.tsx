@@ -67,6 +67,6 @@ export default function Workshop<T extends WorkshopBuild>({builds,onChange,view}
     </>}
     <div className="flex flex-wrap gap-4"><select aria-label="Filter queue status" value={filter} onChange={e=>setFilter(e.target.value)} className="bg-background border-b border-border py-2 text-sm"><option value="all">All statuses</option>{Object.entries(WORKSHOP_LABELS).map(([key,label])=><option key={key} value={key}>{label}</option>)}</select><select aria-label="Filter technician" value={technician} onChange={e=>setTechnician(e.target.value)} className="bg-background border-b border-border py-2 text-sm"><option value="">All technicians</option>{technicians.map(name=><option key={name}>{name}</option>)}</select></div>
     {visible.length===0 && <p className="text-muted-foreground">No active orders match this view.</p>}
-    <div className="space-y-4">{visible.map(b=><Assignment key={`${b.id}-${b.technician_name}-${b.scheduled_build_date}-${b.planned_ship_date}-${b.workshop_status}`} build={b} builds={builds} onChange={onChange}/>)}</div>
+    <div className="space-y-4">{visible.map(b=><Assignment key={b.id} build={b} builds={builds} onChange={onChange}/>)}</div>
   </div>;
 }
