@@ -3,7 +3,8 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 import { consensusPrice, type Hit } from "../_shared/price-consensus.ts";
 
-const BATCH = 8;
+const BATCH = 200; // once-daily run checks every active part
+const CONCURRENCY = 6;
 const GATEWAY = "https://connector-gateway.lovable.dev/firecrawl/v2";
 
 const json = (body: unknown, status = 200) =>
@@ -38,7 +39,7 @@ Deno.serve(async (req) => {
   const now = new Date();
   const { data: locked } = await db
     .from("price_job_state")
-    .update({ locked_until: new Date(now.getTime() + 5 * 60_000).toISOString(), last_run_at: now.toISOString() })
+    .update({ locked_until: new Date(now.getTime() + 10 * 60_000).toISOString(), last_run_at: now.toISOString() })
     .eq("id", 1)
     .or(`locked_until.is.null,locked_until.lt.${now.toISOString()}`)
     .select();
@@ -54,7 +55,11 @@ Deno.serve(async (req) => {
       .order("last_checked_at", { ascending: true, nullsFirst: true })
       .limit(BATCH);
 
-    for (const p of parts ?? []) {
+    let stop = false;
+    const queue = [...(parts ?? [])];
+    const worker = async () => {
+    while (queue.length && !stop) {
+      const p = queue.shift()!;
       const res = await fetch(`${GATEWAY}/search`, {
         method: "POST",
         headers: {
@@ -69,10 +74,12 @@ Deno.serve(async (req) => {
         const body = await res.text();
         await db.from("price_job_state").update({ paused_reason: `[${res.status}] ${body.slice(0, 300)}` }).eq("id", 1);
         results.push({ name: p.name, error: res.status });
+        stop = true;
         break;
       }
       if (res.status === 429) {
-        if (++rateLimited >= 2) break;
+        results.push({ name: p.name, error: 429 });
+        if (++rateLimited >= 5) stop = true;
         continue;
       }
       await db.from("parts").update({ last_checked_at: new Date().toISOString() }).eq("id", p.id);
@@ -100,6 +107,8 @@ Deno.serve(async (req) => {
         .eq("id", p.id);
       results.push({ name: p.name, updated: true, price: c.price, sources: c.sources.length });
     }
+    };
+    await Promise.all(Array.from({ length: CONCURRENCY }, worker));
   } finally {
     await db.from("price_job_state").update({ locked_until: null }).eq("id", 1);
   }
