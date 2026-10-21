@@ -53,6 +53,8 @@ Deno.serve(async (req) => {
       .from("parts")
       .select("id,name,base_price,price")
       .eq("active", true)
+      // once a day: skip parts already checked in the last 20 hours
+      .or(`last_checked_at.is.null,last_checked_at.lt.${new Date(now.getTime() - 20 * 3600_000).toISOString()}`)
       .order("last_checked_at", { ascending: true, nullsFirst: true })
       .limit(BATCH);
 
