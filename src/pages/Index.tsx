@@ -195,7 +195,7 @@ const Index = () => {
               { icon: MessageSquare, step: "01", title: "Tell Us What You Need", desc: "Share your budget and what the PC is for. We'll spec the right parts and send you a quote." },
               { icon: PackageSearch, step: "02", title: "Approve Your Build", desc: "You pick the final parts and price, then we order everything and get started." },
               { icon: Hammer, step: "03", title: "Built & Stress-Tested", desc: "Hand-assembled with clean cable management and stress-tested before it ever leaves the bench." },
-              { icon: Truck, step: "04", title: "Pickup or Delivery", desc: "Ready in 1-2 weeks. Pick it up locally, get local delivery, or have it shipped insured anywhere in the US." },
+              { icon: Truck, step: "04", title: "Pickup or Shipping", desc: "Ready in 1-2 weeks. Pick it up locally or have it shipped insured anywhere in the US." },
             ].map((s, i) => (
               <motion.div
                 key={s.step}

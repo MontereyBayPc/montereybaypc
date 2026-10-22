@@ -18,6 +18,6 @@ export default function ServiceAreaMap() {
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Circle center={[36.6002,-121.8947]} radius={48280.32} pathOptions={{className:'delivery-radius'}} />
       {towns.map(t => <CircleMarker key={t.name} center={[t.lat,t.lng]} radius={7} pathOptions={{className:'delivery-town'}}><Popup><strong>{t.name}</strong><br />Service-town center, not a pickup address.</Popup></CircleMarker>)}<Focus town={selected} />
-    </MapContainer></div><p className="mt-4 text-sm text-muted-foreground">Approximate 30-mile radius from central Monterey, not a driving-distance guarantee. Local delivery $75, subject to address confirmation. Pickup is by arrangement only; we confirm the exact location privately.</p>
+    </MapContainer></div><p className="mt-4 text-sm text-muted-foreground">Approximate 30-mile radius from central Monterey, not a driving-distance guarantee. Insured US shipping available everywhere else. Pickup is by arrangement only; we confirm the exact location privately.</p>
   </section>;
 }

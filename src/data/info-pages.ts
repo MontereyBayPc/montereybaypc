@@ -21,8 +21,8 @@ export const infoPages: InfoPage[] = [
     sections:SERVICE_TERMS.map(t=>({h:t.title,items:[t.text]})),
   },
   {
-    path:'/service-area-map', title:'Monterey Bay PC Service Area, Pickup & Delivery | Monterey Bay PCs', description:'PC builds, repairs and upgrades for Monterey Bay communities. Free arranged pickup in Monterey and $75 local delivery within 30 miles, subject to address confirmation.', h1:'Monterey Bay Service Area',
-    intro:'Local service around Monterey, Carmel, Pacific Grove, Seaside, Marina and Salinas. Free arranged pickup in Monterey; local delivery is $75 within 30 miles, subject to confirming your address.',
+    path:'/service-area-map', title:'Monterey Bay PC Service Area, Pickup & Delivery | Monterey Bay PCs', description:'PC builds, repairs and upgrades for Monterey Bay communities. Free arranged pickup in Monterey and insured shipping anywhere in the US.', h1:'Monterey Bay Service Area',
+    intro:'Local service around Monterey, Carmel, Pacific Grove, Seaside, Marina and Salinas. Free arranged pickup in Monterey, or insured shipping anywhere in the US.',
     sections:[
       {h:'PC services for local customers',items:[
         'Custom gaming PCs and workstations, prebuilt PCs, hardware upgrades, troubleshooting and repair, and cleaning and optimization are available through Monterey Bay PCs.',
@@ -32,8 +32,8 @@ export const infoPages: InfoPage[] = [
         'Local pickup is free. We confirm the exact pickup location and time with you directly; do not travel to a map marker expecting a shop or drop-off point.',
         'For repair or upgrade drop-off, send a repair request first. Back up important files and review the drop-off guide before bringing your PC.',
       ]},
-      {h:'Local delivery and address confirmation',items:[
-        'Local delivery costs $75 within 30 miles. Outside the area, we ship insured anywhere in the US from $59. Send your town and delivery address so we can confirm eligibility and arrangements before you book.',
+      {h:'Pickup and shipping',items:[
+        'Pick up free in Monterey, or we ship insured anywhere in the US from $59. Send your town and delivery address so we can confirm eligibility and arrangements before you book.',
         'The map circle is an approximate geographic radius, not a guaranteed route boundary. Town-center markers are for orientation only and do not establish delivery eligibility for every address in a town.',
       ]},
       {h:'Planning your build or service visit',items:[
@@ -235,12 +235,12 @@ export const infoPages: InfoPage[] = [
   ...cities.map((c) => ({
     path: `/areas/${c.toLowerCase().replace(/ /g, "-")}`,
     title: `Custom Gaming PCs & PC Repair in ${c}, CA | Monterey Bay PCs`,
-    description: `Custom gaming PCs, upgrades, and PC repair for ${c}, CA. Built in Monterey with local delivery to ${c}.`,
+    description: `Custom gaming PCs, upgrades, and PC repair for ${c}, CA. Built in Monterey with pickup or insured shipping to ${c}.`,
     h1: `Custom PCs & Repair in ${c}, CA`,
     intro: `Monterey Bay PCs builds custom gaming PCs and fixes computers for people in ${c}. Everything is built in Monterey and delivered to ${c}, or you can pick it up.`,
     sections: [
       { h: `Services in ${c}`, items: ["Custom gaming PC builds", "Prebuilt gaming PCs", "Upgrades (GPU, RAM, storage, cooling)", "Troubleshooting and repair", "Cleaning and optimization"] },
-      { h: "Delivery", items: [`Local delivery to ${c} for $75, or free pickup in Monterey.`, "Built to order in 1-2 weeks, or 48-72 hours with a rush build."] },
+      { h: "Delivery", items: [`Insured shipping to ${c}, or free pickup in Monterey.`, "Built to order in 1-2 weeks, or 48-72 hours with a rush build."] },
     ],
   })),
 ];
