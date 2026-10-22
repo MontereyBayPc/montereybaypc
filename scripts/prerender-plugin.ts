@@ -53,7 +53,7 @@ export function prerenderPlugin(): Plugin {
       outDir = resolve(c.root, c.build.outDir);
     },
     generateBundle(_options, bundle) {
-      heroAsset = Object.values(bundle).find(entry => entry.type === 'asset' && /^hero-pc-[^.]+\.webp$/.test(entry.fileName.split('/').pop() ?? ''))?.fileName;
+      heroAsset = Object.values(bundle).find(entry => entry.type === 'asset' && entry.originalFileNames.some(name => /(?:^|\/)hero-pc\.webp$/.test(name)))?.fileName;
       if (heroAsset) heroAsset = '/' + heroAsset;
     },
     closeBundle() {

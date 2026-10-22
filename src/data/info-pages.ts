@@ -51,11 +51,11 @@ export const infoPages: InfoPage[] = [
     intro: "Your next rig starts with the one you own. Trade your Monterey Bay PC within 24 months for 50% of its current resale value toward a brand-new build.",
     sections: [
       { h: "50% credit. 24 months. A brand-new rig.", items: TRADE_UP_TERMS },
-      { h: "How it works", items: [
+      { h: "Standard CPU & GPU trade-ins", items: [
         "01 Tell us what you have: model, age, and condition.",
         "02 We reply with a credit offer, usually within 1 business day.",
         "03 Bring it in when you pick up your new PC and the credit comes off your total.",
-        "Only CPUs and GPUs are accepted. Estimated credit never exceeds 50% of the reference component price and is subject to testing and inspection.",
+        "For standard part trade-ins, only CPUs and GPUs are accepted. Estimated part credit never exceeds 50% of the reference component price and is subject to testing and inspection. Complete Monterey Bay PCs qualify separately under the Trade-Up Guarantee above.",
       ] },
     ],
     form: { kind: "trade_in", heading: "Request your trade-up credit or part offer", placeholder: "Monterey Bay PC: order number, purchase date, specs and condition. Or CPU/GPU: exact model, age and condition.", submit: "Request offer" },
