@@ -36,7 +36,8 @@ Deno.serve(async req => {
     if (error) return json({ error: 'Shipment lookup is temporarily unavailable.' }, 503);
     if (!data) return json({ error: 'Invalid or expired private tracking link.' }, 404);
     if (!data.carrier || !data.tracking_number) return json({ shipment: null });
-    if (!['ups', 'usps', 'fedex'].includes(data.carrier) || !/^[A-Z0-9]{8,40}$/.test(data.tracking_number)) return json({ error: 'Carrier tracking is unavailable.' }, 400);
+    const sample = data.carrier === 'shippo' && ['SHIPPO_TRANSIT', 'SHIPPO_DELIVERED', 'SHIPPO_PRE_TRANSIT'].includes(data.tracking_number);
+    if (!sample && (!['ups', 'usps', 'fedex'].includes(data.carrier) || !/^[A-Z0-9]{8,40}$/.test(data.tracking_number))) return json({ error: 'Carrier tracking is unavailable.' }, 400);
     const key = `${data.carrier}/${data.tracking_number}`;
     const saved = cache.get(key); if (saved && saved.until > Date.now()) return json(saved.value);
     const api = Deno.env.get('LOVABLE_API_KEY'), connection = Deno.env.get('UDC_SHIPPO_API_KEY');

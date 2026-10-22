@@ -11,6 +11,7 @@ export default function ShipmentProgress({ token }: { token: string }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(0);
+  const carrierLink = `/build/${token}`;
   useEffect(() => {
     let active = true;
     const load = async () => {
@@ -28,7 +29,7 @@ export default function ShipmentProgress({ token }: { token: string }) {
   return <section className="mt-10 border-y border-border py-8">
     <div className="flex justify-between items-center gap-3"><h2 className="font-heading text-2xl font-semibold flex items-center gap-3"><Package className="text-brand" />Shipment progress</h2><Button variant="outline" size="icon" aria-label="Refresh shipment" title="Refresh shipment" onClick={() => setRefresh(value => value + 1)}><RefreshCw className="w-4 h-4" /></Button></div>
     {loading && <p className="text-muted-foreground mt-4">Checking carrier scans...</p>}
-    {error && <p role="status" className="text-muted-foreground mt-4">{error}</p>}
+    {error && <p role="status" className="text-muted-foreground mt-4">{error} <a href={carrierLink} className="underline">Open your build tracker and carrier link</a>.</p>}
     {shipment && <>
       {shipment.test && <p className="text-brand text-sm mt-4">Shippo test tracking, not a real parcel.</p>}
       <p className="mt-4 text-foreground">{shipment.details}</p>
