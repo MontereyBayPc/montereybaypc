@@ -46,7 +46,7 @@ const Services = () => (
           ))}
         </div>
         <p className="mt-8 text-center text-muted-foreground">
-          Free arranged pickup in Monterey, or $75 local delivery within 30 miles, subject to address confirmation.{' '}
+          Free arranged pickup in Monterey, or insured shipping anywhere in the US.{' '}
           <Link to="/service-area-map" className="text-foreground underline underline-offset-4">View service towns and pickup details</Link>
         </p>
       </div>

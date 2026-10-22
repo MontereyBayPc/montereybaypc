@@ -86,7 +86,7 @@ const Contact = () => {
                 <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto group-hover:translate-x-1 transition-transform duration-300" />
               </motion.a>
               <p className="mt-6 text-muted-foreground">
-                Arranging pickup or local delivery?{' '}
+                Arranging pickup or shipping?{' '}
                 <Link to="/service-area-map" className="text-foreground underline underline-offset-4">Check our service area and address-confirmation details</Link>.
               </p>
             </motion.div>

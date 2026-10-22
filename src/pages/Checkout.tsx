@@ -21,7 +21,7 @@ const PRICE_ID_BY_SLUG: Record<string, string> = {
   "rush-build": "rush_build",
 };
 
-type Fulfillment = "pickup" | "delivery" | "shipping";
+type Fulfillment = "pickup" | "shipping";
 
 const Checkout = () => {
   const { items, subtotal } = useCart();
@@ -31,7 +31,7 @@ const Checkout = () => {
   const [error, setError] = useState<string | null>(null);
 
   const zone = delivery === "shipping" ? shippingZoneForZip(zip) : null;
-  const deliveryFee = delivery === "delivery" ? 75 : zone ? zone.price : 0;
+  const deliveryFee = zone ? zone.price : 0;
   const total = subtotal + deliveryFee;
 
   const fetchClientSecret = useMemo(
@@ -80,7 +80,7 @@ const Checkout = () => {
         <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
           <h1 className="font-heading text-4xl lg:text-6xl font-bold text-foreground mb-2">Checkout</h1>
           <p className="text-muted-foreground mb-10 flex items-center gap-2">
-            <Lock className="w-4 h-4" /> Secure payment powered by Stripe.
+            <Lock className="w-4 h-4" /> Secure payment powered by Stripe. Card, Apple Pay and Google Pay accepted.
           </p>
 
           {items.length === 0 ? (
@@ -96,10 +96,9 @@ const Checkout = () => {
                 <h2 className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
                   Delivery
                 </h2>
-                <div className="grid sm:grid-cols-3 gap-3">
+                <div className="grid sm:grid-cols-2 gap-3">
                   {[
                     { id: "pickup", label: "Local Pickup", desc: "Free, Monterey Bay" },
-                    { id: "delivery", label: "Local Delivery", desc: "$75, within 30 miles" },
                     { id: "shipping", label: "US Shipping", desc: "Insured, from $59" },
                   ].map((opt) => (
                     <button

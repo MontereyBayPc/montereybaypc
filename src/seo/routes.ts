@@ -48,7 +48,7 @@ export const seoRoutes: SeoRoute[] = [
         "01 Tell Us What You Need: Share your budget and what the PC is for. We'll spec the right parts and send you a quote.",
         "02 Approve Your Build: You pick the final parts and price, then we order everything and get started.",
         "03 Built & Stress-Tested: Hand-assembled with clean cable management and stress-tested before it ever leaves the bench.",
-        "04 Pickup or Delivery: Ready in 1-2 weeks. Pick it up locally, get local delivery, or have it shipped insured anywhere in the US.",
+        "04 Pickup or Delivery: Ready in 1-2 weeks. Pick it up locally or have it shipped insured anywhere in the US.",
       ] },
       { h: "What to Know", items: [
         "Build Time: Custom PCs usually take 1-2 weeks to build, test, and prepare. Carrier transit time is additional.",
@@ -74,7 +74,7 @@ export const seoRoutes: SeoRoute[] = [
       { h: "Frequently Asked Questions", items: [
         "How long does a custom build take? Custom PCs usually take 1-2 weeks to build, test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional.",
         "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
-        "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up or get local delivery in the Monterey Bay area.",
+        "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up free in Monterey.",
         "What support do you offer? Technical support is included with every PC purchase.",
       ] },
       { h: "Ready for Your Dream PC?", items: [
@@ -162,7 +162,7 @@ export const seoRoutes: SeoRoute[] = [
     body: [
       "How long does a custom build take? Custom PCs usually take 1-2 weeks to build, test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional.",
       "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
-      "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up or get local delivery in the Monterey Bay area.",
+      "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up free in Monterey.",
       "What support do you offer? Technical support is included with every PC purchase.",
     ],
     changefreq: "monthly",
