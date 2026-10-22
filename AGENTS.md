@@ -13,3 +13,7 @@
 
 - Workshop assignments and internal notes stay private on build_tracking; manage-build validates dates and the database enforces one active assembly slot per day to prevent concurrent overbooking. Queue state is internal and does not automatically claim carrier dispatch on customer pages.
 - Shipping policy content is shared by the legal page and SEO snapshots so carrier timing and coverage terms remain consistent.
+- Shipment progress uses a private expiring build token and server-only Shippo reads; maps show geocoded scan cities, never inferred live GPS positions.
+- Shareable quotes serialize part IDs and extras only, with current catalog pricing restored on open; customer contact details are never included in links.
+- Trade-up eligibility and published terms live in a tested domain module so trade-in copy and legal terms remain consistent.
+- Build-time homepage snapshots include the first bundled hero photo and preload it, so imagery can load before React without exposing SEO snapshot text.

@@ -8,10 +8,23 @@ import { BUSINESS } from "@/lib/business";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { BUILD_STAGES } from "@/lib/build-stages";
+import { useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import ShipmentProgress from "@/components/ShipmentProgress";
 
 const steps = BUILD_STAGES.map(s=>s.name);
 
 const OrderStatus = () => {
+  const [params, setParams] = useSearchParams();
+  const token = params.get('token') ?? '';
+  const [privateLink, setPrivateLink] = useState('');
+  const openTracking = (event: React.FormEvent) => {
+    event.preventDefault();
+    const value = privateLink.trim();
+    const match = value.match(/(?:\/build\/|[?&]token=|^)([a-f0-9]{64})(?:$|[?&#])/);
+    if (!match) { toast.error('Paste the private build link from your order confirmation.'); return; }
+    setParams({ token: match[1] });
+  };
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [order, setOrder] = useState("");
@@ -48,7 +61,9 @@ const OrderStatus = () => {
             If we have sent you a private build link, open it to see your current stage and workbench photos.
           </p>
 
-          <ol className="grid gap-3 mb-14">
+          <form onSubmit={openTracking} className="flex flex-col sm:flex-row gap-3 mb-8"><Input aria-label="Private build tracking link" placeholder="Your private build tracking link" value={privateLink} onChange={event => setPrivateLink(event.target.value)} maxLength={500} required /><Button type="submit">Track shipment</Button></form>
+          {/^[a-f0-9]{64}$/.test(token) && <ShipmentProgress token={token} />}
+          <ol className="grid gap-3 mb-14 mt-10">
             {steps.map((s, i) => (
               <li key={s} className="flex items-center gap-4 border border-border rounded-2xl p-4">
                 <span className="font-heading text-sm font-semibold text-brand w-8">{String(i + 1).padStart(2, "0")}</span>
