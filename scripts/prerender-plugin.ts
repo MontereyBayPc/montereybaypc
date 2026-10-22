@@ -35,7 +35,10 @@ function render(template: string, path: string, title: string, description: stri
     .replace(/<meta name="twitter:description"[^>]*>/, `<meta name="twitter:description" content="${esc(description)}">`);
   const extra = `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />${noindex ? '\n    <meta name="robots" content="noindex" />' : ""}\n  </head>`;
   html = html.replace("</head>", extra);
-  return html.replace('<div id="root"></div>', `<div id="root">${bodyHtml}</div>`);
+  // Snapshot text stays in the HTML for crawlers but is visually hidden so visitors
+  // never see a plain-text page while the app loads.
+  const hidden = `<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">${bodyHtml}</div>`;
+  return html.replace('<div id="root"></div>', `<div id="root">${hidden}</div>`);
 }
 
 export function prerenderPlugin(): Plugin {
