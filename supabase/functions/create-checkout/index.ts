@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
       items,
       fulfillment: body.fulfillment === "shipping"
         ? body.fulfillment
-        : body.includeDelivery ? "delivery" : "pickup",
+        : "pickup",
       shipZip: typeof body.shipZip === "string" ? body.shipZip.trim() : null,
       returnUrl,
       environment: env,

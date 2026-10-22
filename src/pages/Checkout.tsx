@@ -174,7 +174,7 @@ const Checkout = () => {
                     <span className="text-foreground">${subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">{delivery === "shipping" ? "Shipping" : "Delivery"}</span>
+                    <span className="text-muted-foreground">{delivery === "shipping" ? "Shipping" : "Pickup"}</span>
                     <span className="text-foreground">
                       {delivery === "shipping" && !zone ? "Enter ZIP" : deliveryFee ? `$${deliveryFee}` : "Free"}
                     </span>

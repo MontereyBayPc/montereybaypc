@@ -48,7 +48,7 @@ export const seoRoutes: SeoRoute[] = [
         "01 Tell Us What You Need: Share your budget and what the PC is for. We'll spec the right parts and send you a quote.",
         "02 Approve Your Build: You pick the final parts and price, then we order everything and get started.",
         "03 Built & Stress-Tested: Hand-assembled with clean cable management and stress-tested before it ever leaves the bench.",
-        "04 Pickup or Delivery: Ready in 1-2 weeks. Pick it up locally or have it shipped insured anywhere in the US.",
+        "04 Pickup or Shipping: Ready in 1-2 weeks. Pick it up locally or have it shipped insured anywhere in the US.",
       ] },
       { h: "What to Know", items: [
         "Build Time: Custom PCs usually take 1-2 weeks to build, test, and prepare. Carrier transit time is additional.",
