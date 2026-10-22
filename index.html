@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monterey Bay PCs | Custom Gaming PCs Built in Monterey, CA</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" />
+    <style>
+      /* Prevent flash of unstyled text: keep the app hidden until fonts are ready */
+      html { background: #080808; }
+      #root { opacity: 0; }
+      html.fonts-ready #root { opacity: 1; transition: opacity 0.2s ease; }
+    </style>
+
+    <script>
+      (function () {
+        var shown = false;
+        function show() {
+          if (shown) return;
+          shown = true;
+          document.documentElement.classList.add('fonts-ready');
+        }
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(show);
+        }
+        window.addEventListener('load', function () { setTimeout(show, 0); });
+        setTimeout(show, 1500); // fallback so content always appears
+      })();
+    </script>
+
+
     <meta name="description" content="Custom-built gaming PCs, workstations, and everyday systems from Monterey Bay, CA. Handcrafted for performance, reliability, and style.">
     <meta name="author" content="Monterey Bay PCs" />
 
