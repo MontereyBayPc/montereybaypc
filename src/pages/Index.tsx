@@ -52,7 +52,7 @@ const Index = () => {
       {/* Hero */}
       <section className="relative min-h-[100vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.img
               key={currentImage}
               src={heroImages[currentImage]}

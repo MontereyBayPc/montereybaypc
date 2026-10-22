@@ -22,7 +22,7 @@ ${seoRoutes.map((r) => `      <li><a href="${r.path}">${esc(r.title)}</a></li>`)
     <p>Monterey Bay PCs, Monterey, CA. Email montereybaypc@gmail.com. Phone (831) 718-7730.</p>
   </footer>`;
 
-function render(template: string, path: string, title: string, description: string, bodyHtml: string, noindex: boolean) {
+export function render(template: string, path: string, title: string, description: string, bodyHtml: string, noindex: boolean, heroAsset?: string) {
   const url = `${SITE_URL}${path}`;
   let html = template
     .replace(/<meta\b[^>]*\bproperty=["']og:url["'][^>]*>\s*/gi, "")
@@ -35,19 +35,26 @@ function render(template: string, path: string, title: string, description: stri
     .replace(/<meta name="twitter:description"[^>]*>/, `<meta name="twitter:description" content="${esc(description)}">`);
   const extra = `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />${noindex ? '\n    <meta name="robots" content="noindex" />' : ""}\n  </head>`;
   html = html.replace("</head>", extra);
+  if (path === '/' && heroAsset) html = html.replace('</head>', `<link rel="preload" as="image" href="${esc(heroAsset)}" fetchpriority="high" /></head>`);
   // Snapshot text stays in the HTML for crawlers but is visually hidden so visitors
   // never see a plain-text page while the app loads.
   const hidden = `<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">${bodyHtml}</div>`;
-  return html.replace('<div id="root"></div>', `<div id="root">${hidden}</div>`);
+  const photo = path === '/' && heroAsset ? `<section class="relative min-h-[100vh] overflow-hidden" aria-label="Monterey Bay PCs"><img src="${esc(heroAsset)}" alt="Custom gaming PC built by Monterey Bay PCs" width="1600" height="900" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover opacity-45" /><div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20"></div></section>` : '';
+  return html.replace('<div id="root"></div>', `<div id="root">${photo}${hidden}</div>`);
 }
 
 export function prerenderPlugin(): Plugin {
   let outDir = "dist";
+  let heroAsset: string | undefined;
   return {
     name: "static-route-snapshots",
     apply: "build",
     configResolved(c) {
       outDir = resolve(c.root, c.build.outDir);
+    },
+    generateBundle(_options, bundle) {
+      heroAsset = Object.values(bundle).find(entry => entry.type === 'asset' && /^hero-pc-[^.]+\.webp$/.test(entry.fileName.split('/').pop() ?? ''))?.fileName;
+      if (heroAsset) heroAsset = '/' + heroAsset;
     },
     closeBundle() {
       const template = readFileSync(join(outDir, "index.html"), "utf8");
@@ -75,7 +82,7 @@ ${sections}
   </main>
   ${footer}
 `;
-        write(r.path, render(template, r.path, r.title, r.description, body, false));
+        write(r.path, render(template, r.path, r.title, r.description, body, false, heroAsset));
       }
       for (const r of noindexRoutes) {
         write(r.path, render(template, r.path, r.title, r.description, `<main><h1>${esc(r.title)}</h1></main>`, true));
