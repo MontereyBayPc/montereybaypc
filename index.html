@@ -11,7 +11,7 @@
     <style>
       /* Prevent flash of unstyled text: keep the app hidden until fonts are ready */
       #root { opacity: 0; }
-      #root.fonts-ready { opacity: 1; transition: opacity 0.2s ease; }
+      html.fonts-ready #root { opacity: 1; transition: opacity 0.2s ease; }
     </style>
     <script>
       (function () {
@@ -19,8 +19,7 @@
         function show() {
           if (shown) return;
           shown = true;
-          var el = document.getElementById('root');
-          if (el) el.classList.add('fonts-ready');
+          document.documentElement.classList.add('fonts-ready');
         }
         if (document.fonts && document.fonts.ready) {
           document.fonts.ready.then(show);
@@ -29,6 +28,7 @@
         setTimeout(show, 1500); // fallback so content always appears
       })();
     </script>
+
 
     <meta name="description" content="Custom-built gaming PCs, workstations, and everyday systems from Monterey Bay, CA. Handcrafted for performance, reliability, and style.">
     <meta name="author" content="Monterey Bay PCs" />
