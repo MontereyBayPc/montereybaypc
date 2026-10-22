@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { checkFitment } from "@/lib/fitment";
 import { exportQuotePdf } from "@/lib/quote-pdf";
+import { decodeQuote, quoteShareUrl } from "@/lib/quote-share";
 
 type Part = { id: string; category: string; name: string; price: number; price_updated_at: string | null };
 
@@ -60,9 +61,8 @@ const Quote = () => {
         try {
           const b = new URLSearchParams(window.location.search).get("b");
           if (b) {
-            const parsed = JSON.parse(atob(b));
-            if (parsed.s) setSel(parsed.s);
-            if (Array.isArray(parsed.e)) setExtras(parsed.e);
+            const parsed = decodeQuote(b);
+            if (parsed) { setSel(parsed.s); setExtras(parsed.e); }
           }
         } catch { /* ignore bad link */ }
       });
@@ -111,10 +111,18 @@ const Quote = () => {
     toast.success("Build saved on this device");
   };
 
-  const shareLink = () => {
-    const b = btoa(JSON.stringify({ s: sel, e: extras }));
-    const url = `${window.location.origin}/quote?b=${b}`;
-    navigator.clipboard?.writeText(url).then(() => toast.success("Build link copied"), () => toast.message(url));
+  const shareLink = async () => {
+    const url = quoteShareUrl(window.location.origin, { s: sel, e: extras });
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'My Monterey Bay PCs custom quote', text: 'Here is my exact PC build for your approval.', url });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+        toast.success('Custom quote link copied');
+      } else { window.prompt('Copy your custom quote link', url); }
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === 'AbortError')) window.prompt('Copy your custom quote link', url);
+    }
   };
 
   const partsTotal = chosen.reduce((s, p) => s + Number(p.price), 0);
@@ -258,7 +266,7 @@ const Quote = () => {
                 <div className="flex justify-between"><span>Build fee (20%, min $75)</span><span>${buildFee.toLocaleString()}</span></div>
               </div>
               <div className="mt-4 flex flex-col gap-2 print:hidden">
-                <button type="button" onClick={shareLink} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Link2 className="w-4 h-4" /> Copy a link to this build</button>
+                <Button type="button" variant="outline" disabled={!chosen.length} onClick={shareLink} className="h-auto py-3 whitespace-normal"><Link2 className="w-4 h-4 shrink-0" /> Share My Custom Quote</Button>
                 <button type="button" onClick={saveDraft} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Save className="w-4 h-4" /> Save this build</button>
                 <Button type="button" variant="ghost" disabled={!chosen.length} onClick={() => exportQuotePdf(chosen,buildFee,[...warnings,...(fit.note ? [fit.note] : []),summary])} className="justify-start h-auto px-0 text-sm text-muted-foreground"><Printer className="w-4 h-4" /> Download branded PDF</Button>
               </div>
@@ -277,7 +285,7 @@ const Quote = () => {
                 </div>
               )}
               <p className="text-xs text-muted-foreground mt-3">
-                Tax and delivery not included.{lastUpdated && ` Prices last checked ${new Date(lastUpdated).toLocaleDateString()}.`}
+                Tax and shipping not included. Shared quotes use current part prices; final pricing is confirmed before payment.{lastUpdated && ` Prices last checked ${new Date(lastUpdated).toLocaleDateString()}.`}
               </p>
               {sent ? (
                 <div className="mt-6 border border-brand rounded-2xl p-5 text-sm text-foreground">

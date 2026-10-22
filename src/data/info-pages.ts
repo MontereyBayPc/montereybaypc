@@ -1,5 +1,6 @@
 // Content for simple info pages. No asset imports: also read by src/seo/routes.ts.
 import { SERVICE_TERMS } from '../lib/service-agreement';
+import { TRADE_UP_TERMS } from '../lib/trade-up';
 export type InfoPage = {
   path: string;
   title: string;
@@ -44,19 +45,20 @@ export const infoPages: InfoPage[] = [
   },
   {
     path: "/trade-in",
-    title: "CPU & GPU Trade-In Calculator | Monterey Bay PCs",
-    description: "Estimate credit for a working CPU or graphics card toward a new Monterey Bay PCs build. Final offer after inspection, capped at half of reference price.",
-    h1: "CPU & GPU Trade-Ins",
-    intro: "Upgrading? Estimate trade credit for your working processor or graphics card, then send us the model and condition for an inspected offer.",
+    title: "Trade-Up Guarantee & CPU / GPU Trade-Ins | Monterey Bay PCs",
+    description: "Trade your Monterey Bay PC within 24 months for 50% of its current resale value toward a brand-new rig. CPU and GPU trade-ins also available.",
+    h1: "Trade-Up Guarantee",
+    intro: "Your next rig starts with the one you own. Trade your Monterey Bay PC within 24 months for 50% of its current resale value toward a brand-new build.",
     sections: [
-      { h: "How it works", items: [
+      { h: "50% credit. 24 months. A brand-new rig.", items: TRADE_UP_TERMS },
+      { h: "Standard CPU & GPU trade-ins", items: [
         "01 Tell us what you have: model, age, and condition.",
         "02 We reply with a credit offer, usually within 1 business day.",
         "03 Bring it in when you pick up your new PC and the credit comes off your total.",
-        "Only CPUs and GPUs are accepted. Estimated credit never exceeds 50% of the reference component price and is subject to testing and inspection.",
+        "For standard part trade-ins, only CPUs and GPUs are accepted. Estimated part credit never exceeds 50% of the reference component price and is subject to testing and inspection. Complete Monterey Bay PCs qualify separately under the Trade-Up Guarantee above.",
       ] },
     ],
-    form: { kind: "trade_in", heading: "Get a trade-in offer", placeholder: "What are you trading in? (e.g. RTX 3070, good condition, 3 years old)", submit: "Request offer" },
+    form: { kind: "trade_in", heading: "Request your trade-up credit or part offer", placeholder: "Monterey Bay PC: order number, purchase date, specs and condition. Or CPU/GPU: exact model, age and condition.", submit: "Request offer" },
   },
   {
     path: "/bring-your-own-parts",

@@ -5,6 +5,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import NotFound from "./NotFound";
 import { BUSINESS } from "@/lib/business";
 import { shippingPolicy } from "@/data/shipping-policy";
+import { TRADE_UP_TERMS } from "@/lib/trade-up";
 
 type Section = { h: string; p: string[] };
 type Doc = { title: string; intro: string; sections: Section[] };
@@ -43,6 +44,7 @@ const docs: Record<string, Doc> = {
       { h: "Payments", p: ["Payments are processed securely by Stripe. We never see or store your full card number."] },
       { h: "Your own parts", p: ["When you bring your own parts, you are responsible for their condition and compatibility. We will tell you about any issues we find."] },
       { h: "Warranty", p: ["Our assembly work is covered by our Limited Workmanship Warranty. Components are covered by their manufacturers. See the warranty page for details."] },
+      { h: "Trade-Up Guarantee", p: TRADE_UP_TERMS },
       { h: "Limitation of liability", p: ["To the fullest extent allowed by law, our total liability for any claim related to an order or service is limited to the amount you paid for that order or service, and we are not liable for indirect, incidental, or consequential damages such as lost data, lost profits, or lost time.", "This does not limit liability for personal injury, fraud, gross negligence, willful misconduct, or any rights that cannot legally be limited, including your rights under California consumer protection law."] },
       { h: "Delays outside our control", p: ["We are not responsible for delays caused by events beyond our reasonable control, such as part shortages, manufacturer recalls, carrier disruptions, natural disasters, or power outages. If a delay affects your order, we will tell you and you may choose to wait or cancel an unshipped order for a refund."] },
       { h: "Governing law", p: ["These terms are governed by the laws of the State of California. Any dispute will be handled in the state or federal courts located in Monterey County, California, unless the law where you live gives you the right to bring a claim there or in small claims court."] },

@@ -1,5 +1,11 @@
 # Roadmap
 
+## Current request: shipment map, quote sharing, trade-up and publication
+- [ ] Carrier-reported progress and scan-location map on private order status
+- [ ] One-click exact custom quote sharing for a parent or another buyer
+- [ ] Trade-Up Guarantee: 50% of current resale value within 24 months toward a new rig
+- [ ] First-load homepage photo and publish to montereybaypcs.com
+
 ## Current request: nationwide shipping and workshop
 - [x] Paid sandbox shipping checkout, portal tracking and customer link verified; fake tracking removed and test order archived
 - [ ] Real-money shipping order: blocked on Stripe live onboarding; physical parcel tracking requires purchased carrier label
