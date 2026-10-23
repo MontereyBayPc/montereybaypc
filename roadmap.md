@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Current request: shipment map, quote sharing, trade-up and publication
-- [ ] Carrier-reported progress and scan-location map on private order status
-- [ ] One-click exact custom quote sharing for a parent or another buyer
-- [ ] Trade-Up Guarantee: 50% of current resale value within 24 months toward a new rig
+- [x] Carrier progress and scan-location map implemented; real scans blocked by Shippo test credentials
+- [x] One-click exact custom quote sharing for a parent or another buyer, reopening verified
+- [x] Trade-Up Guarantee: 50% of current resale value within 24 months toward a new rig, rules tested
 - [ ] First-load homepage photo and publish to montereybaypcs.com
 
 ## Current request: nationwide shipping and workshop
