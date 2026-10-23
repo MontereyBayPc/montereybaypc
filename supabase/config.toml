@@ -9,3 +9,5 @@ project_id = "uxkkzutipaynmrrawdew"
     verify_jwt = false
   [functions.get-order-status]
     verify_jwt = false
+  [functions.quote-approval]
+    verify_jwt = false
