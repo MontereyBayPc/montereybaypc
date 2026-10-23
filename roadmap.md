@@ -4,7 +4,7 @@
 - [x] Carrier progress and scan-location map implemented; real scans blocked by Shippo test credentials
 - [x] One-click exact custom quote sharing for a parent or another buyer, reopening verified
 - [x] Trade-Up Guarantee: 50% of current resale value within 24 months toward a new rig, rules tested
-- [ ] First-load homepage photo and publish to montereybaypcs.com
+- [x] First-load homepage photo preload added; publishing requested for montereybaypcs.com, deployment completion not verified
 
 ## Current request: nationwide shipping and workshop
 - [x] Paid sandbox shipping checkout, portal tracking and customer link verified; fake tracking removed and test order archived
