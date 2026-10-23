@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { Lock } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -24,7 +24,22 @@ const PRICE_ID_BY_SLUG: Record<string, string> = {
 type Fulfillment = "pickup" | "shipping";
 
 const Checkout = () => {
-  const { items, subtotal } = useCart();
+  const cart = useCart();
+  const [params] = useSearchParams();
+  const quoteToken = params.get("quote");
+  const [quote, setQuote] = useState<{ name: string; total: number; paid: boolean } | null>(null);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!quoteToken) return;
+    supabase.functions.invoke("quote-approval", { body: { action: "get", token: quoteToken } }).then(({ data, error }) => {
+      if (error || !data?.total) setQuoteError("This quote link is not valid or has not been approved yet.");
+      else setQuote(data);
+    });
+  }, [quoteToken]);
+  const items = quoteToken
+    ? (quote && !quote.paid ? [{ slug: "approved-quote", name: "Approved Custom PC Build", price: quote.total, quantity: 1 }] : [])
+    : cart.items;
+  const subtotal = quoteToken ? (quote?.total ?? 0) : cart.subtotal;
   const [delivery, setDelivery] = useState<Fulfillment>("pickup");
   const [zip, setZip] = useState("");
   const [started, setStarted] = useState(false);
@@ -39,11 +54,12 @@ const Checkout = () => {
       const mappedItems = items
         .map((i) => ({ priceId: PRICE_ID_BY_SLUG[i.slug], quantity: i.quantity }))
         .filter((i) => !!i.priceId);
-      if (!mappedItems.length) throw new Error("Cart is empty");
+      if (!mappedItems.length && !quoteToken) throw new Error("Cart is empty");
 
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         body: {
           items: mappedItems,
+          ...(quoteToken && { quoteToken }),
           fulfillment: delivery,
           shipZip: delivery === "shipping" ? zip : undefined,
           returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
@@ -55,7 +71,7 @@ const Checkout = () => {
       }
       return data.clientSecret;
     },
-    [items, delivery, zip],
+    [items, delivery, zip, quoteToken],
   );
 
   const handleStart = () => {
@@ -85,7 +101,7 @@ const Checkout = () => {
 
           {items.length === 0 ? (
             <div className="text-center py-20 border border-border rounded-2xl">
-              <p className="text-muted-foreground mb-6">Your cart is empty.</p>
+              <p className="text-muted-foreground mb-6">{quoteToken ? (quoteError ?? (quote?.paid ? "This quote has already been paid. Thank you!" : "Loading your approved quote...")) : "Your cart is empty."}</p>
               <Link to="/prebuilts" className="font-heading text-sm font-semibold uppercase tracking-widest underline">
                 Browse prebuilts
               </Link>
