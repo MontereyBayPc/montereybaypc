@@ -50,6 +50,13 @@
       "when": 1792593186318,
       "tag": "0006_shipping_label_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792785128125,
+      "tag": "0007_quote_approval",
+      "breakpoints": true
     }
   ]
 }
