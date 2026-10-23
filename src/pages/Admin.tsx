@@ -35,7 +35,30 @@ type Build = WorkshopBuild & {
 };
 type ShippingAddress = { name: string; line1: string; line2: string; city: string; state: string; postal_code: string; country: string; quoted_zip: string | null };
 type Inquiry = { id: string; created_at: string; name: string; email: string; phone: string | null; kind: string; message: string; status: string };
-type Quote = { id: string; created_at: string; name: string; email: string; phone: string | null; estimated_total: number; notes: string | null; status: string };
+type Quote = { id: string; created_at: string; name: string; email: string; phone: string | null; estimated_total: number; notes: string | null; status: string; approved_total: number | null; payment_token: string | null; parts: { category: string; choice?: string }[] };
+
+const QuoteApproval = ({ q, onChange }: { q: Quote; onChange: (q: Quote) => void }) => {
+  const [total, setTotal] = useState(String(q.approved_total ?? q.estimated_total));
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const link = q.payment_token ? `${window.location.origin}/checkout?quote=${q.payment_token}` : '';
+  const approve = async () => {
+    setBusy(true); setErr('');
+    const { data, error } = await supabase.functions.invoke('quote-approval', { body: { action: 'approve', id: q.id, total: Number(total) } });
+    setBusy(false);
+    if (error || !data?.token) { setErr('Could not approve. Check the total and try again.'); return; }
+    onChange({ ...q, status: 'approved', approved_total: Number(total), payment_token: data.token });
+  };
+  if (q.status === 'paid') return <p className="text-sm text-brand mt-3">Paid. The order is in your build queue.</p>;
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+      <label className="text-sm text-muted-foreground">Final price $<input type="number" min={1} value={total} onChange={(e) => setTotal(e.target.value)} className="ml-1 w-28 bg-transparent border-b border-border py-1 text-foreground outline-none focus:border-brand" /></label>
+      <Button size="sm" onClick={approve} disabled={busy}><Check className="w-4 h-4 mr-1" />{q.status === 'approved' ? 'Update price' : 'Approve'}</Button>
+      {link && <Button size="sm" variant="outline" onClick={() => { void navigator.clipboard.writeText(link); }}><Copy className="w-4 h-4 mr-1" />Copy payment link</Button>}
+      {err && <p className="text-sm text-destructive w-full">{err}</p>}
+    </div>
+  );
+};
 
 const stageName = (key: string) => BUILD_STAGES.find((s) => s.key === key)?.name ?? key;
 const FULFILLMENT_LABEL: Record<string, string> = { local_pickup: 'Local pickup', local_delivery: 'Local delivery', us_shipping: 'US shipping (UPS/FedEx)' };
@@ -380,7 +403,7 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
   const loadLeads = useCallback(async () => {
     const [{ data: inq }, { data: quo }] = await Promise.all([
       supabase.from('contact_inquiries').select('id, created_at, name, email, phone, kind, message, status').order('created_at', { ascending: false }).limit(50),
-      supabase.from('quote_requests').select('id, created_at, name, email, phone, estimated_total, notes, status').order('created_at', { ascending: false }).limit(50),
+      supabase.from('quote_requests').select('id, created_at, name, email, phone, estimated_total, notes, status, approved_total, payment_token, parts').order('created_at', { ascending: false }).limit(50),
     ]);
     setInquiries((inq ?? []) as Inquiry[]);
     setQuotes((quo ?? []) as Quote[]);
@@ -465,7 +488,9 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
                     <p className="text-xs text-muted-foreground">{new Date(q.created_at).toLocaleString()}</p>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">{q.email}{q.phone ? ` - ${q.phone}` : ''}</p>
+                  {q.parts?.filter((p) => p.choice && p.choice !== 'None').length > 0 && <p className="text-xs text-muted-foreground mt-2">{q.parts.filter((p) => p.choice && p.choice !== 'None').map((p) => `${p.category}: ${p.choice}`).join(' | ')}</p>}
                   {q.notes && <p className="text-sm mt-2 whitespace-pre-wrap">{q.notes}</p>}
+                  <QuoteApproval q={q} onChange={(n) => setQuotes((all) => all.map((x) => x.id === n.id ? n : x))} />
                 </div>
               ))}
             </div>

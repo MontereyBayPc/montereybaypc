@@ -1,6 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 import { shippingZoneForZip } from "../_shared/shipping.ts";
+import { serviceClient } from "../_shared/orders.ts";
 
 type LineItemInput = { priceId: string; quantity: number };
 type Fulfillment = "pickup" | "delivery" | "shipping";
@@ -11,6 +12,7 @@ async function createCheckoutSession(options: {
   shipZip: string | null;
   returnUrl: string;
   environment: StripeEnv;
+  quote?: { id: string; total: number } | null;
 }) {
   const stripe = createStripeClient(options.environment);
   const includeDelivery = options.fulfillment === "delivery";
@@ -27,7 +29,10 @@ async function createCheckoutSession(options: {
   const priceByLookup = new Map(prices.data.map((p) => [p.lookup_key!, p]));
 
   // deno-lint-ignore no-explicit-any
-  const line_items: any[] = options.items.map((i) => {
+  const line_items: any[] = options.quote ? [{
+    price_data: { currency: "usd", product_data: { name: "Approved Custom PC Build" }, unit_amount: Math.round(options.quote.total * 100) },
+    quantity: 1,
+  }] : options.items.map((i) => {
     const p = priceByLookup.get(i.priceId);
     if (!p) throw new Error(`Price not found: ${i.priceId}`);
     return { price: p.id, quantity: i.quantity };
@@ -70,7 +75,7 @@ async function createCheckoutSession(options: {
     }),
     ...(!isSubscription && {
       payment_intent_data: {
-        description: `Monterey Bay PC order - ${options.items
+        description: options.quote ? "Monterey Bay PC order - approved custom build" : `Monterey Bay PC order - ${options.items
           .map((i) => `${i.priceId} x${i.quantity}`)
           .join(", ")}`,
       },
@@ -83,6 +88,7 @@ async function createCheckoutSession(options: {
           : includeDelivery
             ? "local_delivery"
             : "local_pickup",
+      ...(options.quote && { quote_request_id: options.quote.id }),
       ...(shipZone && { ship_zip: options.shipZip!, ship_zone: shipZone.key }),
     },
   } as const;
@@ -118,8 +124,15 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const items: LineItemInput[] = Array.isArray(body?.items) ? body.items : [];
-    if (!items.length) throw new Error("No items");
+    let quote: { id: string; total: number } | null = null;
+    if (typeof body?.quoteToken === "string") {
+      if (!/^[a-f0-9]{64}$/.test(body.quoteToken)) throw new Error("Invalid quote link");
+      const { data: q } = await serviceClient().from("quote_requests").select("id, status, approved_total").eq("payment_token", body.quoteToken).maybeSingle();
+      if (!q || q.status !== "approved" || !q.approved_total) throw new Error("This quote is not ready for payment");
+      quote = { id: q.id, total: Number(q.approved_total) };
+    }
+    const items: LineItemInput[] = quote ? [] : Array.isArray(body?.items) ? body.items : [];
+    if (!items.length && !quote) throw new Error("No items");
     for (const i of items) {
       if (!/^[a-zA-Z0-9_-]+$/.test(i.priceId)) throw new Error("Invalid priceId");
       if (!Number.isInteger(i.quantity) || i.quantity < 1) throw new Error("Invalid quantity");
@@ -153,6 +166,7 @@ Deno.serve(async (req) => {
       shipZip: typeof body.shipZip === "string" ? body.shipZip.trim() : null,
       returnUrl,
       environment: env,
+      quote,
     });
 
     return new Response(JSON.stringify({ clientSecret }), {

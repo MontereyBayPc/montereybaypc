@@ -211,6 +211,8 @@ export type Database = {
       }
       quote_requests: {
         Row: {
+          approved_at: string | null
+          approved_total: number | null
           build_fee: number
           created_at: string
           email: string
@@ -220,10 +222,13 @@ export type Database = {
           notes: string | null
           parts: Json
           parts_total: number
+          payment_token: string | null
           phone: string | null
           status: string
         }
         Insert: {
+          approved_at?: string | null
+          approved_total?: number | null
           build_fee?: number
           created_at?: string
           email: string
@@ -233,10 +238,13 @@ export type Database = {
           notes?: string | null
           parts?: Json
           parts_total?: number
+          payment_token?: string | null
           phone?: string | null
           status?: string
         }
         Update: {
+          approved_at?: string | null
+          approved_total?: number | null
           build_fee?: number
           created_at?: string
           email?: string
@@ -246,6 +254,7 @@ export type Database = {
           notes?: string | null
           parts?: Json
           parts_total?: number
+          payment_token?: string | null
           phone?: string | null
           status?: string
         }

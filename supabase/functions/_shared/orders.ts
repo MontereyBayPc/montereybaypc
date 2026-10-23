@@ -51,9 +51,13 @@ export async function ensureOrderTracker(sessionId: string, env: StripeEnv) {
       amount_total: (session.amount_total ?? 0) / 100,
       fulfillment: session.metadata?.fulfillment ?? null,
       shipping_address: shippingAddress(session),
+      quote_request_id: session.metadata?.quote_request_id ?? null,
     })
     .select(ORDER_SELECT)
     .single();
+  if (!error && session.metadata?.quote_request_id) {
+    await db.from("quote_requests").update({ status: "paid" }).eq("id", session.metadata.quote_request_id);
+  }
   if (error) {
     // Lost a race with the webhook: read the row the other request created.
     const { data: again } = await db.from("build_tracking").select(ORDER_SELECT).eq("order_ref", sessionId).maybeSingle();
