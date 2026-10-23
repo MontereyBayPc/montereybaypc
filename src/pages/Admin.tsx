@@ -126,6 +126,17 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
           {busy ? 'One moment...' : mode === 'signin' ? 'Sign in' : 'Create owner account'}
         </Button>
       </form>
+      {mode === 'signin' && <button
+        onClick={async () => {
+          if (!email) { setError('Enter your email above first.'); return; }
+          setError('');
+          const { error: failure } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/portal?reset` });
+          setError(failure ? 'Could not send the reset email. Try again shortly.' : 'If that email has an account, a reset link is on its way.');
+        }}
+        className="mt-6 block text-sm text-muted-foreground underline"
+      >
+        Forgot password?
+      </button>}
       {setupAllowed && <button
         onClick={() => { setMode(mode === 'signin' ? 'setup' : 'signin'); setError(''); }}
         className="mt-6 text-sm text-muted-foreground underline"
@@ -133,6 +144,29 @@ const OwnerAuth = ({ onReady }: { onReady: () => void }) => {
         {mode === 'signin' ? 'First time here? Set up your owner account' : 'Already set up? Sign in'}
       </button>}
     </div>
+  );
+};
+
+// ---------- Set a new password (from the emailed reset link) ----------
+const NewPassword = ({ onDone }: { onDone: () => void }) => {
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    const { error: failure } = await supabase.auth.updateUser({ password });
+    setBusy(false);
+    if (failure) { setMessage(/weak|pwned|guess/i.test(failure.message) ? 'That password is too common. Pick a longer, unique one.' : 'Reset link expired or invalid. Request a new one.'); return; }
+    onDone();
+  };
+  return (
+    <form onSubmit={save} className="max-w-sm mx-auto space-y-5">
+      <h1 className="font-heading text-4xl font-bold">Set a new password</h1>
+      <input type="password" aria-label="New password" placeholder="At least 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} autoComplete="new-password" className="w-full bg-transparent border-b border-border py-2 outline-none focus:border-brand" />
+      {message && <p role="alert" className="text-destructive text-sm">{message}</p>}
+      <Button type="submit" disabled={busy} className="w-full">{busy ? 'One moment...' : 'Save password'}</Button>
+    </form>
   );
 };
 
@@ -461,6 +495,7 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
 // ---------- Page ----------
 export default function Admin() {
   const [sessionReady, setSessionReady] = useState(false);
+  const [resetting, setResetting] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('reset'));
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   const checkAdmin = useCallback(async () => {
@@ -488,6 +523,7 @@ export default function Admin() {
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       <section className="container mx-auto px-4 lg:px-8 py-16 lg:py-24">
+        {resetting ? <NewPassword onDone={() => { setResetting(false); window.history.replaceState(null, '', '/portal'); }} /> : <>
         {isAdmin === null && !sessionReady && <OwnerAuth onReady={() => setSessionReady(true)} />}
         {isAdmin === null && sessionReady && <p className="text-muted-foreground text-center">Checking your account...</p>}
         {isAdmin === false && (
@@ -497,6 +533,7 @@ export default function Admin() {
           </div>
         )}
         {isAdmin === true && <Dashboard onSignOut={signOut} />}
+        </>}
       </section>
     </Layout>
   );
