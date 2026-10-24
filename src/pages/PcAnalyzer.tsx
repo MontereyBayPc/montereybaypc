@@ -270,6 +270,7 @@ const games: GameProfile[] = [
   { name: "Apex Legends", baseFps: 270, cpuWeight: 0.35 },
   { name: "Hogwarts Legacy", baseFps: 190, cpuWeight: 0.2 },
   { name: "Starfield", baseFps: 170, cpuWeight: 0.35 },
+  { name: "Rust", baseFps: 220, cpuWeight: 0.5 },
 ];
 
 type SettingLevel = "Low" | "Medium" | "High" | "Ultra";
