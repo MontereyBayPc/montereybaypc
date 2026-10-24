@@ -79,7 +79,8 @@ var prebuiltCatalog = [
         { name: "Valorant", fps: "300+ FPS" },
         { name: "Elden Ring (High)", fps: "60 FPS" },
         { name: "Marvel Rivals (Medium)", fps: "100 FPS" },
-        { name: "RDR2 (High)", fps: "75 FPS" }
+        { name: "RDR2 (High)", fps: "75 FPS" },
+        { name: "Rust (High)", fps: "90 FPS" }
       ]
     },
     whatsInTheBox: ["Fully assembled & tested PC", "Power cable", "Setup guide", "Lifetime technical support"]
@@ -113,7 +114,8 @@ var prebuiltCatalog = [
         { name: "Valorant", fps: "400+ FPS" },
         { name: "Elden Ring (Max)", fps: "60 FPS" },
         { name: "Marvel Rivals (High)", fps: "140 FPS" },
-        { name: "RDR2 (Ultra)", fps: "95 FPS" }
+        { name: "RDR2 (Ultra)", fps: "95 FPS" },
+        { name: "Rust (High)", fps: "110 FPS" }
       ]
     },
     whatsInTheBox: ["Fully assembled & tested PC", "Power cable", "Setup guide", "Lifetime technical support"]
@@ -147,7 +149,8 @@ var prebuiltCatalog = [
         { name: "Valorant", fps: "300+ FPS" },
         { name: "Elden Ring (Max)", fps: "60 FPS" },
         { name: "Marvel Rivals (Ultra)", fps: "110 FPS" },
-        { name: "RDR2 (Ultra)", fps: "75 FPS" }
+        { name: "RDR2 (Ultra)", fps: "75 FPS" },
+        { name: "Rust (Ultra)", fps: "120 FPS" }
       ]
     },
     whatsInTheBox: ["Fully assembled & tested PC", "Power cables", "Setup guide", "Lifetime technical support", "Premium box packaging"]
@@ -182,6 +185,7 @@ var prebuiltCatalog = [
         { name: "Elden Ring (Max)", fps: "60 FPS" },
         { name: "Marvel Rivals (Ultra)", fps: "180 FPS" },
         { name: "RDR2 (Ultra)", fps: "140 FPS" },
+        { name: "Rust (Ultra)", fps: "150 FPS" },
         { name: "Cyberpunk 2077 (RT Ultra)", fps: "90 FPS" }
       ]
     },
