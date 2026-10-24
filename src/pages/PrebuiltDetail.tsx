@@ -176,15 +176,6 @@ const PrebuiltDetail = () => {
             </div>
           </div>
 
-          <div className="mt-12 border border-border rounded-2xl p-6 bg-muted/20">
-            <h2 className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Ready out of the box</h2>
-            <ul className="grid sm:grid-cols-3 gap-3 text-foreground text-sm">
-              <li className="flex gap-2"><Check className="w-4 h-4 mt-0.5 shrink-0" /> Clean Windows 11, zero bloatware</li>
-              <li className="flex gap-2"><Check className="w-4 h-4 mt-0.5 shrink-0" /> Latest stable BIOS installed</li>
-              <li className="flex gap-2"><Check className="w-4 h-4 mt-0.5 shrink-0" /> EXPO/XMP memory speed enabled</li>
-            </ul>
-          </div>
-
           {/* Specs */}
           <div className="mt-16">
             <h2 className="font-heading text-3xl font-bold text-foreground mb-6">Full Specs</h2>
@@ -204,8 +195,8 @@ const PrebuiltDetail = () => {
           </div>
 
           <section className="mt-16 border-t border-border pt-10">
-            <h2 className="font-heading text-3xl font-bold mb-2">Expected FPS</h2>
-            <p className="text-sm text-muted-foreground mb-6">Estimated averages at {pc.performance.resolution}. Your results vary with game updates, drivers and settings.</p>
+            <h2 className="font-heading text-3xl font-bold mb-2">Game Performance</h2>
+            <p className="text-sm text-muted-foreground mb-6">Average frame rates at {pc.performance.resolution} from published benchmarks for this CPU and GPU combo. Your results vary with game updates, drivers and settings.</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {pc.performance.games.map((g) => (
                 <div key={g.name} className="flex justify-between items-center border border-border rounded-xl px-4 py-3">
@@ -218,7 +209,7 @@ const PrebuiltDetail = () => {
           <BuildBenchmarks slug={pc.slug} cpu={pc.specs.cpu} />
 
           <div className="mt-16 border-t border-border pt-10 flex flex-wrap gap-4 justify-between items-center">
-            <p className="text-muted-foreground text-sm">Built in 1-2 weeks. Local pickup, delivery, or insured US shipping from $59.</p>
+            <p className="text-muted-foreground text-sm">Built in 1-2 weeks. Free local pickup in Monterey or insured US shipping from $59.</p>
             <button
               onClick={handleAdd}
               className="inline-flex items-center gap-2 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-6 py-3 rounded-full hover:scale-105 transition-transform"
