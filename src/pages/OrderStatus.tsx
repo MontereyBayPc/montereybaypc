@@ -61,7 +61,14 @@ const OrderStatus = () => {
             If we have sent you a private build link, open it to see your current stage and workbench photos.
           </p>
 
-          <form onSubmit={openTracking} className="flex flex-col sm:flex-row gap-3 mb-8"><Input aria-label="Private build tracking link" placeholder="Your private build tracking link" value={privateLink} onChange={event => setPrivateLink(event.target.value)} maxLength={500} required /><Button type="submit">Track shipment</Button></form>
+          <div className="border border-border rounded-2xl p-6 mb-10">
+            <h2 className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Track your build & shipment</h2>
+            <form onSubmit={openTracking} className="flex flex-col sm:flex-row gap-3">
+              <Input aria-label="Private build tracking link" placeholder="Paste your private build tracking link" value={privateLink} onChange={event => setPrivateLink(event.target.value)} maxLength={500} required className="flex-1" />
+              <Button type="submit" className="shrink-0">Track</Button>
+            </form>
+            <p className="text-xs text-muted-foreground mt-3">The link is in your order confirmation email. It shows your build stage, photos, and carrier scans once shipped.</p>
+          </div>
           {/^[a-f0-9]{64}$/.test(token) && <ShipmentProgress token={token} />}
           <ol className="grid gap-3 mb-14 mt-10">
             {steps.map((s, i) => (

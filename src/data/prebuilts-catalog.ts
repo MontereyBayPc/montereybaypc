@@ -55,10 +55,10 @@ export const prebuiltCatalog: PrebuiltSpec[] = [
     performance: {
       resolution: "1080p",
       games: [
-        { name: "Fortnite (High)", fps: "180+ FPS" },
+        { name: "Fortnite (High)", fps: "140 FPS" },
         { name: "Valorant", fps: "300+ FPS" },
         { name: "Elden Ring (High)", fps: "60 FPS" },
-        { name: "Marvel Rivals (Medium)", fps: "100 FPS" },
+        { name: "Marvel Rivals (Medium)", fps: "110 FPS" },
         { name: "RDR2 (High)", fps: "75 FPS" },
         { name: "Rust (High)", fps: "90 FPS" },
       ],
@@ -91,10 +91,10 @@ export const prebuiltCatalog: PrebuiltSpec[] = [
     performance: {
       resolution: "1440p",
       games: [
-        { name: "Fortnite (Ultra)", fps: "165 FPS" },
+        { name: "Fortnite (Ultra)", fps: "90 FPS" },
         { name: "Valorant", fps: "400+ FPS" },
         { name: "Elden Ring (Max)", fps: "60 FPS" },
-        { name: "Marvel Rivals (High)", fps: "140 FPS" },
+        { name: "Marvel Rivals (High)", fps: "100 FPS" },
         { name: "RDR2 (Ultra)", fps: "95 FPS" },
         { name: "Rust (High)", fps: "110 FPS" },
       ],
@@ -127,12 +127,12 @@ export const prebuiltCatalog: PrebuiltSpec[] = [
     performance: {
       resolution: "4K",
       games: [
-        { name: "Fortnite (Epic)", fps: "120 FPS" },
+        { name: "Fortnite (Epic)", fps: "65 FPS" },
         { name: "Valorant", fps: "300+ FPS" },
         { name: "Elden Ring (Max)", fps: "60 FPS" },
-        { name: "Marvel Rivals (Ultra)", fps: "110 FPS" },
+        { name: "Marvel Rivals (Ultra)", fps: "70 FPS" },
         { name: "RDR2 (Ultra)", fps: "75 FPS" },
-        { name: "Rust (Ultra)", fps: "120 FPS" },
+        { name: "Rust (Ultra)", fps: "90 FPS" },
       ],
     },
     whatsInTheBox: ["Fully assembled & tested PC", "Power cables", "Setup guide", "Lifetime technical support", "Premium box packaging"],
@@ -163,13 +163,13 @@ export const prebuiltCatalog: PrebuiltSpec[] = [
     performance: {
       resolution: "4K Ultra",
       games: [
-        { name: "Fortnite (Epic + RT)", fps: "180+ FPS" },
+        { name: "Fortnite (Epic + RT)", fps: "80 FPS" },
         { name: "Valorant", fps: "500+ FPS" },
         { name: "Elden Ring (Max)", fps: "60 FPS" },
-        { name: "Marvel Rivals (Ultra)", fps: "180 FPS" },
+        { name: "Marvel Rivals (Ultra)", fps: "120 FPS" },
         { name: "RDR2 (Ultra)", fps: "140 FPS" },
-        { name: "Rust (Ultra)", fps: "150 FPS" },
-        { name: "Cyberpunk 2077 (RT Ultra)", fps: "90 FPS" },
+        { name: "Rust (Ultra)", fps: "140 FPS" },
+        { name: "Cyberpunk 2077 (RT Ultra + DLSS)", fps: "90 FPS" },
       ],
     },
     whatsInTheBox: [

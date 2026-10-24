@@ -27,8 +27,9 @@ const docs: Record<string, Doc> = {
     title: "Returns & Refunds",
     intro: "How returns, cancellations, and refunds work.",
     sections: [
+      { h: "48-hour cancellation", p: ["Changed your mind? You can cancel any order for a full refund within 48 hours of purchase, as long as your build has not shipped yet. Email or call us and we will refund your original payment method in full, no questions asked."] },
       { h: "Prebuilt PCs", p: ["If there is a problem with your prebuilt PC at pickup or delivery, let us know right away and we will make it right."] },
-      { h: "Return authorization", p: ["Contact us before shipping anything back for a confirmed address and safe packing instructions. Change-of-mind returns are considered case by case; we do not promise an automatic return window. We confirm eligibility, condition requirements, return shipping costs and any lawful deduction in writing. Damaged, faulty or incorrect orders are handled separately under applicable law."] },
+      { h: "Return authorization", p: ["Contact us before shipping anything back for a confirmed address and safe packing instructions. After the 48-hour cancellation window, change-of-mind returns are considered case by case. We confirm eligibility, condition requirements, return shipping costs and any lawful deduction in writing. Damaged, faulty or incorrect orders are handled separately under applicable law."] },
       { h: "Custom builds", p: ["Custom builds are made from parts ordered for you. Contact us as early as possible if you need to cancel so we can see what options are available."] },
       { h: "Refunds", p: ["Approved refunds are sent back to the original payment method through Stripe."] },
       { h: "Consumer rights", p: ["See our US Shipping, Pickup & Delivery policy for damaged or missing parcels and delayed shipment cancellations. Nothing in these terms limits rights that cannot legally be waived. Your bank determines when an issued refund appears."] },
@@ -40,7 +41,7 @@ const docs: Record<string, Doc> = {
     title: "Terms of Service",
     intro: "The basic rules for using this website and buying from us.",
     sections: [
-      { h: "Orders", p: ["Placing an order means you agree to pay the listed price plus any applicable sales tax and delivery fee. Prices and availability can change before you pay. If we made a clear pricing error, we will contact you before building and you may cancel for a full refund."] },
+      { h: "Orders", p: ["Placing an order means you agree to pay the listed price plus any applicable sales tax and delivery fee. Prices and availability can change before you pay. If we made a clear pricing error, we will contact you before building and you may cancel for a full refund.", "You can cancel any order for a full refund within 48 hours of purchase, as long as it has not shipped. See our Returns & Refunds policy for details."] },
       { h: "Payments", p: ["Payments are processed securely by Stripe. We never see or store your full card number."] },
       { h: "Your own parts", p: ["When you bring your own parts, you are responsible for their condition and compatibility. We will tell you about any issues we find."] },
       { h: "Warranty", p: ["Our assembly work is covered by our Limited Workmanship Warranty. Components are covered by their manufacturers. See the warranty page for details."] },
