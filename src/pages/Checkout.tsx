@@ -183,6 +183,9 @@ const Checkout = () => {
                   Continue to Payment
                 </button>
                 <p className="text-xs text-muted-foreground mt-3 text-center">
+                  Changed your mind? Cancel within 48 hours of purchase for a full refund, as long as your build has not shipped.
+                </p>
+                <p className="text-xs text-muted-foreground mt-3 text-center">
                   You'll enter contact, shipping, card details, and any promo code on the next step.
                 </p>
                 <p className="text-xs text-muted-foreground mt-3 text-center">Ordering is subject to our <Link to="/legal/shipping" className="underline">shipping policy</Link>, <Link to="/legal/returns" className="underline">returns policy</Link> and <Link to="/legal/terms" className="underline">terms</Link>. Build time excludes carrier transit.</p>
@@ -192,6 +195,11 @@ const Checkout = () => {
                 <h3 className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
                   Order Summary
                 </h3>
+                {quoteUpdated && (
+                  <p className="text-xs text-brand border border-brand/40 rounded-lg px-3 py-2 mb-4">
+                    Monterey Bay PCs updated your quote. Your new total is shown below.
+                  </p>
+                )}
                 <div className="space-y-3 mb-6">
                   {items.map((i) => (
                     <div key={i.slug} className="flex justify-between text-sm">
