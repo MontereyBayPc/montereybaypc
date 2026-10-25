@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
 
 export const LogoMark = ({ className = "w-8 h-8" }: { className?: string }) => (
-  <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-    <rect x="1" y="1" width="30" height="30" rx="8" className="fill-foreground" />
-    <path d="M7 22V10l5 7 5-7v12" className="stroke-background" strokeWidth="2.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M20 22c3-1 5-3.5 5-6.5" className="stroke-brand" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-    <circle cx="25" cy="11" r="1.8" className="fill-brand" />
+  <svg viewBox="0 0 32 32" className={className} aria-hidden="true" shapeRendering="crispEdges">
+    {/* Monitor */}
+    <rect x="1" y="4" width="18" height="13" className="fill-foreground" />
+    <rect x="3" y="6" width="14" height="8" className="fill-background" />
+    <rect x="14" y="15" width="2" height="1" className="fill-brand" />
+    {/* Stand + keyboard base */}
+    <rect x="8" y="17" width="3" height="2" className="fill-foreground" />
+    <rect x="4" y="19" width="11" height="2" className="fill-foreground" />
+    {/* Tower */}
+    <rect x="22" y="2" width="9" height="27" className="fill-foreground" />
+    <rect x="24" y="4" width="5" height="23" className="fill-background" />
+    <rect x="25" y="24" width="3" height="2" className="fill-brand" />
   </svg>
 );
 
