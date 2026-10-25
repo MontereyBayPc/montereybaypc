@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { Lock } from "lucide-react";
@@ -29,20 +29,38 @@ const Checkout = () => {
   const quoteToken = params.get("quote");
   const [quote, setQuote] = useState<{ name: string; total: number; paid: boolean } | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [quoteUpdated, setQuoteUpdated] = useState(false);
+  const [started, setStarted] = useState(false);
+  const lastTotal = useRef<number | null>(null);
   useEffect(() => {
     if (!quoteToken) return;
-    supabase.functions.invoke("quote-approval", { body: { action: "get", token: quoteToken } }).then(({ data, error }) => {
-      if (error || !data?.total) setQuoteError("This quote link is not valid or has not been approved yet.");
-      else setQuote(data);
-    });
-  }, [quoteToken]);
+    let cancelled = false;
+    const load = () =>
+      supabase.functions.invoke("quote-approval", { body: { action: "get", token: quoteToken } }).then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data?.total) {
+          setQuoteError("This quote link is not valid or has not been approved yet.");
+          return;
+        }
+        if (lastTotal.current !== null && data.total !== lastTotal.current) setQuoteUpdated(true);
+        lastTotal.current = data.total;
+        setQuote(data);
+      });
+    load();
+    const timer = setInterval(() => {
+      if (!started) load();
+    }, 15000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [quoteToken, started]);
   const items = quoteToken
     ? (quote && !quote.paid ? [{ slug: "approved-quote", name: "Approved Custom PC Build", price: quote.total, quantity: 1 }] : [])
     : cart.items;
   const subtotal = quoteToken ? (quote?.total ?? 0) : cart.subtotal;
   const [delivery, setDelivery] = useState<Fulfillment>("pickup");
   const [zip, setZip] = useState("");
-  const [started, setStarted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const zone = delivery === "shipping" ? shippingZoneForZip(zip) : null;
@@ -165,6 +183,9 @@ const Checkout = () => {
                   Continue to Payment
                 </button>
                 <p className="text-xs text-muted-foreground mt-3 text-center">
+                  Changed your mind? Cancel within 48 hours of purchase for a full refund, as long as your build has not shipped.
+                </p>
+                <p className="text-xs text-muted-foreground mt-3 text-center">
                   You'll enter contact, shipping, card details, and any promo code on the next step.
                 </p>
                 <p className="text-xs text-muted-foreground mt-3 text-center">Ordering is subject to our <Link to="/legal/shipping" className="underline">shipping policy</Link>, <Link to="/legal/returns" className="underline">returns policy</Link> and <Link to="/legal/terms" className="underline">terms</Link>. Build time excludes carrier transit.</p>
@@ -174,6 +195,11 @@ const Checkout = () => {
                 <h3 className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
                   Order Summary
                 </h3>
+                {quoteUpdated && (
+                  <p className="text-xs text-brand border border-brand/40 rounded-lg px-3 py-2 mb-4">
+                    Monterey Bay PCs updated your quote. Your new total is shown below.
+                  </p>
+                )}
                 <div className="space-y-3 mb-6">
                   {items.map((i) => (
                     <div key={i.slug} className="flex justify-between text-sm">
