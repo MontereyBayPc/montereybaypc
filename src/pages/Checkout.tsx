@@ -30,6 +30,7 @@ const Checkout = () => {
   const [quote, setQuote] = useState<{ name: string; total: number; paid: boolean } | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [quoteUpdated, setQuoteUpdated] = useState(false);
+  const [started, setStarted] = useState(false);
   const lastTotal = useRef<number | null>(null);
   useEffect(() => {
     if (!quoteToken) return;
@@ -60,7 +61,6 @@ const Checkout = () => {
   const subtotal = quoteToken ? (quote?.total ?? 0) : cart.subtotal;
   const [delivery, setDelivery] = useState<Fulfillment>("pickup");
   const [zip, setZip] = useState("");
-  const [started, setStarted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const zone = delivery === "shipping" ? shippingZoneForZip(zip) : null;
