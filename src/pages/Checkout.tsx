@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { Lock } from "lucide-react";
@@ -29,13 +29,31 @@ const Checkout = () => {
   const quoteToken = params.get("quote");
   const [quote, setQuote] = useState<{ name: string; total: number; paid: boolean } | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [quoteUpdated, setQuoteUpdated] = useState(false);
+  const lastTotal = useRef<number | null>(null);
   useEffect(() => {
     if (!quoteToken) return;
-    supabase.functions.invoke("quote-approval", { body: { action: "get", token: quoteToken } }).then(({ data, error }) => {
-      if (error || !data?.total) setQuoteError("This quote link is not valid or has not been approved yet.");
-      else setQuote(data);
-    });
-  }, [quoteToken]);
+    let cancelled = false;
+    const load = () =>
+      supabase.functions.invoke("quote-approval", { body: { action: "get", token: quoteToken } }).then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data?.total) {
+          setQuoteError("This quote link is not valid or has not been approved yet.");
+          return;
+        }
+        if (lastTotal.current !== null && data.total !== lastTotal.current) setQuoteUpdated(true);
+        lastTotal.current = data.total;
+        setQuote(data);
+      });
+    load();
+    const timer = setInterval(() => {
+      if (!started) load();
+    }, 15000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [quoteToken, started]);
   const items = quoteToken
     ? (quote && !quote.paid ? [{ slug: "approved-quote", name: "Approved Custom PC Build", price: quote.total, quantity: 1 }] : [])
     : cart.items;
