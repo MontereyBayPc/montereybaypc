@@ -8,7 +8,6 @@ import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useCart } from "@/context/CartContext";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { supabase } from "@/integrations/supabase/client";
-import { shippingZoneForZip } from "../../supabase/functions/_shared/shipping";
 
 const PRICE_ID_BY_SLUG: Record<string, string> = {
   starter: "prebuilt_starter",
@@ -42,19 +41,20 @@ const Checkout = () => {
           setQuoteError("This quote link is not valid or has not been approved yet.");
           return;
         }
-        if (lastTotal.current !== null && data.total !== lastTotal.current) setQuoteUpdated(true);
+        if (lastTotal.current !== null && data.total !== lastTotal.current) {
+          setQuoteUpdated(true);
+          setStarted(false);
+        }
         lastTotal.current = data.total;
         setQuote(data);
       });
     load();
-    const timer = setInterval(() => {
-      if (!started) load();
-    }, 15000);
+    const timer = setInterval(load, 8000);
     return () => {
       cancelled = true;
       clearInterval(timer);
     };
-  }, [quoteToken, started]);
+  }, [quoteToken]);
   const items = quoteToken
     ? (quote && !quote.paid ? [{ slug: "approved-quote", name: "Approved Custom PC Build", price: quote.total, quantity: 1 }] : [])
     : cart.items;
@@ -63,7 +63,22 @@ const Checkout = () => {
   const [zip, setZip] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const zone = delivery === "shipping" ? shippingZoneForZip(zip) : null;
+  const [zone, setZone] = useState<{ price: number; label: string } | null>(null);
+  const [zoneLoading, setZoneLoading] = useState(false);
+  useEffect(() => {
+    setZone(null);
+    if (delivery !== "shipping" || !/^\d{5}$/.test(zip)) return;
+    let cancelled = false;
+    setZoneLoading(true);
+    supabase.functions.invoke("shipping-quote", { body: { zip } }).then(({ data }) => {
+      if (cancelled) return;
+      setZoneLoading(false);
+      if (data?.price) setZone({ price: data.price, label: data.label });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [delivery, zip]);
   const deliveryFee = zone ? zone.price : 0;
   const total = subtotal + deliveryFee;
 
@@ -133,7 +148,7 @@ const Checkout = () => {
                 <div className="grid sm:grid-cols-2 gap-3">
                   {[
                     { id: "pickup", label: "Local Pickup", desc: "Free, Monterey Bay" },
-                    { id: "shipping", label: "US Shipping", desc: "Insured, from $59" },
+                    { id: "shipping", label: "US Shipping", desc: "Insured, priced by your ZIP" },
                   ].map((opt) => (
                     <button
                       type="button"
@@ -165,8 +180,10 @@ const Checkout = () => {
                       className="mt-2 w-full bg-transparent border-b border-border py-2 text-lg outline-none focus:border-foreground"
                     />
                     <p className="text-sm text-muted-foreground mt-2">
-                      {zone
-                        ? `${zone.label}: $${zone.price} covered shipping, foam-packed with signature on delivery. Service depends on destination.`
+                      {zoneLoading
+                        ? "Getting live carrier rates for your ZIP..."
+                        : zone
+                        ? `Shipping to ${zone.label}: $${zone.price}, insured, foam-packed with signature on delivery.`
                         : "Enter your ZIP to see your shipping price. Use the same ZIP as your shipping address."}
                     </p>
                   </div>
@@ -182,9 +199,12 @@ const Checkout = () => {
                 >
                   Continue to Payment
                 </button>
-                <p className="text-xs text-muted-foreground mt-3 text-center">
-                  Changed your mind? Cancel within 48 hours of purchase for a full refund, as long as your build has not shipped.
-                </p>
+                <div className="mt-4 border border-border rounded-xl p-4 text-sm">
+                  <p className="font-heading font-semibold text-foreground">48-hour refund policy</p>
+                  <p className="text-muted-foreground mt-1">
+                    Changed your mind? Cancel within 48 hours of purchase for a full refund to your original payment method, as long as your build has not shipped. Use the Cancel and refund button on your order tracker, no questions asked. See our <Link to="/legal/returns" className="underline">returns policy</Link>.
+                  </p>
+                </div>
                 <p className="text-xs text-muted-foreground mt-3 text-center">
                   You'll enter contact, shipping, card details, and any promo code on the next step.
                 </p>
@@ -218,7 +238,7 @@ const Checkout = () => {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{delivery === "shipping" ? "Shipping" : "Pickup"}</span>
                     <span className="text-foreground">
-                      {delivery === "shipping" && !zone ? "Enter ZIP" : deliveryFee ? `$${deliveryFee}` : "Free"}
+                      {delivery === "shipping" && !zone ? (zoneLoading ? "..." : "Enter ZIP") : deliveryFee ? `$${deliveryFee}` : "Free"}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground pt-2">Tax calculated at checkout.</p>

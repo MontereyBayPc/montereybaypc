@@ -194,19 +194,7 @@ const PrebuiltDetail = () => {
             </div>
           </div>
 
-          <section className="mt-16 border-t border-border pt-10">
-            <h2 className="font-heading text-3xl font-bold mb-2">Game Performance</h2>
-            <p className="text-sm text-muted-foreground mb-6">Average frame rates at {pc.performance.resolution} from published benchmarks for this CPU and GPU combo. Your results vary with game updates, drivers and settings.</p>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {pc.performance.games.map((g) => (
-                <div key={g.name} className="flex justify-between items-center border border-border rounded-xl px-4 py-3">
-                  <span className="text-sm text-foreground">{g.name}</span>
-                  <span className="font-heading font-bold text-brand">{g.fps}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-          <BuildBenchmarks slug={pc.slug} cpu={pc.specs.cpu} />
+          <BuildBenchmarks slug={pc.slug} cpu={pc.specs.cpu} resolution={pc.performance.resolution} games={pc.performance.games} />
 
           <div className="mt-16 border-t border-border pt-10 flex flex-wrap gap-4 justify-between items-center">
             <p className="text-muted-foreground text-sm">Built in 1-2 weeks. Free local pickup in Monterey or insured US shipping from $59.</p>
