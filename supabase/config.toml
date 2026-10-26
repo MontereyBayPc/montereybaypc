@@ -11,3 +11,7 @@ project_id = "uxkkzutipaynmrrawdew"
     verify_jwt = false
   [functions.quote-approval]
     verify_jwt = false
+  [functions.request-refund]
+    verify_jwt = false
+  [functions.shipping-quote]
+    verify_jwt = false
