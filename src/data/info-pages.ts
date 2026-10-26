@@ -34,7 +34,7 @@ export const infoPages: InfoPage[] = [
         'For repair or upgrade drop-off, send a repair request first. Back up important files and review the drop-off guide before bringing your PC.',
       ]},
       {h:'Pickup and shipping',items:[
-        'Pick up free in Monterey, or we ship insured anywhere in the US from $59. Send your town and delivery address so we can confirm eligibility and arrangements before you book.',
+        'Pick up free in Monterey, or we ship insured anywhere in the US at live carrier rates for your ZIP. Send your town and delivery address so we can confirm eligibility and arrangements before you book.',
         'The map circle is an approximate geographic radius, not a guaranteed route boundary. Town-center markers are for orientation only and do not establish delivery eligibility for every address in a town.',
       ]},
       {h:'Planning your build or service visit',items:[

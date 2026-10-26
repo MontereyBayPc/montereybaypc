@@ -36,9 +36,11 @@ export type Database = {
           photo_paths: string[]
           planned_ship_date: string | null
           quote_request_id: string | null
+          refunded_at: string | null
           scheduled_build_date: string | null
           shipping_address: Json | null
           stage: string
+          stripe_env: string | null
           technician_name: string
           tracking_number: string | null
           tracking_token: string
@@ -66,9 +68,11 @@ export type Database = {
           photo_paths?: string[]
           planned_ship_date?: string | null
           quote_request_id?: string | null
+          refunded_at?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           stage?: string
+          stripe_env?: string | null
           technician_name?: string
           tracking_number?: string | null
           tracking_token?: string
@@ -96,9 +100,11 @@ export type Database = {
           photo_paths?: string[]
           planned_ship_date?: string | null
           quote_request_id?: string | null
+          refunded_at?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           stage?: string
+          stripe_env?: string | null
           technician_name?: string
           tracking_number?: string | null
           tracking_token?: string

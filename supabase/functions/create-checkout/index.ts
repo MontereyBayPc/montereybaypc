@@ -1,6 +1,6 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
-import { shippingZoneForZip } from "../_shared/shipping.ts";
+import { shippingQuoteForZip } from "../_shared/shippo-quote.ts";
 import { serviceClient } from "../_shared/orders.ts";
 
 type LineItemInput = { priceId: string; quantity: number };
@@ -16,7 +16,7 @@ async function createCheckoutSession(options: {
 }) {
   const stripe = createStripeClient(options.environment);
   const includeDelivery = options.fulfillment === "delivery";
-  const shipZone = options.fulfillment === "shipping" ? shippingZoneForZip(options.shipZip ?? "") : null;
+  const shipZone = options.fulfillment === "shipping" ? await shippingQuoteForZip(options.shipZip ?? "") : null;
   if (options.fulfillment === "shipping" && !shipZone) throw new Error("Enter a valid 5-digit US ZIP code for shipping");
 
   const priceIds = [...options.items.map((i) => i.priceId)];
@@ -89,7 +89,7 @@ async function createCheckoutSession(options: {
             ? "local_delivery"
             : "local_pickup",
       ...(options.quote && { quote_request_id: options.quote.id }),
-      ...(shipZone && { ship_zip: options.shipZip!, ship_zone: shipZone.key }),
+      ...(shipZone && { ship_zip: options.shipZip!, ship_price: String(shipZone.price) }),
     },
   } as const;
 
