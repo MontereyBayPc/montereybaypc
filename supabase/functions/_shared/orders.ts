@@ -43,6 +43,7 @@ export async function ensureOrderTracker(sessionId: string, env: StripeEnv) {
     .from("build_tracking")
     .insert({
       order_ref: sessionId,
+      stripe_env: env,
       build_name: buildName.slice(0, 120),
       customer_name: customerName || null,
       customer_email: session.customer_details?.email ?? null,

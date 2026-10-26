@@ -43,7 +43,6 @@ Deno.serve(async (req) => {
       stage: "refunded", refunded_at: new Date().toISOString(), scheduled_build_date: null,
       customer_note: "Order cancelled and fully refunded at your request. Refunds usually reach your card in 5-10 business days.",
     }).eq("id", b.id);
-    if (b.quote_request_id) await db.from("quote_requests").update({ status: "approved" }).eq("id", b.quote_request_id);
     return json({ ok: true });
   } catch (e) {
     console.error("request-refund error:", e);
