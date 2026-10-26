@@ -27,7 +27,7 @@ const docs: Record<string, Doc> = {
     title: "Returns & Refunds",
     intro: "How returns, cancellations, and refunds work.",
     sections: [
-      { h: "48-hour cancellation", p: ["Changed your mind? You can cancel any order for a full refund within 48 hours of purchase, as long as your build has not shipped yet. Email or call us and we will refund your original payment method in full, no questions asked."] },
+      { h: "48-hour cancellation", p: ["Changed your mind? You can cancel any order for a full refund within 48 hours of purchase, as long as your build has not shipped yet. Tap Cancel and refund on your order tracker, or email or call us, and we will refund your original payment method in full, no questions asked."] },
       { h: "Prebuilt PCs", p: ["If there is a problem with your prebuilt PC at pickup or delivery, let us know right away and we will make it right."] },
       { h: "Return authorization", p: ["Contact us before shipping anything back for a confirmed address and safe packing instructions. After the 48-hour cancellation window, change-of-mind returns are considered case by case. We confirm eligibility, condition requirements, return shipping costs and any lawful deduction in writing. Damaged, faulty or incorrect orders are handled separately under applicable law."] },
       { h: "Custom builds", p: ["Custom builds are made from parts ordered for you. Contact us as early as possible if you need to cancel so we can see what options are available."] },

@@ -74,7 +74,7 @@ export const seoRoutes: SeoRoute[] = [
       { h: "Frequently Asked Questions", items: [
         "How long does a custom build take? Custom PCs usually take 1-2 weeks to build, test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional.",
         "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
-        "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up free in Monterey.",
+        "Do you ship nationwide? Yes. We ship insured anywhere in the US at live carrier rates based on your ZIP code, or you can pick up free in Monterey.",
         "What support do you offer? Technical support is included with every PC purchase.",
       ] },
       { h: "Ready for Your Dream PC?", items: [
@@ -162,7 +162,7 @@ export const seoRoutes: SeoRoute[] = [
     body: [
       "How long does a custom build take? Custom PCs usually take 1-2 weeks to build, test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional.",
       "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
-      "Do you ship nationwide? Yes. We ship insured anywhere in the US from $59 based on your ZIP code, or you can pick up free in Monterey.",
+      "Do you ship nationwide? Yes. We ship insured anywhere in the US at live carrier rates based on your ZIP code, or you can pick up free in Monterey.",
       "What support do you offer? Technical support is included with every PC purchase.",
     ],
     changefreq: "monthly",

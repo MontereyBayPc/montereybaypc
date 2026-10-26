@@ -197,7 +197,7 @@ const PrebuiltDetail = () => {
           <BuildBenchmarks slug={pc.slug} cpu={pc.specs.cpu} resolution={pc.performance.resolution} games={pc.performance.games} />
 
           <div className="mt-16 border-t border-border pt-10 flex flex-wrap gap-4 justify-between items-center">
-            <p className="text-muted-foreground text-sm">Built in 1-2 weeks. Free local pickup in Monterey or insured US shipping from $59.</p>
+            <p className="text-muted-foreground text-sm">Built in 1-2 weeks. Free local pickup in Monterey or insured US shipping priced by your ZIP.</p>
             <button
               onClick={handleAdd}
               className="inline-flex items-center gap-2 font-heading text-sm font-semibold uppercase tracking-widest bg-foreground text-background px-6 py-3 rounded-full hover:scale-105 transition-transform"
