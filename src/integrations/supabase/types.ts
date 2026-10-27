@@ -19,20 +19,31 @@ export type Database = {
           amount_total: number | null
           build_name: string
           carrier: string | null
+          carrier_status: string | null
+          carrier_updated_at: string | null
           created_at: string
           customer_email: string | null
           customer_name: string | null
           customer_note: string
           customer_phone: string | null
+          delivered_at: string | null
           expires_at: string
           fulfillment: string | null
+          held_at: string | null
+          hold_previous_status: string | null
+          hold_reason: string | null
+          hold_until: string | null
           id: string
           internal_note: string
           items: Json
           label_cost: number | null
           label_url: string | null
+          labor_cost: number | null
           manage_token: string
+          net_revenue: number | null
           order_ref: string | null
+          other_cost: number | null
+          parts_cost: number | null
           photo_paths: string[]
           planned_ship_date: string | null
           quote_request_id: string | null
@@ -51,20 +62,31 @@ export type Database = {
           amount_total?: number | null
           build_name: string
           carrier?: string | null
+          carrier_status?: string | null
+          carrier_updated_at?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
           customer_note?: string
           customer_phone?: string | null
+          delivered_at?: string | null
           expires_at?: string
           fulfillment?: string | null
+          held_at?: string | null
+          hold_previous_status?: string | null
+          hold_reason?: string | null
+          hold_until?: string | null
           id?: string
           internal_note?: string
           items?: Json
           label_cost?: number | null
           label_url?: string | null
+          labor_cost?: number | null
           manage_token?: string
+          net_revenue?: number | null
           order_ref?: string | null
+          other_cost?: number | null
+          parts_cost?: number | null
           photo_paths?: string[]
           planned_ship_date?: string | null
           quote_request_id?: string | null
@@ -83,20 +105,31 @@ export type Database = {
           amount_total?: number | null
           build_name?: string
           carrier?: string | null
+          carrier_status?: string | null
+          carrier_updated_at?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
           customer_note?: string
           customer_phone?: string | null
+          delivered_at?: string | null
           expires_at?: string
           fulfillment?: string | null
+          held_at?: string | null
+          hold_previous_status?: string | null
+          hold_reason?: string | null
+          hold_until?: string | null
           id?: string
           internal_note?: string
           items?: Json
           label_cost?: number | null
           label_url?: string | null
+          labor_cost?: number | null
           manage_token?: string
+          net_revenue?: number | null
           order_ref?: string | null
+          other_cost?: number | null
+          parts_cost?: number | null
           photo_paths?: string[]
           planned_ship_date?: string | null
           quote_request_id?: string | null
@@ -154,6 +187,7 @@ export type Database = {
           active: boolean
           base_price: number
           category: string
+          cost_override: number | null
           created_at: string
           id: string
           last_checked_at: string | null
@@ -167,6 +201,7 @@ export type Database = {
           active?: boolean
           base_price: number
           category: string
+          cost_override?: number | null
           created_at?: string
           id?: string
           last_checked_at?: string | null
@@ -180,6 +215,7 @@ export type Database = {
           active?: boolean
           base_price?: number
           category?: string
+          cost_override?: number | null
           created_at?: string
           id?: string
           last_checked_at?: string | null
