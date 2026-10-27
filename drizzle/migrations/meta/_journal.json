@@ -64,6 +64,13 @@
       "when": 1793030693172,
       "tag": "0008_order_refunds",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793118378898,
+      "tag": "0009_workshop_operations",
+      "breakpoints": true
     }
   ]
 }

@@ -10,6 +10,7 @@ import { getPrebuilt } from "@/data/prebuilts";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 import BuildBenchmarks from "@/components/BuildBenchmarks";
+import { estimatedShipWindow } from '@/lib/operations';
 
 const PrebuiltDetail = () => {
   const { slug = "" } = useParams();
@@ -104,6 +105,7 @@ const PrebuiltDetail = () => {
             <h1 className="font-heading text-5xl lg:text-7xl font-bold text-foreground mt-2 leading-[0.95]">{pc.name}</h1>
             <p className="text-muted-foreground text-lg mt-4 max-w-2xl">{pc.description}</p>
             <p className="mt-4 text-sm text-brand font-heading font-semibold uppercase tracking-widest">Built to order and stress-tested, ready in 1-2 weeks</p>
+            <p className="mt-2 text-sm text-muted-foreground">Order today, estimated ship window {estimatedShipWindow()}. Subject to parts availability and workshop schedule; carrier transit is additional.</p>
 
             <div className="flex flex-wrap gap-2 mt-6">
               {[
