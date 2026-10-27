@@ -5,6 +5,7 @@ import { ArrowRight, Cpu, MemoryStick, HardDrive } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 import { prebuilts } from "@/data/prebuilts";
+import { estimatedShipWindow } from '@/lib/operations';
 
 const FILTERS = ["All", "1080p Esports", "1440p High Refresh", "4K Ultra", "Video Editing"];
 
@@ -122,6 +123,8 @@ const Prebuilts = () => {
                   <h2 className="font-heading text-3xl lg:text-4xl font-bold text-foreground mb-2">{pc.name}</h2>
                   <p className="text-muted-foreground mb-4">{pc.tagline}</p>
                   <span className="inline-block mb-6 rounded-full border border-brand/50 px-3 py-1 text-xs font-heading font-semibold uppercase tracking-widest text-brand">Built to order, 1-2 weeks</span>
+                  <p className="text-sm text-foreground mb-2">Estimated ship window: {estimatedShipWindow()}</p>
+                  <p className="text-xs text-muted-foreground mb-5">Order today. Subject to parts availability and workshop schedule. Carrier transit is additional.</p>
 
                   <div className="space-y-2 text-sm border-t border-border pt-5">
                     <div className="flex items-center gap-3 text-muted-foreground">
