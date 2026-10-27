@@ -1,6 +1,21 @@
 # Task Roadmap
 
-All items complete:
+## Automation upgrades
+
+- [ ] Queue label PDF downloads and batch printing
+- [ ] Carrier scan updates without manual stage changes
+- [ ] Staff-only component baseline cost overrides
+- [ ] Honest product shipping date estimates
+- [ ] Express wallet checkout verification
+- [ ] Private tracking recovery by email
+- [ ] Review follow-up after 7 days (marketing service required)
+- [ ] Unsubmitted quote reminder after 2 hours (marketing service required)
+- [ ] Three simulated game FPS presets
+- [ ] Emergency hold, customer notice and revised ETA
+- [ ] Build capacity calendar
+- [ ] Order cost and profitability dashboard
+
+## Previously completed
 
 - [x] Researched FPS numbers in game performance data (incl. Rust); section renamed "Game Performance"
 - [x] 48-hour buyer's remorse refund policy (terms, returns page, checkout badge)
