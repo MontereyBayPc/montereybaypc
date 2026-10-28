@@ -67,9 +67,7 @@ export default function ShippingLabel({ buildId, labelUrl, labelCost, onSaved }:
             <a href={labelUrl} target="_blank" rel="noopener noreferrer">Print label{labelCost ? ` ($${Number(labelCost).toFixed(2)})` : ''}</a>
           </Button>
         )}
-        <Button size="sm" variant={labelUrl ? 'ghost' : 'default'} onClick={() => setOpen(!open)}>
-          {open ? 'Close' : labelUrl ? 'Buy another label' : 'Create shipping label'}
-        </Button>
+        {!labelUrl && <Button size="sm" onClick={() => setOpen(!open)}>{open ? 'Close' : 'Create shipping label'}</Button>}
       </div>
 
       {open && (

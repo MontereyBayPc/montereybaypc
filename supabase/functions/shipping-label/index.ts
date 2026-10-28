@@ -52,7 +52,8 @@ Deno.serve(async (req) => {
     if (body?.action === 'rates') {
       const p = ratesSchema.safeParse(body);
       if (!p.success) return json({ error: 'Check the ship-from address and box size.' }, 400);
-      const { data: build } = await client.from('build_tracking').select('shipping_address, customer_name, customer_email, customer_phone, amount_total, fulfillment').eq('id', p.data.id).maybeSingle();
+      const { data: build } = await client.from('build_tracking').select('shipping_address, customer_name, customer_email, customer_phone, amount_total, fulfillment, held_at, refunded_at').eq('id', p.data.id).maybeSingle();
+      if (build?.held_at || build?.refunded_at) return json({ error: 'Release the order hold before buying shipping, and do not ship refunded orders.' }, 409);
       const to = build?.shipping_address as Record<string, string> | null;
       if (!build || build.fulfillment !== 'us_shipping' || !to?.line1) return json({ error: 'This order has no US shipping address.' }, 400);
       const shipment = await shippo('/shipments/', {
@@ -76,6 +77,9 @@ Deno.serve(async (req) => {
     if (body?.action === 'buy') {
       const p = buySchema.safeParse(body);
       if (!p.success) return json({ error: 'Choose a rate first.' }, 400);
+      const { data: existing } = await client.from('build_tracking').select('id,held_at,refunded_at,label_url,fulfillment').eq('id',p.data.id).maybeSingle();
+      if (!existing || existing.fulfillment!=='us_shipping' || existing.held_at || existing.refunded_at) return json({error:'Order is not available for shipping.'},409);
+      if(existing.label_url)return json({error:'A label already exists. Download it rather than purchasing a duplicate.'},409);
       const tx = await shippo('/transactions/', { rate: p.data.rate_id, label_file_type: 'PDF_4x6', async: false });
       if (tx.status !== 'SUCCESS' || !tx.tracking_number) {
         const why = (tx.messages ?? []).map((m: { text?: string }) => m.text).filter(Boolean).join(' ');

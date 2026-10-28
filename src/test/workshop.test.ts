@@ -10,6 +10,7 @@ describe('workshop scheduling', () => {
     const order = {id:'a',stage:'parts_ordered',scheduled_build_date:'2026-10-23'};
     expect(dayHasCapacity([order], '2026-10-23', 'a')).toBe(true);
     expect(dayHasCapacity([{...order,stage:'completed'}], '2026-10-23')).toBe(true);
+    expect(dayHasCapacity([{...order,stage:'refunded'}], '2026-10-23')).toBe(true);
   });
   it('rejects shipping before assembly', () => {
     expect(scheduleError('2026-10-23','2026-10-22')).toBe('Ship date must be on or after the build date.');

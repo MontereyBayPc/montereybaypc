@@ -13,6 +13,7 @@ async function createCheckoutSession(options: {
   returnUrl: string;
   environment: StripeEnv;
   quote?: { id: string; total: number } | null;
+  express?: boolean;
 }) {
   const stripe = createStripeClient(options.environment);
   const includeDelivery = options.fulfillment === "delivery";
@@ -26,7 +27,7 @@ async function createCheckoutSession(options: {
     lookup_keys: priceIds,
     limit: 100,
   });
-  const priceByLookup = new Map(prices.data.map((p) => [p.lookup_key!, p]));
+  const priceByLookup = new Map(prices.data.filter(p=>p.lookup_key).map((p) => [p.lookup_key ?? '', p]));
 
   // deno-lint-ignore no-explicit-any
   const line_items: any[] = options.quote ? [{
@@ -66,7 +67,7 @@ async function createCheckoutSession(options: {
   const baseParams = {
     line_items,
     mode: isSubscription ? "subscription" : "payment",
-    ui_mode: "embedded_page",
+    ui_mode: options.express ? "elements" : "embedded_page",
     return_url: options.returnUrl,
     phone_number_collection: { enabled: true },
     allow_promotion_codes: true,
@@ -89,7 +90,7 @@ async function createCheckoutSession(options: {
             ? "local_delivery"
             : "local_pickup",
       ...(options.quote && { quote_request_id: options.quote.id }),
-      ...(shipZone && { ship_zip: options.shipZip!, ship_price: String(shipZone.price) }),
+      ...(shipZone && options.shipZip && { ship_zip: options.shipZip, ship_price: String(shipZone.price) }),
     },
   } as const;
 
@@ -167,6 +168,7 @@ Deno.serve(async (req) => {
       returnUrl,
       environment: env,
       quote,
+      express: body.express === true,
     });
 
     return new Response(JSON.stringify({ clientSecret }), {

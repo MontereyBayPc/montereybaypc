@@ -10,8 +10,9 @@ import { BUILD_STAGES } from '@/lib/build-stages';
 import Workshop from '@/components/Workshop';
 import ShippingLabel from '@/components/ShippingLabel';
 import type { WorkshopBuild } from '@/lib/workshop';
+import { LabelBatch, OrderHold, PartCosts, Profitability, type OperationsBuild } from '@/components/PortalOperations';
 
-type Build = WorkshopBuild & {
+type Build = WorkshopBuild & OperationsBuild & {
   id: string;
   build_name: string;
   tracking_token: string;
@@ -316,6 +317,7 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
         />
         <Button size="sm" className="mt-2" onClick={() => void call({ action: 'update', customer_note: note }, 'Note saved.')}>Save note</Button>
       </div>
+      <OrderHold build={build} onChange={onChange} />
 
       <div>
         <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Package tracking</p>
@@ -381,11 +383,11 @@ const BuildCard = ({ build, onChange }: { build: Build; onChange: (b: Build) => 
 
 // ---------- Dashboard ----------
 const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
-  const [tab, setTab] = useState<'builds' | 'leads' | 'queue' | 'schedule'>(() => {
+  const [tab, setTab] = useState<'builds' | 'leads' | 'queue' | 'schedule' | 'costs' | 'profit'>(() => {
     const view = new URLSearchParams(window.location.search).get('view');
-    return view === 'queue' || view === 'schedule' || view === 'leads' ? view : 'builds';
+    return view === 'queue' || view === 'schedule' || view === 'leads' || view === 'costs' || view === 'profit' ? view : 'builds';
   });
-  const changeTab = (next: 'builds' | 'leads' | 'queue' | 'schedule') => {
+  const changeTab = (next: 'builds' | 'leads' | 'queue' | 'schedule' | 'costs' | 'profit') => {
     setTab(next); window.history.replaceState(null, '', `${window.location.pathname}?view=${next}`);
   };
   const [builds, setBuilds] = useState<Build[]>([]);
@@ -444,10 +446,15 @@ const Dashboard = ({ onSignOut }: { onSignOut: () => void }) => {
         <Button variant="ghost" className={tabCls('queue')} onClick={() => changeTab('queue')}>Build queue</Button>
         <Button variant="ghost" className={tabCls('schedule')} onClick={() => changeTab('schedule')}>Build schedule</Button>
         <Button variant="ghost" className={tabCls('leads')} onClick={() => changeTab('leads')}>Leads ({inquiries.length + quotes.length})</Button>
+        <Button variant="ghost" className={tabCls('costs')} onClick={() => changeTab('costs')}>Part costs</Button>
+        <Button variant="ghost" className={tabCls('profit')} onClick={() => changeTab('profit')}>Profitability</Button>
       </div>
 
       {error && <p role="alert" className="text-destructive text-sm mb-6">{error}</p>}
 
+      {tab === 'costs' && <PartCosts />}
+      {tab === 'profit' && <Profitability builds={builds} onChange={replaceBuild} />}
+      {tab === 'queue' && <LabelBatch builds={builds} />}
       {(tab === 'queue' || tab === 'schedule') && <Workshop builds={builds} onChange={replaceBuild} view={tab} />}
 
       {tab === 'builds' && (

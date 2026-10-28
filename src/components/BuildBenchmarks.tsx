@@ -20,6 +20,6 @@ export default function BuildBenchmarks({slug,cpu,resolution='',games=[]}: {slug
     <Slider aria-label="Game FPS preset" min={0} max={2} step={1} value={[preset]} onValueChange={v=>setPreset(v[0])} className="mb-4 max-w-lg" />
     <div className="flex justify-between text-xs text-muted-foreground max-w-lg gap-2 mb-6">{FPS_PRESETS.map(p=><span key={p}>{p}</span>)}</div>
     <p className="text-sm text-muted-foreground mb-6">Simulated FPS, not measurements of this PC. Resolution and quality scaling are approximate; game updates, CPU limits, drivers and upscaling affect results. No frame generation assumed.</p>
-    <div className="space-y-4">{shown.map(g=><div key={g.name} className="grid grid-cols-[1fr_auto] gap-2"><span className="text-sm">{g.name}</span><span className="font-heading font-bold text-brand">{g.value===null?'N/A':`~${g.value} FPS`}</span><progress aria-label={`${g.name} simulated FPS`} value={g.value ?? 0} max={max} className="col-span-2 w-full h-2 accent-brand" /></div>)}</div></>}
+    <div className="space-y-4">{shown.map(g=><div key={g.name} className="grid grid-cols-[1fr_auto] gap-2"><span className="text-sm">{g.name.replace(/\s*\((?:high|medium|ultra|low|max)\)/gi,'')}</span><span className="font-heading font-bold text-brand">{g.value===null?'N/A':`~${g.value} FPS`}</span><progress aria-label={`${g.name} simulated FPS`} value={g.value ?? 0} max={max} className="fps-progress col-span-2 w-full h-2" /></div>)}</div></>}
   </section>;
 }

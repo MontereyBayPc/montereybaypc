@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
+import ExpressPayment from '@/components/ExpressPayment';
 import { Lock } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
@@ -97,6 +97,7 @@ const Checkout = () => {
           shipZip: delivery === "shipping" ? zip : undefined,
           returnUrl: `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
           environment: getStripeEnvironment(),
+          express: true,
         },
       });
       if (error || !data?.clientSecret) {
@@ -253,9 +254,7 @@ const Checkout = () => {
             </div>
           ) : (
             <div id="checkout" className="border border-border rounded-2xl overflow-hidden bg-background">
-              <EmbeddedCheckoutProvider stripe={getStripe()} options={{ fetchClientSecret }}>
-                <EmbeddedCheckout />
-              </EmbeddedCheckoutProvider>
+              <ExpressPayment loadSecret={fetchClientSecret} shipping={delivery==='shipping'} />
             </div>
           )}
         </div>
