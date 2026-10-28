@@ -67,7 +67,7 @@ async function createCheckoutSession(options: {
   const baseParams = {
     line_items,
     mode: isSubscription ? "subscription" : "payment",
-    ui_mode: options.express ? "custom" : "embedded_page",
+    ui_mode: options.express ? "elements" : "embedded_page",
     return_url: options.returnUrl,
     phone_number_collection: { enabled: true },
     allow_promotion_codes: true,

@@ -68,6 +68,10 @@
 }
 
 @layer components {
+  .fps-progress { appearance: none; border: 0; background: hsl(var(--muted)); }
+  .fps-progress::-webkit-progress-bar { background: hsl(var(--muted)); }
+  .fps-progress::-webkit-progress-value { background: hsl(var(--brand)); }
+  .fps-progress::-moz-progress-bar { background: hsl(var(--brand)); }
   .font-display {
     font-family: var(--font-display);
   }
