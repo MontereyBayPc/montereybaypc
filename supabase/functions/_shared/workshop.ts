@@ -14,5 +14,5 @@ export function scheduleError(buildDate: string | null, shipDate: string | null)
   return null;
 }
 export function dayHasCapacity(orders: ScheduledOrder[], date: string, excludeId?: string): boolean {
-  return orders.filter(o => o.id !== excludeId && o.stage !== 'completed' && o.scheduled_build_date === date).length < WORKSHOP_CAPACITY;
+  return orders.filter(o => o.id !== excludeId && o.stage !== 'completed' && o.stage !== 'refunded' && o.scheduled_build_date === date).length < WORKSHOP_CAPACITY;
 }

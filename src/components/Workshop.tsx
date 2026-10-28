@@ -3,8 +3,11 @@ import { CalendarDays, Save, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { addDays, dayHasCapacity, localDate, scheduleError, WORKSHOP_LABELS, type WorkshopBuild } from '@/lib/workshop';
+import { Calendar } from '@/components/ui/calendar';
+import { OrderHold, type OperationsBuild } from '@/components/PortalOperations';
+import ShippingLabel from '@/components/ShippingLabel';
 
-function Assignment<T extends WorkshopBuild>({ build, builds, onChange }: {build:T; builds:T[]; onChange:(b:T)=>void}) {
+function Assignment<T extends OperationsBuild>({ build, builds, onChange }: {build:T; builds:T[]; onChange:(b:T)=>void}) {
   const [date,setDate]=useState(build.scheduled_build_date ?? '');
   const [ship,setShip]=useState(build.planned_ship_date ?? '');
   const [state,setState]=useState(build.workshop_status ?? 'queued');
@@ -42,18 +45,21 @@ function Assignment<T extends WorkshopBuild>({ build, builds, onChange }: {build
     <label className="block text-sm text-muted-foreground">Internal workshop note<textarea aria-label={`Internal note for ${build.build_name}`} value={note} onChange={e=>setNote(e.target.value)} rows={2} maxLength={2000} className={input}/></label>
     <div className="flex flex-wrap gap-3"><Button size="sm" type="submit" disabled={busy}><Save className="w-4 h-4 mr-2"/>{busy?'Saving...':'Save schedule'}</Button><Button size="sm" variant="outline" type="button" onClick={nextSlot}><ArrowRight className="w-4 h-4 mr-2"/>Next free day</Button></div>
     {message && <p role="status" className="text-sm text-brand">{message}</p>}
+    <OrderHold build={build} onChange={onChange} />
+    {build.fulfillment==='us_shipping' && <ShippingLabel buildId={build.id} labelUrl={build.label_url} labelCost={build.label_cost} onSaved={saved=>onChange({...build,...saved})} />}
   </form>;
 }
 
-export default function Workshop<T extends WorkshopBuild>({builds,onChange,view}:{builds:T[];onChange:(b:T)=>void;view:'queue'|'schedule'}) {
+export default function Workshop<T extends OperationsBuild>({builds,onChange,view}:{builds:T[];onChange:(b:T)=>void;view:'queue'|'schedule'}) {
   const [start,setStart]=useState(localDate());
   const [filter,setFilter]=useState('all');
-  const active=builds.filter(b=>b.stage!=='completed');
+  const active=builds.filter(b=>b.stage!=='completed' && b.stage!=='refunded');
   const sorted=[...active].sort((a,b)=>(a.scheduled_build_date ?? '9999').localeCompare(b.scheduled_build_date ?? '9999') || (a.created_at ?? '').localeCompare(b.created_at ?? ''));
   const visible=sorted.filter(b=>filter==='all' || b.workshop_status===filter);
   return <div className="space-y-6">
     <div className="flex flex-wrap justify-between gap-4"><div><h2 className="font-heading text-2xl font-semibold">{view==='queue'?'Build queue':'Build schedule'}</h2><p className="text-sm text-muted-foreground mt-2">{active.length} active · {active.filter(b=>!b.scheduled_build_date).length} unscheduled · {active.filter(b=>b.workshop_status==='blocked').length} blocked · 1 build per day</p></div></div>
     {view==='schedule' && <>
+      <div className="flex flex-wrap gap-6 items-start"><Calendar mode="single" selected={new Date(`${start}T12:00:00`)} onSelect={day=>{if(day)setStart(localDate(day));}} modifiers={{booked:active.filter(b=>b.scheduled_build_date).map(b=>new Date(`${b.scheduled_build_date}T12:00:00`)),held:active.filter(b=>b.held_at&&b.scheduled_build_date).map(b=>new Date(`${b.scheduled_build_date}T12:00:00`))}} modifiersClassNames={{booked:'border border-brand rounded-full text-brand',held:'border border-destructive text-destructive'}} /><div className="text-sm space-y-3 pt-4"><h3 className="font-heading font-semibold">Capacity forecast</h3><p className="text-brand">Outlined days: booked</p><p className="text-destructive">Red days: order held</p><p className="text-muted-foreground">One assembly slot per day. Unscheduled orders still need a date.</p></div></div>
       <label className="flex items-center gap-3 text-sm"><CalendarDays className="w-4 h-4 text-brand"/>Week starting<input aria-label="Schedule week starting" type="date" value={start} onChange={e=>{if(e.target.value)setStart(e.target.value);}} className="bg-transparent border-b border-border p-2"/></label>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">{Array.from({length:7},(_,i)=>addDays(start,i)).map(day=>{
         const entries=active.filter(b=>b.scheduled_build_date===day);

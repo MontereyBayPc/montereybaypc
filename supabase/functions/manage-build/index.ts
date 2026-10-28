@@ -45,7 +45,7 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
 const MIME: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
-const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at, technician_name, scheduled_build_date, planned_ship_date, workshop_status, internal_note, label_url, label_cost';
+const BUILD_SELECT = 'id, build_name, tracking_token, manage_token, stage, customer_note, photo_paths, updated_at, expires_at, order_ref, customer_name, customer_email, customer_phone, items, amount_total, fulfillment, shipping_address, carrier, tracking_number, created_at, technician_name, scheduled_build_date, planned_ship_date, workshop_status, internal_note, label_url, label_cost, parts_cost, labor_cost, other_cost, net_revenue, held_at, hold_reason, hold_until, carrier_status, refunded_at';
 
 const serviceClient = () =>
   createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
@@ -119,6 +119,7 @@ Deno.serve(async (req) => {
       const { data: existing, error: readError } = await client.from('build_tracking').select(BUILD_SELECT).eq('id', parsed.data.id).maybeSingle();
       if (readError) return json({ error: 'Could not load this build.' }, 503);
       if (!existing) return json({ error: 'Build not found.' }, 404);
+      if (existing.held_at && (parsed.data.stage !== undefined || parsed.data.workshop_status !== undefined || parsed.data.planned_ship_date !== undefined)) return json({ error: 'Release the emergency hold before advancing this order or changing its schedule.' }, 409);
       const invalidDate = scheduleError(parsed.data.scheduled_build_date === undefined ? existing.scheduled_build_date : parsed.data.scheduled_build_date, parsed.data.planned_ship_date === undefined ? existing.planned_ship_date : parsed.data.planned_ship_date);
       if (invalidDate) return json({ error: invalidDate }, 400);
       const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
