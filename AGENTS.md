@@ -4,6 +4,7 @@
 - Shippo webhooks are untrusted hints; re-fetch tracking through the authenticated carrier connection before updating status, and apply only newer live carrier events.
 - Product ship windows use the existing build turnaround in Monterey time, with transit and stock uncertainty disclosed; FPS presets are explicitly simulated rather than measured.
 - Queue label PDFs are fetched and merged server-side for authenticated staff; never expose arbitrary URL fetching or buy labels implicitly during download.
+- Custom Stripe Checkout Elements place supported express wallets before card details; Stripe collects wallet/address data and confirms the session without exposing payment credentials.
 
 - Keep The Beast as a dedicated one-of-one product page outside the reusable prebuilt catalog, because its presentation and inventory rules are unique.- Public routes, titles, descriptions, and static snapshot text live in src/seo/routes.ts; the sitemap and build-time HTML snapshots read from it, so new pages must be added there to be crawlable.
 - Simple content pages (trade-in, BYO, business, repair request, city pages) are data entries in src/data/info-pages.ts rendered by one InfoPage component and fed into src/seo/routes.ts, so new ones need a route in App.tsx plus a data entry.
