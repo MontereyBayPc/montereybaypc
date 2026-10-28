@@ -26,7 +26,7 @@ Deno.serve(async req => {
     if (!parsed.success) return json({ error: 'Check the entered details.' }, 400);
     const p = parsed.data;
     if (p.action === 'parts') {
-      const { data, error } = await db.from('parts').select('id,name,category,base_price,price,cost_override').eq('active', true).order('sort');
+      const { data, error } = await db.from('parts').select('id,name,category,base_price,price,cost_override').eq('active', true).order('sort').order('name').order('id');
       if (error) throw error; return json({ parts: data });
     }
     if (p.action === 'part-cost') {
