@@ -2,18 +2,18 @@
 
 ## Automation upgrades
 
-- [ ] Queue label PDF downloads and batch printing
-- [ ] Carrier scan updates without manual stage changes
-- [ ] Staff-only component baseline cost overrides
-- [ ] Honest product shipping date estimates
-- [ ] Express wallet checkout verification
-- [ ] Private tracking recovery by email
-- [ ] Review follow-up after 7 days (marketing service required)
-- [ ] Unsubmitted quote reminder after 2 hours (marketing service required)
-- [ ] Three simulated game FPS presets
-- [ ] Emergency hold, customer notice and revised ETA
-- [ ] Build capacity calendar
-- [ ] Order cost and profitability dashboard
+- [x] Queue label PDF downloads and batch printing
+- [x] Carrier scan updates without manual stage changes (Shippo webhook registered and live)
+- [x] Staff-only component baseline cost overrides
+- [x] Honest product shipping date estimates
+- [x] Express wallet checkout (Apple Pay / Google Pay buttons above card form)
+- [ ] Private tracking recovery by email (blocked: email domain not configured)
+- [ ] Review follow-up after 7 days (blocked: needs email domain + marketing service)
+- [ ] Unsubmitted quote reminder after 2 hours (blocked: needs email domain + marketing service)
+- [x] Three simulated game FPS presets
+- [x] Emergency hold, customer notice and revised ETA
+- [x] Build capacity calendar
+- [x] Order cost and profitability dashboard
 
 ## Previously completed
 
