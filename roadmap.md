@@ -1,5 +1,23 @@
 # Task Roadmap
 
+## Selected shopping improvements
+
+- [ ] #1 Relevant RAM and storage checkout upgrades using existing prices
+- [ ] #2 Parent / sponsor checkout and quote sharing
+- [ ] #3 Selected-build comparison dialog
+- [ ] #4 Monitor pairing advisor
+- [x] #6 No stock countdown: all PCs are built to order, no inventory is reserved
+- [ ] #7 Custom vs big-brand transparency drawer
+- [ ] #9 Verified power headroom guidance, unknown expansion details disclosed
+- [ ] #12 Game, resolution and settings filters using simulated FPS
+- [ ] #25 Compatible best-value build optimization
+- [ ] #27 Budget cap including the build fee, excluding tax and shipping
+- [ ] #29 Printable build sheet alongside existing PDF export
+- [ ] #31 Secure same-ZIP address corrections before shipping preparation
+- [ ] #50 Persistent dark / light theme switch
+- [ ] Expanded searchable FAQ and matching crawlable answers
+- [ ] Domain tests and customer-flow browser verification
+
 ## Automation upgrades
 
 - [x] Queue label PDF downloads and batch printing

@@ -50,6 +50,7 @@ export type Database = {
           refunded_at: string | null
           scheduled_build_date: string | null
           shipping_address: Json | null
+          shipping_address_locked_at: string | null
           stage: string
           stripe_env: string | null
           technician_name: string
@@ -93,6 +94,7 @@ export type Database = {
           refunded_at?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
+          shipping_address_locked_at?: string | null
           stage?: string
           stripe_env?: string | null
           technician_name?: string
@@ -136,6 +138,7 @@ export type Database = {
           refunded_at?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
+          shipping_address_locked_at?: string | null
           stage?: string
           stripe_env?: string | null
           technician_name?: string
@@ -358,6 +361,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      correct_order_address: {
+        Args: { p_address: Json; p_token: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
