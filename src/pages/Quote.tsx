@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { checkFitment } from "@/lib/fitment";
 import { exportQuotePdf } from "@/lib/quote-pdf";
+import { estimateBuild, optimizeBuild } from "@/lib/build-optimizer";
+import { Switch } from "@/components/ui/switch";
 import { decodeQuote, quoteShareUrl } from "@/lib/quote-share";
 
 type Part = { id: string; category: string; name: string; price: number; price_updated_at: string | null };
@@ -35,6 +37,10 @@ const CATEGORIES: { key: string; title: string; multi?: boolean }[] = [
 const NONE = "none";
 
 const Quote = () => {
+  const [budget,setBudget]=useState("2000");
+  const [locked,setLocked]=useState(false);
+  const [suggestion,setSuggestion]=useState<Record<string,string>|null>(null);
+  const budgetCap=locked && Number(budget)>0 ? Number(budget) : null;
   const [parts, setParts] = useState<Part[]>([]);
   const [loading, setLoading] = useState(true);
   const [sel, setSel] = useState<Record<string, string>>({});
@@ -147,6 +153,7 @@ const Quote = () => {
 
   const submitQuote = async (e: React.FormEvent) => {
     e.preventDefault();
+    if(budgetCap!==null && total>budgetCap){toast.error("This build exceeds your budget cap.");return;}
     if (warnings.length) {
       toast.error("Fix the compatibility warnings first.");
       return;
@@ -196,6 +203,7 @@ const Quote = () => {
                   Parts list could not load right now. Call <a className="text-foreground underline" href={BUSINESS.phoneHref}>{BUSINESS.phone}</a> or email <a className="text-foreground underline" href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a> and we will quote you directly.
                 </div>
               )}
+              <div className="border-y border-border py-5 space-y-4"><div className="flex flex-wrap items-center gap-4"><label className="flex gap-3 items-center font-heading text-sm"><Switch checked={locked} onCheckedChange={v=>{setLocked(v);setSuggestion(null);}} aria-label="Budget Lock"/>Budget Lock</label><label className="text-sm flex gap-2 items-center">$<Input aria-label="Build budget" type="number" min="75" value={budget} onChange={e=>{setBudget(e.target.value);setSuggestion(null);}} className="w-32"/></label><Button variant="outline" disabled={!cpu||!gpu||loading} onClick={()=>setSuggestion(optimizeBuild(parts,sel,extras,budgetCap))}>Optimize Build</Button></div><p className="text-xs text-muted-foreground">Parts plus assembly fee only. Tax and shipping excluded. Optimization keeps your CPU and GPU; review supporting-part suggestions before applying.</p>{locked && (Number(budget)<75 || total>Number(budget)) && <p role="alert" className="text-destructive text-sm">{Number(budget)<75?"The minimum assembly fee alone is $75.":"Your current build exceeds the cap. Reduce selections or raise the budget."}</p>}{suggestion && <div className="space-y-2 text-sm"><p className="font-semibold">Suggested supporting parts</p>{["motherboard","ram","psu"].map(c=><p key={c} className="text-muted-foreground">{c}: {byId[suggestion[c]]?.name ?? "No verified alternative"}</p>)}<p>Revised estimate: ${estimateBuild(parts,suggestion,extras).toLocaleString()}</p><Button disabled={budgetCap!==null&&estimateBuild(parts,suggestion,extras)>budgetCap} onClick={()=>{setSel(suggestion);setSuggestion(null);}}>Apply suggestion</Button><Button variant="ghost" onClick={()=>setSuggestion(null)}>Keep my build</Button></div>}</div>
               {!loading &&
                 CATEGORIES.map((c) => (
                   <fieldset key={c.key}>
@@ -209,6 +217,7 @@ const Quote = () => {
                               type="button"
                               key={p.id}
                               aria-pressed={on}
+                              disabled={!on && budgetCap!==null && estimateBuild(parts,sel,[...extras,p.id])>budgetCap}
                               onClick={() => setExtras((x) => (on ? x.filter((i) => i !== p.id) : [...x, p.id]))}
                               className={`px-4 py-2 rounded-full border text-sm transition-colors ${on ? "border-brand text-foreground bg-brand/10" : "border-border text-muted-foreground hover:text-foreground"}`}
                             >
@@ -222,14 +231,14 @@ const Quote = () => {
                         aria-label={c.title}
                         className={selectCls}
                         value={sel[c.key] ?? ""}
-                        onChange={(e) => setSel((s) => ({ ...s, [c.key]: e.target.value }))}
+                        onChange={(e) => {setSuggestion(null);setSel((s) => ({ ...s, [c.key]: e.target.value }));}}
                       >
                         <option value="" className="bg-background">Choose...</option>
                         <option value={NONE} className="bg-background">None / I already have one</option>
                         {(byCat[c.key === 'storage-secondary' ? 'storage' : c.key] ?? []).map((p) => {
                           const bad = isIncompatible(c.key, p);
                           return (
-                            <option key={p.id} value={p.id} disabled={!!bad} className="bg-background">
+                            <option key={p.id} value={p.id} disabled={!!bad || (budgetCap!==null && estimateBuild(parts,{...sel,[c.key]:p.id},extras)>budgetCap)} className="bg-background">
                               {RECOMMENDED.includes(p.name) ? "★ " : ""}{p.name} - ${Number(p.price)}{bad ? ` (${bad})` : ""}
                             </option>
                           );
@@ -266,8 +275,9 @@ const Quote = () => {
                 <div className="flex justify-between"><span>Build fee (20%, min $75)</span><span>${buildFee.toLocaleString()}</span></div>
               </div>
               <div className="mt-4 flex flex-col gap-2 print:hidden">
-                <Button type="button" variant="outline" disabled={!chosen.length} onClick={shareLink} className="h-auto py-3 whitespace-normal"><Link2 className="w-4 h-4 shrink-0" /> Share My Custom Quote</Button>
+                <Button type="button" variant="outline" disabled={!chosen.length} onClick={shareLink} className="h-auto py-3 whitespace-normal"><Link2 className="w-4 h-4 shrink-0" /> Send build to parent / share quote</Button>
                 <button type="button" onClick={saveDraft} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><Save className="w-4 h-4" /> Save this build</button>
+                <Button type="button" variant="ghost" disabled={!chosen.length} onClick={()=>window.print()} className="justify-start"><Printer/> Print build sheet</Button>
                 <Button type="button" variant="ghost" disabled={!chosen.length} onClick={() => exportQuotePdf(chosen,buildFee,[...warnings,...(fit.note ? [fit.note] : []),summary])} className="justify-start h-auto px-0 text-sm text-muted-foreground"><Printer className="w-4 h-4" /> Download branded PDF</Button>
               </div>
               {drafts.length > 0 && (
@@ -298,7 +308,7 @@ const Quote = () => {
                   <Input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
                   <Input type="tel" placeholder="Phone (optional)" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} maxLength={30} />
                   <Textarea placeholder="Anything else? Games, budget, style..." value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={1000} />
-                  <button type="submit" disabled={sending} className="btn-brand justify-center"><Mail className="w-4 h-4" /> {sending ? "Sending..." : "Send quote request"}</button>
+                  <button type="submit" disabled={sending || (budgetCap!==null && total>budgetCap)} className="btn-brand justify-center"><Mail className="w-4 h-4" /> {sending ? "Sending..." : "Send quote request"}</button>
                 </form>
               )}
             </aside>

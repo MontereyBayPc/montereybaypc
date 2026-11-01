@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { faqEntries } from "@/data/faq";
 import { ChevronDown } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 
-const faqs = [
-  { q: "How long does a custom build take?", a: "Custom PCs usually take 1-2 weeks to build, thoroughly test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional; we confirm your expected dispatch time and the carrier provides a delivery estimate." },
-  { q: "Do you offer warranties?", a: "Individual components carry their manufacturer warranties. We do not offer a separate manufacturer-style system warranty, but our Limited Workmanship Warranty covers assembly issues for one year and every PC purchase includes technical support. See Warranty & Support for details." },
-  { q: "Can I bring my own parts?", a: "Absolutely. We're happy to build with parts you've already purchased." },
-  { q: "Do you ship nationwide?", a: "Yes. We ship insured anywhere in the US: $59 West Coast, $85 Mountain and Central, $115 East Coast and South, $165 Alaska and Hawaii. Every PC is foam-packed and needs a signature on delivery. Local pickup and delivery in the Monterey Bay area are still available." },
-  { q: "What kind of support do you offer?", a: "We offer technical support with every PC purchase. If you ever have questions or issues, we're here to help." },
-];
+const faqs = faqEntries;
 
 const FAQItem = ({ faq, index, isOpen, onToggle }: { faq: typeof faqs[0]; index: number; isOpen: boolean; onToggle: () => void }) => (
   <motion.div
@@ -19,9 +16,9 @@ const FAQItem = ({ faq, index, isOpen, onToggle }: { faq: typeof faqs[0]; index:
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay: index * 0.08 }}
   >
-    <button
+    <Button variant="ghost" aria-expanded={isOpen} aria-controls={`answer-${index}`}
       onClick={onToggle}
-      className="w-full text-left group"
+      className="w-full h-auto p-0 whitespace-normal text-left group hover:bg-transparent block"
     >
       <div className="flex items-center justify-between py-6 border-b border-border">
         <div className="flex items-center gap-6">
@@ -40,7 +37,7 @@ const FAQItem = ({ faq, index, isOpen, onToggle }: { faq: typeof faqs[0]; index:
           <ChevronDown className={`w-5 h-5 transition-colors duration-300 ${isOpen ? "text-foreground" : "text-muted-foreground"}`} />
         </motion.div>
       </div>
-    </button>
+    </Button>
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -48,7 +45,7 @@ const FAQItem = ({ faq, index, isOpen, onToggle }: { faq: typeof faqs[0]; index:
           animate={{ height: "auto", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="overflow-hidden"
+          id={`answer-${index}`} className="overflow-hidden"
         >
           <div className="py-5 pl-12 lg:pl-16 pr-4">
             <p className="text-muted-foreground text-sm lg:text-base leading-relaxed max-w-2xl">{faq.a}</p>
@@ -60,13 +57,16 @@ const FAQItem = ({ faq, index, isOpen, onToggle }: { faq: typeof faqs[0]; index:
 );
 
 const FAQ = () => {
+  const [search,setSearch]=useState("");
+  const [category,setCategory]=useState("All");
+  const filtered=faqs.filter(f=>(category==="All"||category===f.category)&&`${f.q} ${f.a}`.toLowerCase().includes(search.toLowerCase()));
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <Layout>
       <CanonicalHome
-      title={"FAQ — Build Times, Pricing & Pickup | Monterey Bay PCs"}
-      description={"Answers about build times, pricing, local pickup and delivery, parts sourcing, and support for Monterey Bay PCs customers."}
+      title={"FAQ - Build Times, Pricing & Pickup | Monterey Bay PCs"}
+      description={"Answers about build times, pricing, US shipping, tracking, parts sourcing, and support for Monterey Bay PCs customers."}
     />
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4 lg:px-8 max-w-3xl">
@@ -92,8 +92,10 @@ const FAQ = () => {
             <p className="text-muted-foreground mt-4 text-lg">Everything you need to know before your build.</p>
           </motion.div>
 
+          <div className="mb-8"><Input aria-label="Search questions" placeholder="Search questions..." value={search} onChange={e=>{setSearch(e.target.value);setOpenIndex(null);}}/><div className="flex flex-wrap gap-2 mt-4">{["All",...new Set(faqs.map(f=>f.category))].map(c=><Button key={c} variant={category===c?"default":"outline"} size="sm" className="rounded-full" onClick={()=>{setCategory(c);setOpenIndex(null);}}>{c}</Button>)}</div></div>
+          {!filtered.length && <p className="text-muted-foreground">No matching questions. Try a different search or contact our team.</p>}
           <div>
-            {faqs.map((faq, i) => (
+            {filtered.map((faq, i) => (
               <FAQItem
                 key={i}
                 faq={faq}
