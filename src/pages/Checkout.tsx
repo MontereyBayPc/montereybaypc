@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import CheckoutUpgrades from "@/components/CheckoutUpgrades";
+import { readSharedCart } from "@/lib/shopping";
 import ExpressPayment from '@/components/ExpressPayment';
 import { Lock } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -26,6 +28,7 @@ const Checkout = () => {
   const cart = useCart();
   const [params] = useSearchParams();
   const quoteToken = params.get("quote");
+  const shared = useMemo(() => readSharedCart(params.get("cart")), [params]);
   const [quote, setQuote] = useState<{ name: string; total: number; paid: boolean } | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [quoteUpdated, setQuoteUpdated] = useState(false);
@@ -57,8 +60,8 @@ const Checkout = () => {
   }, [quoteToken]);
   const items = quoteToken
     ? (quote && !quote.paid ? [{ slug: "approved-quote", name: "Approved Custom PC Build", price: quote.total, quantity: 1 }] : [])
-    : cart.items;
-  const subtotal = quoteToken ? (quote?.total ?? 0) : cart.subtotal;
+    : shared ?? cart.items;
+  const subtotal = quoteToken ? (quote?.total ?? 0) : items.reduce((n,i)=>n+i.price*i.quantity,0);
   const [delivery, setDelivery] = useState<Fulfillment>("pickup");
   const [zip, setZip] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -133,6 +136,8 @@ const Checkout = () => {
             <Lock className="w-4 h-4" /> Secure payment powered by Stripe. Card, Apple Pay and Google Pay accepted.
           </p>
 
+          {shared && <p className="border-y border-border py-4 mb-8 text-sm">Parent / sponsor checkout: review this PC and its current price, then enter your contact information and the intended recipient’s shipping address during payment.</p>}
+          {params.has("cart") && !shared && <p role="alert" className="text-destructive mb-6">This shared cart is invalid. Please ask for a new link.</p>}
           {items.length === 0 ? (
             <div className="text-center py-20 border border-border rounded-2xl">
               <p className="text-muted-foreground mb-6">{quoteToken ? (quoteError ?? (quote?.paid ? "This quote has already been paid. Thank you!" : "Loading your approved quote...")) : "Your cart is empty."}</p>
@@ -189,6 +194,8 @@ const Checkout = () => {
                     </p>
                   </div>
                 )}
+
+                {!quoteToken && !shared && <CheckoutUpgrades/>}
 
                 {error && (
                   <div className="mt-6 border border-red-300 bg-red-50 text-red-800 rounded-xl p-4 text-sm">{error}</div>

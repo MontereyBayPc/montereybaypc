@@ -10,6 +10,8 @@ import { getPrebuilt } from "@/data/prebuilts";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 import BuildBenchmarks from "@/components/BuildBenchmarks";
+import { MonitorAdvisor } from "@/components/ShoppingAdvice";
+import { HARDWARE_UPGRADES } from "@/lib/shopping";
 import { estimatedShipWindow } from '@/lib/operations';
 
 const PrebuiltDetail = () => {
@@ -34,8 +36,8 @@ const PrebuiltDetail = () => {
 
   const hasRam64 = /64GB|96GB|128GB/.test(pc.specs.ram);
   const upgrades = [
-    { on: addStorage, set: setAddStorage, slug: "upgrade-storage-1tb", name: "+1TB NVMe Storage", price: 150, show: true },
-    { on: addRam, set: setAddRam, slug: "upgrade-ram-64gb", name: "64GB RAM Upgrade", price: 800, show: !hasRam64 },
+    { on: addStorage, set: setAddStorage, slug: "upgrade-storage-1tb", name: HARDWARE_UPGRADES[0].name, price: HARDWARE_UPGRADES[0].price, show: true },
+    { on: addRam, set: setAddRam, slug: "upgrade-ram-64gb", name: HARDWARE_UPGRADES[1].name, price: HARDWARE_UPGRADES[1].price, show: !hasRam64 },
     { on: rush, set: setRush, slug: "rush-build", name: "Rush Build (48-72 hours)", price: 100, show: true },
   ].filter((u) => u.show);
   const optionTotal = pc.price + upgrades.reduce((s, u) => s + (u.on ? u.price : 0), 0);
@@ -121,6 +123,7 @@ const PrebuiltDetail = () => {
 
             <div className="mt-8 border border-border rounded-2xl p-5 max-w-xl">
               <h2 className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Upgrades</h2>
+              <p className="text-xs text-muted-foreground mb-4">Extra storage for games and projects. 64GB replaces the memory kit and is intended for demanding editing and multitasking, not a required gaming upgrade. Component models confirmed before assembly.</p>
               <div className="space-y-2">
                 {upgrades.map((u) => (
                   <label key={u.slug} className="flex items-center justify-between gap-4 cursor-pointer text-foreground">
@@ -195,6 +198,8 @@ const PrebuiltDetail = () => {
               ))}
             </div>
           </div>
+
+          <MonitorAdvisor pc={pc}/>
 
           <BuildBenchmarks slug={pc.slug} cpu={pc.specs.cpu} resolution={pc.performance.resolution} games={pc.performance.games} />
 

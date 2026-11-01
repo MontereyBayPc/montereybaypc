@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cartShareUrl, readSharedCart, sharePurchase } from "@/lib/shopping";
+import { toast } from "sonner";
+import { Minus, Plus, Trash2, ArrowRight, Link2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import CanonicalHome from "@/components/CanonicalHome";
 import { useCart } from "@/context/CartContext";
@@ -30,7 +33,7 @@ const Cart = () => {
                 {items.map((item) => (
                   <div key={item.slug} className="p-6 flex items-center gap-4 flex-wrap">
                     <div className="flex-1 min-w-[200px]">
-                      <Link to={item.slug === "the-beast" ? "/the-beast" : `/prebuilts/${item.slug}`} className="font-heading text-xl font-bold text-foreground hover:underline">
+                      <Link to={item.slug.startsWith("upgrade-") || item.slug === "rush-build" ? "/prebuilts" : item.slug === "the-beast" ? "/the-beast" : `/prebuilts/${item.slug}`} className="font-heading text-xl font-bold text-foreground hover:underline">
                         {item.name}
                       </Link>
                       <p className="text-muted-foreground text-sm mt-1">${item.price.toLocaleString()} each</p>
@@ -67,6 +70,7 @@ const Cart = () => {
                 ))}
               </div>
 
+              {readSharedCart(new URL(cartShareUrl(window.location.origin,items)).searchParams.get("cart")) && <div className="mt-6"><Button variant="outline" className="h-auto py-3 whitespace-normal rounded-full" onClick={async()=>{try{await sharePurchase(cartShareUrl(window.location.origin,items),"My PC for parent / sponsor checkout");toast.success("Purchase link ready to share");}catch{toast.error("Could not share. Try again.");}}><Link2/> Send to parent / sponsor to pay</Button><p className="text-xs text-muted-foreground mt-2">No personal details included. Your payer reviews current prices and chooses pickup or shipping.</p></div>}
               <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-6">
                 <div className="text-muted-foreground text-sm">Taxes & delivery calculated at checkout.</div>
                 <div className="flex items-center gap-6">
