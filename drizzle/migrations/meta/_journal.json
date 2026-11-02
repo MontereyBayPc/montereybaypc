@@ -85,6 +85,13 @@
       "when": 1793639062690,
       "tag": "0011_shipping_label_claims",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793639077188,
+      "tag": "0012_fix_label_claim_result",
+      "breakpoints": true
     }
   ]
 }
