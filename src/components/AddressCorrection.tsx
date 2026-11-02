@@ -1,0 +1,10 @@
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/integrations/supabase/client';
+export default function AddressCorrection({token,onSaved}:{token:string;onSaved:()=>void}){
+ const [open,setOpen]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
+ const [fields,setFields]=useState({name:'',line1:'',line2:'',city:'',state:'',postal_code:''});
+ const submit=async(e:React.FormEvent)=>{e.preventDefault();setBusy(true);setMessage('');const {data,error}=await supabase.functions.invoke('correct-order-address',{body:{token,address:{...fields,country:'US'}}});setBusy(false);if(error||!data?.corrected){setMessage(data?.error||'Could not save. Use the original ZIP or contact our team.');return;}setMessage('Your shipping address correction is saved.');setOpen(false);onSaved();};
+ return <section className="border-y border-border py-5 mt-6"><Button variant="outline" onClick={()=>setOpen(!open)} className="rounded-full">Correct shipping address</Button><p className="text-xs text-muted-foreground mt-3">Same ZIP only, before shipping preparation. Contact our team for ZIP changes.</p>{message&&<p role="status" className="text-sm mt-3">{message}</p>}{open&&<form onSubmit={submit} className="grid sm:grid-cols-2 gap-4 mt-5">{Object.keys(fields).map(k=>{const key=k as keyof typeof fields;const labels={name:'Recipient name',line1:'Street address',line2:'Apartment / unit (optional)',city:'City',state:'State (2 letters)',postal_code:'Original shipping ZIP'};return <label key={key} className="text-sm">{labels[key]}<Input className="mt-2" aria-label={labels[key]} required={key!=='line2'} maxLength={key==='state'?2:key==='postal_code'?5:120} value={fields[key]} onChange={e=>setFields(s=>({...s,[key]:key==='state'?e.target.value.toUpperCase():key==='postal_code'?e.target.value.replace(/\D/g,''):e.target.value}))}/></label>;})}<Button disabled={busy} type="submit">{busy?'Saving...':'Save correction'}</Button></form>}</section>;
+}

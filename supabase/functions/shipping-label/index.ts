@@ -52,6 +52,9 @@ Deno.serve(async (req) => {
     if (body?.action === 'rates') {
       const p = ratesSchema.safeParse(body);
       if (!p.success) return json({ error: 'Check the ship-from address and box size.' }, 400);
+      const lockTime=new Date().toISOString();
+      const {data:locked,error:lockError}=await client.from('build_tracking').update({shipping_address_locked_at:lockTime}).eq('id',p.data.id).eq('fulfillment','us_shipping').is('label_url',null).is('tracking_number',null).is('held_at',null).is('refunded_at',null).is('label_purchase_claimed_at',null).select('id').maybeSingle();
+      if(lockError||!locked)return json({error:'Shipping preparation is unavailable for this order.'},409);
       const { data: build } = await client.from('build_tracking').select('shipping_address, customer_name, customer_email, customer_phone, amount_total, fulfillment, held_at, refunded_at').eq('id', p.data.id).maybeSingle();
       if (build?.held_at || build?.refunded_at) return json({ error: 'Release the order hold before buying shipping, and do not ship refunded orders.' }, 409);
       const to = build?.shipping_address as Record<string, string> | null;
@@ -71,6 +74,8 @@ Deno.serve(async (req) => {
         id: r.object_id, carrier: r.provider, service: r.servicelevel?.name ?? '', amount: Number(r.amount), days: r.estimated_days ?? null,
       })).sort((a: { amount: number }, b: { amount: number }) => a.amount - b.amount);
       const messages = (shipment.messages ?? []).map((m: { text?: string }) => m.text).filter(Boolean).slice(0, 3);
+      const {error:saveRates}=await client.from('build_tracking').update({shipping_rate_ids:rates.map((r:{id:string})=>r.id)}).eq('id',p.data.id).is('label_purchase_claimed_at',null);
+      if(saveRates)return json({error:'Could not save shipping rates. Try again.'},503);
       return json({ rates, messages });
     }
 
@@ -80,6 +85,8 @@ Deno.serve(async (req) => {
       const { data: existing } = await client.from('build_tracking').select('id,held_at,refunded_at,label_url,fulfillment').eq('id',p.data.id).maybeSingle();
       if (!existing || existing.fulfillment!=='us_shipping' || existing.held_at || existing.refunded_at) return json({error:'Order is not available for shipping.'},409);
       if(existing.label_url)return json({error:'A label already exists. Download it rather than purchasing a duplicate.'},409);
+      const {data:claimed,error:claimError}=await client.rpc('claim_label_purchase',{p_id:p.data.id,p_rate:p.data.rate_id});
+      if(claimError||!claimed)return json({error:'A label purchase is already in progress, or this rate has expired. Contact our team before retrying a purchase.'},409);
       const tx = await shippo('/transactions/', { rate: p.data.rate_id, label_file_type: 'PDF_4x6', async: false });
       if (tx.status !== 'SUCCESS' || !tx.tracking_number) {
         const why = (tx.messages ?? []).map((m: { text?: string }) => m.text).filter(Boolean).join(' ');
