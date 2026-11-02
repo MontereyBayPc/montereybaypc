@@ -23,3 +23,9 @@
 - Shareable quotes serialize part IDs and extras only, with current catalog pricing restored on open; customer contact details are never included in links.
 - Trade-up eligibility and published terms live in a tested domain module so trade-in copy and legal terms remain consistent.
 - Build-time homepage snapshots include the first bundled hero photo and preload it, so imagery can load before React without exposing SEO snapshot text.
+
+- Shared prebuilt carts contain catalog slugs and quantities only; prices are restored from the catalog and Stripe remains authoritative so payer links cannot set payment amounts.
+- Quote budget and optimization logic lives in a tested domain module and reuses compatibility helpers; proposals require customer acceptance and preserve the selected CPU and GPU.
+- FAQ page and search snapshots use shared answer data to prevent conflicting customer policies.
+- Address corrections use a service-role-only private-token RPC; rate preparation locks the address before reading it, and label purchase uses an atomic rate-bound claim to prevent stale-address or duplicate purchases.
+- Theme selection uses next-themes with dark default and semantic CSS palettes so customer preference persists without changing brand identity.

@@ -70,7 +70,7 @@ const Cart = () => {
                 ))}
               </div>
 
-              {readSharedCart(new URL(cartShareUrl(window.location.origin,items)).searchParams.get("cart")) && <div className="mt-6"><Button variant="outline" className="h-auto py-3 whitespace-normal rounded-full" onClick={async()=>{try{await sharePurchase(cartShareUrl(window.location.origin,items),"My PC for parent / sponsor checkout");toast.success("Purchase link ready to share");}catch{toast.error("Could not share. Try again.");}}><Link2/> Send to parent / sponsor to pay</Button><p className="text-xs text-muted-foreground mt-2">No personal details included. Your payer reviews current prices and chooses pickup or shipping.</p></div>}
+              {readSharedCart(new URL(cartShareUrl(window.location.origin,items)).searchParams.get("cart")) && <div className="mt-6"><Button variant="outline" className="h-auto py-3 whitespace-normal rounded-full" onClick={async()=>{try{await sharePurchase(cartShareUrl(window.location.origin,items),"My PC for parent / sponsor checkout");toast.success("Purchase link ready to share");}catch{toast.error("Could not share. Try again.");}}}><Link2/> Send to parent / sponsor to pay</Button><p className="text-xs text-muted-foreground mt-2">No personal details included. Your payer reviews current prices and chooses pickup or shipping.</p></div>}
               <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-6">
                 <div className="text-muted-foreground text-sm">Taxes & delivery calculated at checkout.</div>
                 <div className="flex items-center gap-6">
