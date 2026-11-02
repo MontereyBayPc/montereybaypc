@@ -3,6 +3,7 @@
 // Keep this file free of asset imports and "@/" aliases (it is loaded by vite.config.ts).
 import { prebuiltCatalog } from "../data/prebuilts-catalog";
 import { infoPages } from "../data/info-pages";
+import { faqEntries } from "../data/faq";
 import { shippingPolicy } from "../data/shipping-policy";
 
 export const SITE_URL = "https://montereybaypcs.com";
@@ -157,14 +158,9 @@ export const seoRoutes: SeoRoute[] = [
   {
     path: "/faq",
     title: "FAQ: Build Times, Pricing & Pickup | Monterey Bay PCs",
-    description: "Answers about build times, pricing, local pickup and delivery, parts sourcing, and support for Monterey Bay PCs customers.",
+    description: "Answers about build times, quotes, payments, US shipping, tracking, upgrades and support for Monterey Bay PCs customers.",
     h1: "Frequently Asked Questions",
-    body: [
-      "How long does a custom build take? Custom PCs usually take 1-2 weeks to build, test, and prepare for pickup, delivery, or shipping. Carrier transit time is additional.",
-      "Can I bring my own parts? Yes, we're happy to build with parts you already purchased.",
-      "Do you ship nationwide? Yes. We ship insured anywhere in the US at live carrier rates based on your ZIP code, or you can pick up free in Monterey.",
-      "What support do you offer? Technical support is included with every PC purchase.",
-    ],
+    body: faqEntries.map(f => `${f.q} ${f.a}`),
     changefreq: "monthly",
     priority: "0.6",
   },
