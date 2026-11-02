@@ -37,6 +37,7 @@ export type Database = {
           internal_note: string
           items: Json
           label_cost: number | null
+          label_purchase_claimed_at: string | null
           label_url: string | null
           labor_cost: number | null
           manage_token: string
@@ -51,6 +52,7 @@ export type Database = {
           scheduled_build_date: string | null
           shipping_address: Json | null
           shipping_address_locked_at: string | null
+          shipping_rate_ids: string[]
           stage: string
           stripe_env: string | null
           technician_name: string
@@ -81,6 +83,7 @@ export type Database = {
           internal_note?: string
           items?: Json
           label_cost?: number | null
+          label_purchase_claimed_at?: string | null
           label_url?: string | null
           labor_cost?: number | null
           manage_token?: string
@@ -95,6 +98,7 @@ export type Database = {
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           shipping_address_locked_at?: string | null
+          shipping_rate_ids?: string[]
           stage?: string
           stripe_env?: string | null
           technician_name?: string
@@ -125,6 +129,7 @@ export type Database = {
           internal_note?: string
           items?: Json
           label_cost?: number | null
+          label_purchase_claimed_at?: string | null
           label_url?: string | null
           labor_cost?: number | null
           manage_token?: string
@@ -139,6 +144,7 @@ export type Database = {
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           shipping_address_locked_at?: string | null
+          shipping_rate_ids?: string[]
           stage?: string
           stripe_env?: string | null
           technician_name?: string
@@ -361,6 +367,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_label_purchase: {
+        Args: { p_id: string; p_rate: string }
+        Returns: boolean
+      }
       correct_order_address: {
         Args: { p_address: Json; p_token: string }
         Returns: boolean
