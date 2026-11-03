@@ -60,7 +60,7 @@ const Checkout = () => {
   }, [quoteToken]);
   const items = quoteToken
     ? (quote && !quote.paid ? [{ slug: "approved-quote", name: "Approved Custom PC Build", price: quote.total, quantity: 1 }] : [])
-    : shared ?? cart.items;
+    : params.has("cart") ? shared ?? [] : cart.items;
   const subtotal = quoteToken ? (quote?.total ?? 0) : items.reduce((n,i)=>n+i.price*i.quantity,0);
   const [delivery, setDelivery] = useState<Fulfillment>("pickup");
   const [zip, setZip] = useState("");
