@@ -18,7 +18,7 @@ export function optimizeBuild(parts: BuilderPart[], selection: Record<string,str
       if(category==='ram')return !!board && !!boardRam(board.name) && ramGen(p.name)===boardRam(board.name);
       return !!cpu && !!gpu && (psuWatts(p.name) ?? 0)>=minPsu(systemWatts(cpu.name,gpu.name));
     }).sort((a,b)=> Number(RECOMMENDED.includes(b.name))-Number(RECOMMENDED.includes(a.name)) || a.price-b.price);
-    const candidate=candidates.find(p=>budget===null || estimateBuild(parts,{...next,[category]:p.id},extras)<=budget);
+    const candidate=budget===null ? candidates[0] : [...candidates].sort((a,b)=>a.price-b.price)[0];
     if(candidate)next[category]=candidate.id;
   }
   return next;
