@@ -18,3 +18,12 @@ project_id = "uxkkzutipaynmrrawdew"
 
 [functions.preview-transactional-email]
 verify_jwt = false
+
+[functions.email-tracking-link]
+verify_jwt = false
+
+[functions.save-quote-reminder]
+verify_jwt = false
+
+[functions.email-followups]
+verify_jwt = false
