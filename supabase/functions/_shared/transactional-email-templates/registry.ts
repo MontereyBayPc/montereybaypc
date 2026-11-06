@@ -17,7 +17,12 @@ export interface TemplateEntry {
  *   import { template as welcomeTemplate } from './welcome.tsx'
  *   // then add to TEMPLATES: 'welcome': welcomeTemplate
  */
+import { template as trackingLinks } from './tracking-links.tsx'
+import { template as reviewRequest } from './review-request.tsx'
+import { template as quoteSaved } from './quote-saved.tsx'
+
 export const TEMPLATES: Record<string, TemplateEntry> = {
-  // Add templates here as they are created, e.g.:
-  // 'welcome': welcomeTemplate,
+  'tracking-links': trackingLinks,
+  'review-request': reviewRequest,
+  'quote-saved': quoteSaved,
 }
