@@ -117,6 +117,13 @@ const Quote = () => {
     toast.success("Build saved on this device");
   };
 
+  const saveForLater = () => {
+    const value = email.trim();
+    if (!chosen.length || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return;
+    const share = new URL(quoteShareUrl(window.location.origin, { s: sel, e: extras })).searchParams.get("b");
+    supabase.functions.invoke("save-quote-reminder", { body: { email: value, share, total } });
+  };
+
   const shareLink = async () => {
     const url = quoteShareUrl(window.location.origin, { s: sel, e: extras });
     try {
@@ -178,6 +185,7 @@ const Quote = () => {
       toast.error("Could not send. Please email or call us instead.");
       return;
     }
+    supabase.functions.invoke("save-quote-reminder", { body: { action: "submitted", email: email.trim() } });
     setSent(true);
   };
 
@@ -305,7 +313,8 @@ const Quote = () => {
               ) : (
                 <form onSubmit={submitQuote} className="grid gap-4 mt-6">
                   <Input required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
-                  <Input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} />
+                  <Input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={saveForLater} maxLength={255} />
+                  <p className="text-xs text-muted-foreground -mt-2">If you do not finish, we will email you a link to this build once so you can pick it up later.</p>
                   <Input type="tel" placeholder="Phone (optional)" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} maxLength={30} />
                   <Textarea placeholder="Anything else? Games, budget, style..." value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={1000} />
                   <button type="submit" disabled={sending || (budgetCap!==null && total>budgetCap)} className="btn-brand justify-center"><Mail className="w-4 h-4" /> {sending ? "Sending..." : "Send quote request"}</button>

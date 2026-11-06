@@ -25,6 +25,17 @@ const OrderStatus = () => {
     if (!match) { toast.error('Paste the private build link from your order confirmation.'); return; }
     setParams({ token: match[1] });
   };
+  const [lookupEmail, setLookupEmail] = useState('');
+  const [lookupSending, setLookupSending] = useState(false);
+  const [lookupSent, setLookupSent] = useState(false);
+  const emailLink = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setLookupSending(true);
+    const { error } = await supabase.functions.invoke('email-tracking-link', { body: { email: lookupEmail.trim() } });
+    setLookupSending(false);
+    if (error) { toast.error(`Could not send right now. Please call ${BUSINESS.phone}.`); return; }
+    setLookupSent(true);
+  };
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [order, setOrder] = useState("");
@@ -68,6 +79,17 @@ const OrderStatus = () => {
               <Button type="submit" className="shrink-0">Track</Button>
             </form>
             <p className="text-xs text-muted-foreground mt-3">The link is in your order confirmation email. It shows your build stage, photos, and carrier scans once shipped.</p>
+            <div className="border-t border-border mt-5 pt-5">
+              <p className="text-sm text-foreground mb-3">Lost your link? We will email it to the address used for your order.</p>
+              {lookupSent ? (
+                <p className="text-sm text-muted-foreground">If we found an active order for that email, your tracking link is on its way. Check spam if it does not arrive in a few minutes.</p>
+              ) : (
+                <form onSubmit={emailLink} className="flex flex-col sm:flex-row gap-3">
+                  <Input aria-label="Order email" type="email" required placeholder="Email used for your order" value={lookupEmail} onChange={e => setLookupEmail(e.target.value)} maxLength={255} className="flex-1" />
+                  <Button type="submit" variant="outline" disabled={lookupSending} className="shrink-0"><Mail className="w-4 h-4" /> {lookupSending ? 'Sending...' : 'Email my link'}</Button>
+                </form>
+              )}
+            </div>
           </div>
           {/^[a-f0-9]{64}$/.test(token) && <ShipmentProgress token={token} />}
           <ol className="grid gap-3 mb-14 mt-10">
