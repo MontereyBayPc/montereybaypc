@@ -49,6 +49,7 @@ export type Database = {
           planned_ship_date: string | null
           quote_request_id: string | null
           refunded_at: string | null
+          review_requested_at: string | null
           scheduled_build_date: string | null
           shipping_address: Json | null
           shipping_address_locked_at: string | null
@@ -95,6 +96,7 @@ export type Database = {
           planned_ship_date?: string | null
           quote_request_id?: string | null
           refunded_at?: string | null
+          review_requested_at?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           shipping_address_locked_at?: string | null
@@ -141,6 +143,7 @@ export type Database = {
           planned_ship_date?: string | null
           quote_request_id?: string | null
           refunded_at?: string | null
+          review_requested_at?: string | null
           scheduled_build_date?: string | null
           shipping_address?: Json | null
           shipping_address_locked_at?: string | null
@@ -257,6 +260,36 @@ export type Database = {
           last_run_at?: string | null
           locked_until?: string | null
           paused_reason?: string | null
+        }
+        Relationships: []
+      }
+      quote_reminders: {
+        Row: {
+          build_url: string
+          created_at: string
+          email: string
+          estimated_total: number | null
+          id: string
+          reminded_at: string | null
+          submitted_at: string | null
+        }
+        Insert: {
+          build_url: string
+          created_at?: string
+          email: string
+          estimated_total?: number | null
+          id?: string
+          reminded_at?: string | null
+          submitted_at?: string | null
+        }
+        Update: {
+          build_url?: string
+          created_at?: string
+          email?: string
+          estimated_total?: number | null
+          id?: string
+          reminded_at?: string | null
+          submitted_at?: string | null
         }
         Relationships: []
       }
