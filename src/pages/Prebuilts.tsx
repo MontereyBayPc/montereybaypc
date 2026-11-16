@@ -8,7 +8,6 @@ import { prebuilts } from "@/data/prebuilts";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { matchesGameTarget } from "@/lib/shopping";
 import { estimatedShipWindow } from '@/lib/operations';
 
 const FILTERS = ["All", "1080p Esports", "1440p High Refresh", "4K Ultra", "Video Editing"];
@@ -17,12 +16,8 @@ const Prebuilts = () => {
   const [filter, setFilter] = useState("All");
   const [compare, setCompare] = useState(false);
   const [selected,setSelected]=useState<string[]>([]);
-  const [game,setGame]=useState("All games");
-  const [preset,setPreset]=useState(0);
-  const [target,setTarget]=useState(60);
-  const games=["All games",...new Set(prebuilts.flatMap(p=>p.performance.games.map(g=>g.name.replace(/\s*\(.*\)/,""))))];
   const compared=prebuilts.filter(p=>selected.includes(p.slug));
-  const shown=prebuilts.filter(p=>(filter==="All"||p.useCases.includes(filter))&&matchesGameTarget(p,game,preset,target));
+  const shown=prebuilts.filter(p=>(filter==="All"||p.useCases.includes(filter)));
   const rows: [string, (p: (typeof prebuilts)[number]) => string][] = [
     ["Price", (p) => `$${p.price.toLocaleString()}`],
     ["Best at", (p) => p.performance.resolution],
@@ -70,8 +65,6 @@ const Prebuilts = () => {
             ))}
             <Button variant="outline" className="ml-auto rounded-full" disabled={selected.length<2} onClick={()=>setCompare(true)}>Compare selected ({selected.length}/3)</Button>
           </div>
-
-          <div className="flex flex-wrap gap-4 mb-4"> <label className="text-sm">Game<select aria-label="Game filter" className="block bg-background border border-border rounded-md mt-2 p-2 max-w-full" value={game} onChange={e=>setGame(e.target.value)}>{games.map(g=><option key={g}>{g}</option>)}</select></label><label className="text-sm">Settings<select aria-label="Game settings" value={preset} onChange={e=>setPreset(Number(e.target.value))} className="block bg-background border border-border rounded-md mt-2 p-2">{["1080p Ultra","1440p High","4K Max"].map((v,i)=><option value={i} key={v}>{v}</option>)}</select></label><label className="text-sm">Minimum simulated FPS<select aria-label="Minimum simulated FPS" value={target} onChange={e=>setTarget(Number(e.target.value))} className="block bg-background border border-border rounded-md mt-2 p-2">{[30,60,120,144,240].map(n=><option key={n} value={n}>{n}</option>)}</select></label></div><p className="text-xs text-muted-foreground mb-8">FPS filtering uses simulations, not complete-system measurements. Actual results vary.</p>
           <Dialog open={compare} onOpenChange={setCompare}><DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto"><DialogTitle>Compare your builds</DialogTitle><DialogDescription>Listed specifications and intended resolution. Frame rates remain simulated estimates.</DialogDescription><div className="overflow-x-auto">
               <table className="w-full text-sm min-w-[720px]">
                 <thead>
@@ -96,7 +89,7 @@ const Prebuilts = () => {
             </div>
           </DialogContent></Dialog>
 
-          {!shown.length && <p className="py-10 text-muted-foreground">No builds match these targets. Try a lower FPS target or different settings.</p>}
+          {!shown.length && <p className="py-10 text-muted-foreground">No builds in this category yet.</p>}
           <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
             {shown.map((pc, i) => (
               <motion.div

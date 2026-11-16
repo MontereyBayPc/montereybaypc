@@ -4,7 +4,6 @@ import { Menu, X, ShoppingCart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import Logo from "./Logo";
-import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { to: "/the-beast", label: "The Beast", featured: true },
@@ -28,7 +27,7 @@ const Navbar = () => {
           <Logo />
 
           <div className="hidden lg:flex items-center gap-4">
-            <ThemeToggle/>
+            
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -57,7 +56,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-4 lg:hidden">
-            <ThemeToggle/>
+            
             <button type="button" onClick={() => setDrawerOpen(true)} aria-label="Cart" className="relative text-foreground">
               <ShoppingCart className="w-5 h-5" />
               {totalItems > 0 && (

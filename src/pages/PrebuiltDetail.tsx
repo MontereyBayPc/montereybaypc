@@ -10,7 +10,7 @@ import { getPrebuilt } from "@/data/prebuilts";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 import BuildBenchmarks from "@/components/BuildBenchmarks";
-import { MonitorAdvisor } from "@/components/ShoppingAdvice";
+import { TransparencyDrawer } from "@/components/ShoppingAdvice";
 import { HARDWARE_UPGRADES } from "@/lib/shopping";
 import { estimatedShipWindow } from '@/lib/operations';
 
@@ -199,7 +199,7 @@ const PrebuiltDetail = () => {
             </div>
           </div>
 
-          <MonitorAdvisor pc={pc}/>
+          <div className="mt-8"><TransparencyDrawer/></div>
 
           <BuildBenchmarks slug={pc.slug} cpu={pc.specs.cpu} resolution={pc.performance.resolution} games={pc.performance.games} />
 

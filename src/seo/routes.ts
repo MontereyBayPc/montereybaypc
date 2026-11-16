@@ -150,7 +150,7 @@ export const seoRoutes: SeoRoute[] = [
     path: "/about",
     title: "About Monterey Bay PCs | Local Custom PC Builders",
     description: "Meet Monterey Bay PCs, a local custom PC building and repair shop serving the Monterey Bay area with hand-built rigs and honest service.",
-    h1: "About Monterey Bay PCs: Custom Builds & Repair",
+    h1: "About Us",
     body: ["A local custom PC building and repair shop in Monterey, CA, founded in 2024, with 15+ builds completed."],
     changefreq: "yearly",
     priority: "0.6",
